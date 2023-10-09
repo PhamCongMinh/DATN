@@ -1,0 +1,43 @@
+.space {
+  position: relative;
+  background-color: #FFFFFF;
+  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.15);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.container {
+  width: 400px;
+  height: 300px;
+  padding: 30px;
+  display: grid;
+}
+
+.title {
+  color: #512B1A !important;
+  font-weight: 500 !important;
+  font-family: 'Open sans' !important;
+  font-size: 28px !important;
+  line-height: 1.625em !important;
+  margin-top: 0px !important;
+}
+
+.text {
+  color: #512B1A;
+  font-weight: 400;
+  font-family: 'Open sans';
+  font-size: 20px;
+  line-height: 1.625em;
+}
+
+.button {
+  color: #FFFFFF;
+  border-radius: 2px;
+  text-align: center;
+  background: #2B95CA;
+  font-family: Open sans;
+  font-weight: 400;
+  min-height: 42px;
+  min-width: 339px;
+  margin-top: 10px;
+}

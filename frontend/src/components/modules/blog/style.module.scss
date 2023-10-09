@@ -1,0 +1,50 @@
+.container {
+  background: #ffffff;
+  padding: 20px;
+}
+
+.filter {
+  min-height: 68px !important;
+  min-width: 1632px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input {
+  min-width: 250px;
+  min-height: 47px;
+}
+
+
+.button {
+  width: 47px !important;
+  height: 47px;
+  padding: 0px !important;
+}
+
+.button_option {
+  min-width: 100px;
+  min-height: 47px;
+  color: #6e5555;
+}
+
+.content {
+  min-width: 1632px !important;
+  align-items: initial !important;
+}
+
+.text {
+  color: #512B1A;
+  font-weight: 400;
+  font-family: 'Open sans';
+  font-size: 20px;
+  line-height: 1.625em;
+}
+
+.title1 {
+  font-family: "Open Sans";
+  font-weight: 500;
+  font-size: 2rem !important;
+  color: #512B1A;
+}

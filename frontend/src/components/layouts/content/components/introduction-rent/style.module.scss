@@ -1,0 +1,34 @@
+.image {
+  width: 650px;
+  height: 367px;
+  align-items: center;
+  border-radius: 8px ;
+  display: inline-block;
+}
+
+.typography {
+  position: absolute;
+  bottom: 100px;
+  left: 135px;
+}
+
+.title {
+  text-shadow: 0 0 2em rgba(0, 0, 0, 0.1);
+  font-size: 32px !important;
+  font-family: "Open Sans";
+  font-weight: bold;
+  color: #6D635F;
+  display: flex;
+  justify-content: center;
+}
+
+.text {
+  text-shadow: 0 0 2em rgba(0, 0, 0, 0.1);
+  font-size: 20px !important;
+  font-family: "Open Sans";
+  font-weight: bold;
+  color: #6D635F;
+  display: inline-block;
+  margin-left: 100px;
+  margin-right: 20px;
+}

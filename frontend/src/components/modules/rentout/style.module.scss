@@ -1,0 +1,71 @@
+.container {
+  position: relative;
+  min-height: 740px;
+}
+
+.space {
+  width: 1732px;
+  min-height: 550px;
+  display: flex !important;
+  align-items: left;
+}
+
+.header {
+  max-width: 256px !important;
+  align-items: center;
+  display: flex;
+  background: #40404254;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #eee;
+  margin-left: 30px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.name {
+    font-size: 20px;
+    font-weight: 500;
+  margin-left: 20px;
+}
+
+.menu {
+  font-family: "Open Sans";
+  font-weight: normal;
+  font-size: 16px !important;
+  min-height: 650px;
+}
+
+.content {
+  background: #ffffff;
+  padding: 20px;
+  position: absolute;
+  top: 0;
+  display: grid;
+}
+
+.title1 {
+  font-family: "Open Sans";
+  font-weight: 400;
+  font-size: 2.5rem !important;
+}
+
+.title2 {
+  font-family: "Open Sans";
+  font-weight: 600;
+  font-size: 1.75rem!important;
+}
+
+.contact {
+  background: #ffffff;
+  padding: 20px;
+  position: absolute;
+  top: 0;
+  min-height: 1200px;
+  min-width: 1450px;
+}

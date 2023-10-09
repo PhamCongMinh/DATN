@@ -1,0 +1,35 @@
+.space {
+  position: relative;
+  background-color: #FFFFFF;
+  min-width: 1632px;
+  min-height: 200px;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+}
+
+.container {
+
+}
+
+.image {
+  width: 50px;
+  height: 50px;
+}
+
+.title {
+  color: #512B1A !important;
+  font-weight: 500 !important;
+  font-family: 'Open sans' !important;
+  font-size: 20px !important;
+  line-height: 1.625em !important;
+  margin-top: 0px !important;
+}
+
+.text {
+  color: #512B1A;
+  font-weight: 400;
+  font-family: 'Open sans';
+  font-size: 16px;
+  line-height: 1.625em;
+}
