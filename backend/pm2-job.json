@@ -1,0 +1,34 @@
+{
+    "apps": [
+        {
+            "name": "crowded-genix-api",
+            "script": "npm run start",
+            "node_args": "",
+            "instances": 1
+        },
+        {
+            "name": "crowded-genix-provider",
+            "script": "npm run console:dev provider",
+            "node_args": "",
+            "instances": 1
+        },
+        {
+            "name": "crowded-genix-consumer",
+            "script": "npm run console:dev consumer",
+            "node_args": "",
+            "instances": 1
+        },
+        {
+            "name": "crowded-genix-batch-job-no-queue",
+            "script": "npm run batch-job-no-queue:dev",
+            "node_args": "",
+            "instances": 1
+        },
+        {
+            "name": "crowded-genix-batch-job-with-queue",
+            "script": "npm run batch-job-with-queue:dev",
+            "node_args": "",
+            "instances": 1
+        }
+    ]
+}

@@ -6,7 +6,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Role } from '@models/entities/User.entity';
+import { EUserRole } from '@models/entities/User.entity';
 
 export class RegisterDto {
   @ApiProperty()
@@ -34,5 +34,5 @@ export class RegisterDto {
 
   @ApiPropertyOptional()
   @IsString()
-  role: Role;
+  role: EUserRole;
 }

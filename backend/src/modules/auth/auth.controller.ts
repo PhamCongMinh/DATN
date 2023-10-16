@@ -2,40 +2,26 @@ import {
   Body,
   Controller,
   Get,
-  MaxFileSizeValidator,
-  ParseFilePipe,
   Post,
   Req,
-  UploadedFile,
   UploadedFiles,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiConsumes,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { AuthService } from '@modules/auth/auth.service';
 import { LoginDto } from '@modules/auth/dto/login.dto';
 import { RegisterDto } from '@modules/auth/dto/register.dto';
-import { JwtAuthGuard } from '@shared/guards/auth.guard';
 import { ApiAuthDescription } from '@modules/auth/constants/description-api';
 import { LoggerService } from '@shared/modules/loggers/logger.service';
 import { UpdateAccountDto } from '@modules/auth/dto/updateAccount.dto';
-import {
-  AnyFilesInterceptor,
-  FileFieldsInterceptor,
-  FileInterceptor,
-} from '@nestjs/platform-express';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import path from 'path';
-import { CreateRentalNewsDto } from '@modules/rent-out/dto/request/createRentalNewsDto';
 import { v4 } from 'uuid';
 import { UpdateProfileDto } from '@modules/auth/dto/updateProfile.dto';
-import { PrivateInformationDocument } from '@models/entities/PrivateInformation.entity';
+import { UseAuth } from '@shared/decorators/auth.decorator';
+import { EUserRole } from '@models/entities/User.entity';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -59,8 +45,7 @@ export class AuthController {
     return this.authService.login(loginDto);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth('jwt')
+  @UseAuth(Object.values(EUserRole))
   @Post('logout')
   @ApiOperation({ description: ApiAuthDescription.logout })
   logout() {
@@ -69,8 +54,7 @@ export class AuthController {
     };
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth('jwt')
+  @UseAuth(Object.values(EUserRole))
   @Post('update-account')
   @ApiOperation({ description: ApiAuthDescription.update })
   updateAccount(@Req() req, @Body() data: UpdateAccountDto) {
@@ -78,8 +62,7 @@ export class AuthController {
     return this.authService.updateAccount(req.user.id, data);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth('jwt')
+  @UseAuth(Object.values(EUserRole))
   @Post('update-profile')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(
@@ -113,8 +96,7 @@ export class AuthController {
     return this.authService.updateProfile(req.user.id, updateProfileDto);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth('jwt')
+  @UseAuth(Object.values(EUserRole))
   @Get('check-updated-information')
   async checkUpdatedInfo(@Req() req) {
     return this.authService.checkUpdatedInfo(req.user.id);

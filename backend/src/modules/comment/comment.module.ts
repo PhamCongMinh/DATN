@@ -5,8 +5,6 @@ import { Comment, CommentSchema } from '@models/entities/Comment.entity';
 import { CommentService } from '@modules/comment/comment.service';
 import CommentRepository from '@models/repositories/Comment.repository';
 import { CommentController } from '@modules/comment/comment.controller';
-import RentalNewsRepository from '@models/repositories/RentalNews.repository';
-import { RentalNews, RentalNewsSchema } from '@models/entities/RentalNews';
 
 @Module({
   imports: [
@@ -15,15 +13,11 @@ import { RentalNews, RentalNewsSchema } from '@models/entities/RentalNews';
         name: Comment.name,
         schema: CommentSchema,
       },
-      {
-        name: RentalNews.name,
-        schema: RentalNewsSchema,
-      },
     ]),
     LoggingModule,
   ],
   controllers: [CommentController],
-  providers: [CommentService, CommentRepository, RentalNewsRepository],
+  providers: [CommentService, CommentRepository],
   exports: [CommentService],
 })
 export default class CommentModule {}
