@@ -6,13 +6,13 @@ import { ConfigurationModule } from '@config/config.module';
 import { DatabaseModule } from '@config/database.module';
 import { LoggingModule } from '@shared/modules/loggers/logger.module';
 import { JwtModule } from '@nestjs/jwt';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
+import { ConsoleModule } from 'nestjs-console';
 
 @Module({
   imports: [
     ConfigurationModule,
     DatabaseModule,
+    ConsoleModule,
     LoggingModule,
     JwtModule.register({}),
     ...MODULES,

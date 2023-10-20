@@ -14,8 +14,8 @@ export class BodyValidationPipe extends ValidationPipe {
           message: `Validation errors on these fields: ${this.getMessageFromErrs(
             errs,
           )}`,
-          statusCode: HttpStatus.BAD_REQUEST,
-          validatorErrors: this.getPropertyAndContraints(errs),
+          status_code: HttpStatus.BAD_REQUEST,
+          validator_errors: this.getPropertyAndContraints(errs),
         });
       },
     });

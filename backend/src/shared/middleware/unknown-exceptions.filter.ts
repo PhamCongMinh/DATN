@@ -26,14 +26,14 @@ export class UnknownExceptionsFilter implements ExceptionFilter {
 
     const defaultResponse: IResponse<any> = {
       data: null,
-      validatorErrors: [],
-      statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      validator_errors: [],
+      status_code: HttpStatus.INTERNAL_SERVER_ERROR,
 
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       message: 'unknown exception',
       success: false,
     };
-    response.status(defaultResponse.statusCode).json(defaultResponse);
+    response.status(defaultResponse.status_code).json(defaultResponse);
   }
 }

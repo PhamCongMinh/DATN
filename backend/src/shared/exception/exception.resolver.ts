@@ -6,15 +6,15 @@ import {
 } from '@shared/interceptors/request-response.interceptor';
 
 export abstract class BaseException<TData> extends HttpException {
-  protected constructor(partial: IResponse<TData>, statusCode: number) {
+  protected constructor(partial: IResponse<TData>, status_code: number) {
     const payload = {
       ...defaultResponse,
-      statusCode: partial?.statusCode ? partial.statusCode : statusCode,
+      status_code: partial?.status_code ? partial.status_code : status_code,
       message: '',
       ...partial,
     };
-    payload.success = payload.statusCode < 400;
-    super(payload, statusCode);
+    payload.success = payload.status_code < 400;
+    super(payload, status_code);
   }
 }
 
@@ -28,9 +28,9 @@ export abstract class BaseException<TData> extends HttpException {
 export class Exception<TData> extends BaseException<TData> {
   constructor(
     payload: IResponse<TData>,
-    statusCode: number = HttpStatus.INTERNAL_SERVER_ERROR,
+    status_code: number = HttpStatus.INTERNAL_SERVER_ERROR,
   ) {
-    super(payload, statusCode);
+    super(payload, status_code);
   }
 }
 

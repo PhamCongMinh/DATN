@@ -1,11 +1,13 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { Prop } from '@shared/swagger';
 
-export enum Role {
-  HOST = 'host',
-  RENTER = 'renter',
+export enum EUserRole {
   ADMIN = 'admin',
+  SUB_ADMIN = 'sub-admin',
+  PROJECT_OWNER = 'project-owner',
+  INVESTOR = 'investor',
+  USER = 'user',
 }
 
 export type UserDocument = User & Document;
@@ -41,9 +43,10 @@ export class User {
   @Prop({
     type: String,
     required: true,
-    default: Role.RENTER,
+    enum: EUserRole,
+    default: EUserRole.USER,
   })
-  role: string;
+  role: EUserRole;
 
   @Prop({
     type: 'string',
