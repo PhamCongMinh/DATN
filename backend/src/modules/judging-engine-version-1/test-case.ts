@@ -3,5 +3,5 @@ import { testCaseForSumOfTwoNumbers } from './solution-and-testcase/sum-two-numb
 
 export function getTestCasesForLanguage() {
   // Define and return test cases based on the language
-  return testCaseForSumOfTwoNumbers;
+  return testCaseForLengthOfLastWord;
 }

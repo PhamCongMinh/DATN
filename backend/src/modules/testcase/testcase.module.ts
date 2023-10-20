@@ -12,6 +12,7 @@ import {
   Testcase,
   TestcaseSchema,
 } from '@models/entities';
+import TestcaseRepository from '@models/repositories/Testcase.repository';
 
 @Module({
   imports: [
@@ -37,7 +38,7 @@ import {
     LoggingModule,
   ],
   controllers: [TestcaseController],
-  providers: [TestcaseService],
+  providers: [TestcaseService, TestcaseRepository],
   exports: [TestcaseService],
 })
 export default class TestcaseModule {}

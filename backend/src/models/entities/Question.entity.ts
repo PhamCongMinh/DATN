@@ -1,6 +1,7 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { Prop } from '@shared/swagger';
+import { EQuestionDifficultyLevel } from '@constants/questions.constant';
 
 export type QuestionDocument = Question & Document;
 
@@ -15,34 +16,65 @@ export type QuestionDocument = Question & Document;
 export class Question {
   @Prop({
     type: String,
-    required: true,
-    unique: true,
+    required: false,
+  })
+  title: string;
+
+  @Prop({
+    type: String,
+    required: false,
   })
   description: string;
 
   @Prop({
-    type: String,
-    required: true,
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Testcase',
+    required: false,
   })
-  test_cases: string;
+  test_cases?: string[];
 
   @Prop({
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true,
   })
   author_id: string;
 
   @Prop({
-    type: String,
-    required: true,
+    type: Number,
+    required: false,
   })
-  points: string;
+  points?: number;
 
   @Prop({
     type: String,
-    required: true,
+    default: EQuestionDifficultyLevel.EASY,
   })
-  difficulty_level: string;
+  difficulty_level: EQuestionDifficultyLevel;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  example_input?: string;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  example_output?: string;
+
+  @Prop({
+    type: Number,
+    required: false,
+  })
+  time_limit?: number;
+
+  @Prop({
+    type: Number,
+    required: false,
+  })
+  memory_limit?: number;
 }
 
 export const QuestionSchema = SchemaFactory.createForClass(Question);

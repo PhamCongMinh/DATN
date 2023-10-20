@@ -16,6 +16,6 @@ int lengthOfLastWord(string s) {
 int main() {
     string s;
     getline(cin, s);
-    cout << lengthOfLastWord(s);
+    cout << lengthOfLastWord(s) << endl;
     return 0;
 }`;

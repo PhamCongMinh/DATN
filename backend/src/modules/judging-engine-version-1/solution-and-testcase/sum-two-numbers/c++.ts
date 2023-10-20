@@ -7,7 +7,7 @@ int greet(int a,int b) {
 int main() {
     int a,b;
     cin >> a >> b;
-    cout << greet(a,b);
+    cout << greet(a,b) << endl;
     return 0;
 }`;
 

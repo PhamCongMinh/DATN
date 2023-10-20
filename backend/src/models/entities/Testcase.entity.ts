@@ -15,10 +15,9 @@ export type TestcaseDocument = Testcase & Document;
 export class Testcase {
   @Prop({
     type: String,
-    required: true,
-    unique: true,
+    required: false,
   })
-  description: string;
+  description?: string;
 
   @Prop({
     type: String,
@@ -33,16 +32,17 @@ export class Testcase {
   output: string;
 
   @Prop({
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true,
   })
   author_id: string;
 
   @Prop({
-    type: String,
+    type: Number,
     required: true,
   })
-  order: string;
+  order: number;
 }
 
 export const TestcaseSchema = SchemaFactory.createForClass(Testcase);

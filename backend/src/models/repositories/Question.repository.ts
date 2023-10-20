@@ -22,11 +22,19 @@ export default class QuestionRepository {
     return this.questionDocument.updateOne({ _id: id }, data).exec();
   }
 
-  async findById(id: string): Promise<QuestionDocument[]> {
-    return this.questionDocument.find({ _id: id }).exec();
+  async findById(id: string): Promise<QuestionDocument> {
+    return this.questionDocument
+      .findOne({ _id: id })
+      .populate('test_cases')
+      .populate('author_id')
+      .exec();
   }
 
   async getAll(): Promise<QuestionDocument[]> {
-    return this.questionDocument.find().exec();
+    return this.questionDocument
+      .find()
+      .populate('test_cases')
+      .populate('author_id')
+      .exec();
   }
 }

@@ -1,6 +1,10 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { Prop } from '@shared/swagger';
+import {
+  ESubmissionLanguage,
+  ESubmissionStatus,
+} from '@constants/submission.constant';
 
 export type SubmissionDocument = Submission & Document;
 
@@ -14,14 +18,15 @@ export type SubmissionDocument = Submission & Document;
 })
 export class Submission {
   @Prop({
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true,
-    unique: true,
   })
-  user_id: string;
+  author_id: string;
 
   @Prop({
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Question',
     required: true,
   })
   question_id: string;
@@ -30,25 +35,37 @@ export class Submission {
     type: String,
     required: true,
   })
-  score: string;
+  source: string;
+
+  @Prop({
+    type: Number,
+    required: false,
+  })
+  score?: number;
 
   @Prop({
     type: String,
-    required: true,
+    required: false,
   })
-  language: string;
+  language: ESubmissionLanguage;
 
   @Prop({
     type: String,
-    required: true,
+    required: false,
   })
-  accepted_submission: string;
+  status?: ESubmissionStatus;
+
+  @Prop({
+    type: Number,
+    required: false,
+  })
+  passed_testcase_number?: number;
 
   @Prop({
     type: String,
-    required: true,
+    required: false,
   })
-  error_code: string;
+  error_code?: string;
 }
 
 export const SubmissionSchema = SchemaFactory.createForClass(Submission);

@@ -1,10 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { LoggerService } from '@shared/modules/loggers/logger.service';
+import TestcaseRepository from '@models/repositories/Testcase.repository';
+import { CreateTestcaseDto } from '@modules/testcase/dto/create-testcase.dto';
 
 @Injectable()
 export class TestcaseService {
-  constructor(private loggerService: LoggerService) {
+  constructor(
+    private testcaseRepository: TestcaseRepository,
+    private loggerService: LoggerService,
+  ) {
     this.loggerService.getLogger('TestcaseService');
+  }
+
+  async createTestcase(
+    author_id: string,
+    createTestcaseDto: CreateTestcaseDto,
+  ) {
+    const newTestcase = await this.testcaseRepository.create({
+      ...createTestcaseDto,
+      author_id: author_id,
+    });
+
+    return newTestcase;
   }
 
   // async getAllRentalNews(ownerId: string) {

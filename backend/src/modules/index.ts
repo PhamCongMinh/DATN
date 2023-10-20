@@ -3,8 +3,10 @@ import BlogModule from '@modules/blog/blog.module';
 import CommentModule from '@modules/comment/comment.module';
 import ManageSystemModule from '@modules/manage-system/manage-system.module';
 import TestcaseModule from '@modules/testcase/testcase.module';
-import { JobModule } from '@modules/judging-engine/job.module';
+import { JuggingEngineModule } from '@modules/judging-engine/jugging-engine.module';
 import { ConsoleModule } from 'nestjs-console';
+import QuestionModule from '@modules/question/question.module';
+import SubmissionModule from '@modules/submission/submission.module';
 
 export const MODULES = [
   AuthModule,
@@ -12,5 +14,7 @@ export const MODULES = [
   CommentModule,
   TestcaseModule,
   ManageSystemModule,
-  JobModule,
+  JuggingEngineModule,
+  QuestionModule,
+  SubmissionModule,
 ];

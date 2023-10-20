@@ -2,9 +2,14 @@ import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import { v4 } from 'uuid';
 import { getTestCasesForLanguage } from './test-case';
-import { javascriptCode2 } from './solution-and-testcase/lenght-of-last-word/javascript';
+import {
+  javascriptCode2,
+  javascriptCode3,
+} from './solution-and-testcase/lenght-of-last-word/javascript';
 import { cppCode3 } from './solution-and-testcase/lenght-of-last-word/c++';
 import { cppCode } from './solution-and-testcase/sum-two-numbers/c++';
+import { javascriptCode } from './solution-and-testcase/sum-two-numbers/javascript';
+import readline from 'readline';
 
 export const evaluateCode = async (language: string, code: string) => {
   let totalScore = 0;
@@ -102,7 +107,8 @@ const executeCode = async (
   } else if (language === 'javascript') {
     result = await createChildProcessToExecuteCode(
       `node ${fileName}.js`,
-      JSON.stringify(input),
+      input,
+      // JSON.stringify(input),
       // input.replace(/\n|\r/g, ' '),
     );
   }
@@ -135,8 +141,9 @@ const createChildProcessToExecuteCode = async (
 
     result.on('close', (code) => {
       if (code === 0) {
-        const dataBuffer = JSON.parse(Buffer.concat(bufferArray).toString());
-        console.log(`Result: ${dataBuffer} ${typeof dataBuffer}`);
+        const dataBuffer = Buffer.concat(bufferArray).toString();
+        // const dataBuffer = JSON.parse(Buffer.concat(bufferArray).toString());
+        console.log(`Result: ${dataBuffer}`);
         resolve(dataBuffer);
       } else {
         reject();
@@ -145,4 +152,4 @@ const createChildProcessToExecuteCode = async (
   });
 };
 
-evaluateCode('c++', cppCode).then((score) => console.log(score));
+evaluateCode('javascript', javascriptCode3).then((score) => console.log(score));

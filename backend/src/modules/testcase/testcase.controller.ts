@@ -1,16 +1,28 @@
 import { ApiTags } from '@nestjs/swagger';
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Param, Post, Put, Req } from '@nestjs/common';
 import { LoggerService } from '@shared/modules/loggers/logger.service';
 import { TestcaseService } from '@modules/testcase/testcase.service';
+import { UseAuth } from '@shared/decorators/auth.decorator';
+import { EUserRole } from '@models/entities';
+import { CreateTestcaseDto } from '@modules/testcase/dto/create-testcase.dto';
 
-@ApiTags('RentOut')
-@Controller('rent-out')
+@ApiTags('Testcase')
+@Controller('testcase')
 export class TestcaseController {
   constructor(
     private testcaseService: TestcaseService,
     private loggerService: LoggerService,
   ) {
     this.loggerService.getLogger('TestcaseController');
+  }
+
+  @UseAuth(Object.values(EUserRole))
+  @Post('/')
+  async createTestcase(
+    @Body() createTestcaseDto: CreateTestcaseDto,
+    @Req() req,
+  ) {
+    return this.testcaseService.createTestcase(req.user._id, createTestcaseDto);
   }
 
   // @UseAuth(Object.values(EUserRole))
