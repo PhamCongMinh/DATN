@@ -5,16 +5,8 @@ import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import { v4 } from 'uuid';
 import { ESubmissionLanguage } from '@constants/submission.constant';
-import Dockerode from 'dockerode';
-import stream from 'stream';
-import path from 'path';
 
-const docker = new Dockerode();
-const hostFolderPath =
-  '/home/sotatek/Projects/Hust/DATN/backend/src/modules/judging-engine';
-
-@Injectable()
-export class JuggingEngineService {
+class JuggingEngineService {
   constructor(
     private configService: ConfigService,
     private loggerService: LoggerService,
@@ -73,8 +65,7 @@ export class JuggingEngineService {
 
   createCodeFile = (language: string, fileName: string, code: string) => {
     if (language === ESubmissionLanguage.C_PLUS) {
-      const filePath = path.join(hostFolderPath, `${fileName}.cpp`);
-      fs.writeFileSync(filePath, code);
+      fs.writeFileSync(`${fileName}.cpp`, code);
     } else if (language === ESubmissionLanguage.JAVASCRIPT) {
       fs.writeFileSync(`${fileName}.js`, code);
     }
@@ -83,9 +74,8 @@ export class JuggingEngineService {
   removeCodeFile = (language: string, fileName: string) => {
     if (language === ESubmissionLanguage.C_PLUS) {
       // Remove the temporary files
-      const filePath = path.join(hostFolderPath, `${fileName}`);
-      fs.unlinkSync(`${filePath}.cpp`);
-      fs.unlinkSync(`${filePath}`);
+      fs.unlinkSync(`${fileName}.cpp`);
+      fs.unlinkSync(`${fileName}`);
     } else if (language === ESubmissionLanguage.JAVASCRIPT) {
       fs.unlinkSync(`${fileName}.js`);
     }
@@ -93,10 +83,9 @@ export class JuggingEngineService {
 
   compileCode = async (language: string, fileName: string) => {
     if (language === ESubmissionLanguage.C_PLUS) {
-      const filePath = path.join(hostFolderPath, `${fileName}`);
       await new Promise((resolve, reject) => {
         childProcess.exec(
-          `g++ -o ${filePath} ${filePath}.cpp`,
+          `g++ -o ${fileName} ${fileName}.cpp`,
           {
             timeout: 10000,
           },
@@ -123,12 +112,12 @@ export class JuggingEngineService {
     // Use child_process to execute code
     // Capture the result and return it
     if (language === ESubmissionLanguage.C_PLUS) {
-      result = await this.createDockerContainerToRunCode(
+      result = await this.createChildProcessToExecuteCode(
         `./${fileName}`,
         input,
       );
     } else if (language === ESubmissionLanguage.JAVASCRIPT) {
-      result = await this.createDockerContainerToRunCode(
+      result = await this.createChildProcessToExecuteCode(
         `node ${fileName}.js`,
         input,
         // JSON.stringify(input),
@@ -138,93 +127,40 @@ export class JuggingEngineService {
     return result;
   };
 
-  createDockerContainerToRunCode = async (
+  createChildProcessToExecuteCode = async (
     command: string,
     inputString: any,
   ): Promise<any> => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const container: Dockerode.Container = await docker.createContainer({
-          Image: 'gcc',
-          OpenStdin: true,
-          AttachStdin: false,
-          AttachStdout: true,
-          AttachStderr: true,
-          Tty: true,
-          Cmd: ['/bin/bash'],
-          HostConfig: {
-            Binds: [`${hostFolderPath}:/code`],
-          },
-          WorkingDir: '/code',
-        });
+    return new Promise((resolve, reject) => {
+      const result = childProcess.spawn(command, {
+        timeout: 5000,
+        shell: true,
+      });
 
-        await container.start();
-        console.log('Created container');
+      const buffer = Buffer.from(inputString);
+      result.stdin.write(buffer, 'ascii');
+      result.stdin.end();
 
-        const result = await this.executeCodeInContainer(
-          command,
-          container,
-          inputString,
-        );
+      const bufferArray = [];
+      result.stdout.on('data', (data) => {
+        bufferArray.push(data);
+      });
 
-        await container.remove({ force: true });
-        console.log('Removed container');
+      result.stderr.on('data', (data) => {
+        console.error(`Compilation error: ${data.toString()}`);
+        reject(data);
+      });
 
-        resolve(result);
-      } catch (err) {
-        reject(err);
-      }
-    });
-  };
-
-  executeCodeInContainer = async (
-    command: string,
-    container: Dockerode.Container,
-    inputString: string,
-  ) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const executeExec = await container.exec({
-          AttachStdin: true,
-          AttachStdout: true,
-          AttachStderr: true,
-          WorkingDir: '/code',
-          Cmd: [command],
-        });
-
-        const resultStream = new stream.PassThrough();
-        const bufferResultArray = [];
-
-        resultStream.on('data', function (data) {
-          bufferResultArray.push(data);
-        });
-
-        resultStream.on('end', function () {
-          const dataBuffer = Buffer.concat(bufferResultArray).toString();
+      result.on('close', (code) => {
+        if (code === 0) {
+          const dataBuffer = Buffer.concat(bufferArray).toString();
+          // const dataBuffer = JSON.parse(Buffer.concat(bufferArray).toString());
+          console.log(`Result: ${dataBuffer}`);
           resolve(dataBuffer);
-        });
-
-        const errorStream = new stream.PassThrough();
-
-        executeExec.start(
-          {
-            stdin: true,
-            hijack: true,
-            Detach: false,
-          },
-          function (error, stream) {
-            stream.write(inputString, 'ascii');
-            stream.end();
-
-            docker.modem.demuxStream(stream, resultStream, errorStream);
-            stream.on('end', function () {
-              resultStream.end();
-            });
-          },
-        );
-      } catch (err) {
-        reject(err);
-      }
+        } else {
+          reject();
+        }
+      });
     });
   };
 }
