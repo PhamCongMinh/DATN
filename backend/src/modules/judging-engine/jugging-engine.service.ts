@@ -72,22 +72,22 @@ export class JuggingEngineService {
   };
 
   createCodeFile = (language: string, fileName: string, code: string) => {
+    const filePath = path.join(hostFolderPath, `${fileName}`);
     if (language === ESubmissionLanguage.C_PLUS) {
-      const filePath = path.join(hostFolderPath, `${fileName}.cpp`);
-      fs.writeFileSync(filePath, code);
+      fs.writeFileSync(`${filePath}.cpp`, code);
     } else if (language === ESubmissionLanguage.JAVASCRIPT) {
-      fs.writeFileSync(`${fileName}.js`, code);
+      fs.writeFileSync(`${filePath}.js`, code);
     }
   };
 
   removeCodeFile = (language: string, fileName: string) => {
+    const filePath = path.join(hostFolderPath, `${fileName}`);
     if (language === ESubmissionLanguage.C_PLUS) {
       // Remove the temporary files
-      const filePath = path.join(hostFolderPath, `${fileName}`);
       fs.unlinkSync(`${filePath}.cpp`);
       fs.unlinkSync(`${filePath}`);
     } else if (language === ESubmissionLanguage.JAVASCRIPT) {
-      fs.unlinkSync(`${fileName}.js`);
+      fs.unlinkSync(`${filePath}.js`);
     }
   };
 
@@ -124,28 +124,29 @@ export class JuggingEngineService {
     // Capture the result and return it
     if (language === ESubmissionLanguage.C_PLUS) {
       result = await this.createDockerContainerToRunCode(
-        `./${fileName}`,
+        language,
+        [`./${fileName}`],
         input,
       );
     } else if (language === ESubmissionLanguage.JAVASCRIPT) {
       result = await this.createDockerContainerToRunCode(
-        `node ${fileName}.js`,
+        language,
+        ['node', `${fileName}.js`],
         input,
-        // JSON.stringify(input),
-        // input.replace(/\n|\r/g, ' '),
       );
     }
     return result;
   };
 
   createDockerContainerToRunCode = async (
-    command: string,
+    language: string,
+    command: string[],
     inputString: any,
   ): Promise<any> => {
     return new Promise(async (resolve, reject) => {
       try {
         const container: Dockerode.Container = await docker.createContainer({
-          Image: 'gcc',
+          Image: language === ESubmissionLanguage.JAVASCRIPT ? 'node' : 'gcc',
           OpenStdin: true,
           AttachStdin: false,
           AttachStdout: true,
@@ -160,6 +161,8 @@ export class JuggingEngineService {
 
         await container.start();
         console.log('Created container');
+
+        // await container.changes();
 
         const result = await this.executeCodeInContainer(
           command,
@@ -178,7 +181,7 @@ export class JuggingEngineService {
   };
 
   executeCodeInContainer = async (
-    command: string,
+    command: string[],
     container: Dockerode.Container,
     inputString: string,
   ) => {
@@ -189,7 +192,7 @@ export class JuggingEngineService {
           AttachStdout: true,
           AttachStderr: true,
           WorkingDir: '/code',
-          Cmd: [command],
+          Cmd: command,
         });
 
         const resultStream = new stream.PassThrough();
@@ -227,4 +230,94 @@ export class JuggingEngineService {
       }
     });
   };
+
+  // createDockerContainerToRunCode = async (
+  //   command: string,
+  //   inputString: any,
+  // ): Promise<any> => {
+  //   return new Promise(async (resolve, reject) => {
+  //     try {
+  //       const container: Dockerode.Container = await docker.createContainer({
+  //         Image: 'gcc',
+  //         OpenStdin: true,
+  //         AttachStdin: false,
+  //         AttachStdout: true,
+  //         AttachStderr: true,
+  //         Tty: true,
+  //         Cmd: ['/bin/bash'],
+  //         HostConfig: {
+  //           Binds: [`${hostFolderPath}:/code`],
+  //         },
+  //         WorkingDir: '/code',
+  //       });
+  //
+  //       await container.start();
+  //       console.log('Created container');
+  //
+  //       const result = await this.executeCodeInContainer(
+  //         command,
+  //         container,
+  //         inputString,
+  //       );
+  //
+  //       await container.remove({ force: true });
+  //       console.log('Removed container');
+  //
+  //       resolve(result);
+  //     } catch (err) {
+  //       reject(err);
+  //     }
+  //   });
+  // };
+  //
+  // executeCodeInContainer = async (
+  //   command: string,
+  //   container: Dockerode.Container,
+  //   inputString: string,
+  // ) => {
+  //   return new Promise(async (resolve, reject) => {
+  //     try {
+  //       const executeExec = await container.exec({
+  //         AttachStdin: true,
+  //         AttachStdout: true,
+  //         AttachStderr: true,
+  //         WorkingDir: '/code',
+  //         Cmd: [command],
+  //       });
+  //
+  //       const resultStream = new stream.PassThrough();
+  //       const bufferResultArray = [];
+  //
+  //       resultStream.on('data', function (data) {
+  //         bufferResultArray.push(data);
+  //       });
+  //
+  //       resultStream.on('end', function () {
+  //         const dataBuffer = Buffer.concat(bufferResultArray).toString();
+  //         resolve(dataBuffer);
+  //       });
+  //
+  //       const errorStream = new stream.PassThrough();
+  //
+  //       executeExec.start(
+  //         {
+  //           stdin: true,
+  //           hijack: true,
+  //           Detach: false,
+  //         },
+  //         function (error, stream) {
+  //           stream.write(inputString, 'ascii');
+  //           stream.end();
+  //
+  //           docker.modem.demuxStream(stream, resultStream, errorStream);
+  //           stream.on('end', function () {
+  //             resultStream.end();
+  //           });
+  //         },
+  //       );
+  //     } catch (err) {
+  //       reject(err);
+  //     }
+  //   });
+  // };
 }
