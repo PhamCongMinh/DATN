@@ -1,0 +1,85 @@
+@startuml
+left to right direction
+    package "Hệ thống" {
+        (Đăng nhập) as (UC1)
+        (Đăng ký) as (UC2)
+
+        (Quản lý khóa học) as (UC25)
+        (Xem danh sách khóa học) as (UC3)
+        (Tạo và sửa nội dung khóa học) as (UC4)
+        (Cài đặt khóa học) as (UC5)
+        (Xem danh sách học sinh) as (UC6)
+
+        (Quản lý đề thi) as (UC26)
+        (Tạo ngân hàng câu hỏi) as (UC8)
+        (Import danh sách câu hỏi) as (UC9)
+        (Tạo đề thi từ ngân hàng đề thi) as (UC10)
+        (Tạo đề thi trực tiếp) as (UC11)
+        (Export đề thi để làm đề thi giấy) as (UC12)
+        (Tạo các unit test để kiểm tra code tự động) as (UC13)
+
+        (Quản lý kết quả thi) as (UC27)
+        (Xem điểm học sinh) as (UC7)
+        (Thống kê biểu đồ điểm) as (UC14)
+        (Bảng danh sách điểm của sinh viên) as (UC15)
+
+        (Đăng kí khóa học) as (UC16)
+        (Xem video bài giảng) as (UC17)
+        (Xem tài liệu) as (UC18)
+        (Làm bài thi) as (UC19)
+        (Diễn đàn thảo luận) as (UC20)
+        (Xem kết quả thi) as (UC21)
+
+        (Thống kê người dùng) as (UC22)
+        (Thống kê bài thi) as (UC23)
+        (Thống kê các dữ liệu hệ thống khác) as (UC24)
+    }
+
+    actor "Nguoi dung" as ND
+    actor "Giao vien" as GV
+    actor "Hoc sinh" as HS
+    actor "Admin" as AD
+
+    ND <|-- GV
+    ND <|-- HS
+
+    GV --> (UC1)
+    GV --> (UC2)
+
+    GV --> (UC25)
+    (UC25) <.. (UC3): extend
+    (UC25) <.. (UC4): extend
+    (UC25) <.. (UC5): extend
+    (UC25) <.. (UC6): extend
+
+    GV --> (UC26)
+    (UC26) <... (UC8): extend
+    (UC26) <... (UC9): extend
+    (UC26) <... (UC10): extend
+    (UC26) <... (UC11): extend
+    (UC26) <... (UC12): extend
+    (UC26) <... (UC13): extend
+
+
+    GV --> (UC27)
+    (UC27) <.. (UC7): extend
+    (UC27) <.. (UC14): extend
+    (UC27) <.. (UC15): extend
+
+    HS --> (UC16)
+    HS --> (UC17)
+    HS --> (UC18)
+    HS --> (UC19)
+    HS --> (UC20)
+    HS --> (UC21)
+
+    AD --> (UC22)
+    AD --> (UC23)
+    AD --> (UC24)
+
+
+'    :Khach hang:-->(Xem danh sach san pham)
+'    :Khach hang:->(Dang ky khach hang)
+'    (Tinh tien)..>(Nhap thong tin thanh toan):include
+'    (Dua san pham vao gio hang)..>(Xem danh sach san pham):extend
+@enduml
