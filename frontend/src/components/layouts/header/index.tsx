@@ -24,7 +24,7 @@ function CustomHeader() {
         <Col span={5} style={{ display: 'flex', alignItems: 'center', paddingLeft: 135 }}>
           <Typography>
             <a href="http://localhost:3000/home">
-              <Text className={styles.logo_text}>RentHouse</Text>
+              <Text className={styles.logo_text}>Learning</Text>
             </a>
           </Typography>
         </Col>

@@ -1,24 +1,20 @@
-import { Alert, Layout } from 'antd'
+import { Layout } from 'antd'
 import CustomHeader from '../../components/layouts/header'
 import { Content } from 'antd/lib/layout/layout'
 import CustomFooter from '../../components/layouts/footer'
-import SignUpContent from '../../components/modules/signup'
-import SignInContent from '../../components/modules/signin'
-import RentOutContent from '../../components/modules/rentout'
 import React from 'react'
-import { useRouter } from 'next/router'
-import { useSelector } from 'react-redux'
+import CourseContent from '../../components/modules/course'
 
-function RentOut() {
+function Course() {
   return (
     <Layout>
       <CustomHeader />
       <Content className="site-layout" style={{ padding: '0px', margin: '0px', minHeight: 1100 }}>
-        <RentOutContent />
+        <CourseContent />
       </Content>
       <CustomFooter />
     </Layout>
   )
 }
 
-export default React.memo(RentOut)
+export default React.memo(Course)

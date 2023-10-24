@@ -35,7 +35,7 @@ const items: MenuProps['items'] = [
   getItem('Liên hệ', 'contact', <MailOutlined />)
 ]
 
-function RentOutContent() {
+function CourseContent() {
   const router = useRouter()
   const dispatch = useDispatch()
   const [selectedMenuItem, setSelectedMenuItem] = React.useState('createNews')
@@ -47,13 +47,17 @@ function RentOutContent() {
     // router.push('/signin')
   }, [])
 
-  if (!jwt || user.role !== 'host') {
+  console.log('user', user)
+  console.log('jwt', jwt)
+  console.log('user.role', user.role)
+
+  if (!jwt || user.role !== 'teacher') {
     return (
       <div>
         <Alert
           message="Không có quyền truy cập"
           showIcon
-          description="Bạn phải đăng nhập với tài khoản chủ trọ để sử dụng chức năng này"
+          description="Bạn phải đăng nhập với tài khoản giáo viên để sử dụng chức năng này"
           type="error"
           action={
             <Button size="small" danger>
@@ -109,4 +113,4 @@ function RentOutContent() {
   )
 }
 
-export default React.memo(RentOutContent)
+export default React.memo(CourseContent)

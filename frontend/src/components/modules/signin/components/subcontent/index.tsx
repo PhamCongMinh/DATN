@@ -57,11 +57,11 @@ export default function SignInForm() {
       }
 
       // @ts-ignore
-      if (response.statusCode === 200) {
+      if (response.status_code === 200) {
         dispatch(authSliceActions.logIn(userData))
       }
 
-      router.push('/rent')
+      router.push('/course')
     } catch (error) {
       alert('Đăng nhập thất bại, vui lòng kiểm tra lại thông tin trước khi thử lại')
       console.log(error)

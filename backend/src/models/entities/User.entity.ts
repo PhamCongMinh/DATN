@@ -5,8 +5,8 @@ import { Prop } from '@shared/swagger';
 export enum EUserRole {
   ADMIN = 'admin',
   SUB_ADMIN = 'sub-admin',
-  PROJECT_OWNER = 'project-owner',
-  INVESTOR = 'investor',
+  STUDENT = 'student',
+  TEACHER = 'teacher',
   USER = 'user',
 }
 

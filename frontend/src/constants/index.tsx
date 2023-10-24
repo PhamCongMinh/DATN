@@ -6,15 +6,15 @@ export const menuItemsBeforeLogin: MenuProps['items'] = [
     key: 'home'
   },
   {
-    label: <a>Tìm trọ</a>,
-    key: 'rent'
+    label: <a>Khóa học</a>,
+    key: 'course'
   },
   {
-    label: <a>Cho thuê</a>,
+    label: <a>Cuộc thi</a>,
     key: 'rentout'
   },
   {
-    label: 'Blog',
+    label: <a>Blog</a>,
     key: 'blog'
   },
   {
@@ -33,15 +33,15 @@ export const menuItemsAfterLogin: MenuProps['items'] = [
     key: 'home'
   },
   {
-    label: <a>Tìm trọ</a>,
-    key: 'rent'
+    label: <a>Khóa học</a>,
+    key: 'course'
   },
   {
-    label: <a>Cho thuê</a>,
+    label: <a>Cuộc thi</a>,
     key: 'rentout'
   },
   {
-    label: 'Blog',
+    label: <a>Blog</a>,
     key: 'blog'
   },
   {
@@ -57,7 +57,7 @@ export const menuItemsForAdmin: MenuProps['items'] = [
   },
   {
     label: <a>Tìm trọ</a>,
-    key: 'rent'
+    key: 'course'
   },
   {
     label: 'Blog',
