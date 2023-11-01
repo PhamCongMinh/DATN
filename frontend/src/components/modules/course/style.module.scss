@@ -1,13 +1,15 @@
 .container {
   position: relative;
-  min-height: 740px;
+  //min-height: 740px;
+  max-width: 1430px !important;
+  //height: fit-content !important;
 }
 
 .space {
-  width: 1732px;
+  max-width: 1390px !important;
   min-height: 550px;
   display: flex !important;
-  align-items: left;
+  align-items: normal;
 }
 
 .header {

@@ -6,14 +6,15 @@ const { Text } = Typography
 
 export default function Search() {
   return (
-    <Space className={styles.space}>
-      <Typography>
+    <div className={styles.space}>
+      <Typography style={{ textAlign: 'center' }}>
         <Text className={styles.title}>
-          Quality Rooms at <br />
-          Wallet-Friendly Prices
+          Advance your skills and
+          <br />
         </Text>
+        <Text className={styles.title}>career with online courses</Text>
       </Typography>
       <CustomForm />
-    </Space>
+    </div>
   )
 }
