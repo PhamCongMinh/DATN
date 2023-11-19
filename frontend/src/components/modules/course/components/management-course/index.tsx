@@ -7,11 +7,12 @@ import SubContent from '../../../rent/components/subcontent'
 import Course from '../../../../elements/course'
 import { CommentType, RentalStatus, RentNews, RentNewsType, User } from '../../../../../types'
 import { TSearch } from '../../../rent'
+import { ICourse } from '../../index'
 
 const { Text, Title } = Typography
 
 interface IProps {
-  data: CourseOverview[]
+  data: ICourse[]
   handleSearch: (searchData: TSearchCourse) => void
   appliedFilter: TSearchCourse
   setReload: () => void
@@ -22,14 +23,6 @@ export type TSearchCourse = {
   status?: string
   tag?: string
   author?: string
-}
-
-export type CourseOverview = {
-  _id: string
-  author: string
-  name: string
-  tag: string
-  status: string
 }
 
 const initialState: TSearchCourse = {}
@@ -62,7 +55,7 @@ const ManagementCourse: React.FC<IProps> = (props): JSX.Element => {
           <Breadcrumb.Item>Khóa học</Breadcrumb.Item>
         </Breadcrumb>
         <Text className={styles.title1}>Danh sách khóa học</Text>
-        <Divider style={{ width: 1350, margin: 0 }}></Divider>
+        <Divider style={{ width: 1215, margin: 0 }}></Divider>
         <Space className={styles.sub_content}>
           {props.data.length !== 0 ? (
             <List
@@ -73,7 +66,7 @@ const ManagementCourse: React.FC<IProps> = (props): JSX.Element => {
                   <Course
                     key={course._id}
                     name={course.name}
-                    tag={course.tag}
+                    tag={course.tags}
                     status={course.status}
                     author={course.author}
                     onClick={() => handleClickCourseDetail(course)}

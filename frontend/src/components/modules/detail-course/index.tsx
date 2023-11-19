@@ -1,24 +1,28 @@
-import Image from 'next/image'
-import RentOutImage from '../../../assets/images/image_introduction_rentout.png'
 import styles from './style.module.scss'
-import { Breadcrumb, Button, Card, Col, Divider, Input, Rate, Row, Typography } from 'antd'
-import { HomeOutlined, UserOutlined } from '@ant-design/icons'
+import { Breadcrumb, Button, Card, Col, Divider, Input, Menu, MenuProps, Rate, Row, Typography } from 'antd'
+import { AppstoreOutlined, HomeOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
 import React, { useCallback, useState } from 'react'
-import { CommentType, RentNews } from '../../../types'
 import { NextPage } from 'next'
-import Comments from './components/comments'
 import { useDispatch, useSelector } from 'react-redux'
 import AxiosService from '../../../utils/axios'
 import { useRouter } from 'next/router'
-import House1 from '../../../assets/images/house1.jpeg'
-import ConfirmationForm from './components/confirmation-form'
+import { authSliceActions } from '../../../store/auth/authSlice'
+import CreateRentalnews from '../course/components/create-course'
+import ManagementRentalNews from '../course/components/management-news'
+import Contact from '../course/components/management-news/components/contact'
+import CourseSetting from './components/setting'
+import Participant from './components/participant'
+import QuestionBank from './components/question-bank'
+import ExamBank from './components/exam-bank'
+import Grade from './components/grade'
+import Discuss from './components/discuss'
 
 const { Text, Title } = Typography
 
 const characteristic = 'Đối tượng thuê:\tTất cả\n' + 'Gói tin:\tTin VIP nổi bật\n'
 
 type IProps = {
-  rentNews: RentNews
+  rentNews: any
   handleClickBack: () => void
   setReload: () => void
 }
@@ -35,50 +39,46 @@ const initialComment: IComment = {
   rate: 3
 }
 
-const DetailHouseContent: NextPage<IProps> = props => {
-  const { rentNews } = props
-  const [comment, setComment] = useState<IComment>(initialComment)
+type MenuItem = Required<MenuProps>['items'][number]
+function getItem(
+  label: React.ReactNode,
+  key: React.Key,
+  icon?: React.ReactNode,
+  children?: MenuItem[],
+  type?: 'group'
+): MenuItem {
+  return {
+    key,
+    icon,
+    children,
+    label,
+    type
+  } as MenuItem
+}
+
+const items: MenuProps['items'] = [
+  getItem('Khóa học', 'setting', <AppstoreOutlined />),
+  getItem('Người tham gia', 'participant', <AppstoreOutlined />),
+  getItem('Ngân hàng câu hỏi', 'question_bank', <AppstoreOutlined />),
+  getItem('Đề thi', 'exam_bank', <MailOutlined />),
+  getItem('Điểm', 'grade', <MailOutlined />),
+  getItem('Thảo luận', 'discuss', <MailOutlined />)
+]
+
+const DetailCourseContent: NextPage<IProps> = props => {
+  const [selectedMenuItem, setSelectedMenuItem] = React.useState('managementCourse')
   const jwt = useSelector((state: any) => state.auth?.user?.jwt)
   const axiosService = new AxiosService('application/json', jwt)
   const router = useRouter()
+  const dispatch = useDispatch()
 
-  const handleChangeRate = useCallback(
-    (value: number) => {
-      setComment({ ...comment, rate: value })
-    },
-    [comment]
-  )
-
-  const handleChangeComment = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setComment({ ...comment, comment: e.target.value })
-    },
-    [comment]
-  )
-
-  const handleSubmitComment = useCallback(async () => {
-    try {
-      let isMissingInfo: boolean = false
-      Object.values(comment).forEach(value => {
-        if (!value) {
-          alert('Bạn phải nhập đầy đủ thông tin')
-          isMissingInfo = true
-        }
-      })
-      if (isMissingInfo) return
-
-      await axiosService.post('/comment', {
-        content: comment.comment,
-        rate: comment.rate,
-        rentNewsId: rentNews._id
-      })
-      await props.setReload()
-    } catch (e) {
-      alert('Bạn phải đăng nhập mới có thể bình luận')
-      await router.push('signin')
-      console.log(e)
+  const handleClickMenuItem = async (key: string) => {
+    if (key === 'logout') {
+      dispatch(authSliceActions.logOut())
+      router.push('/home')
     }
-  }, [comment, axiosService, rentNews._id, props.setReload, router])
+    setSelectedMenuItem(key)
+  }
 
   return (
     <div className={styles.content}>
@@ -88,120 +88,34 @@ const DetailHouseContent: NextPage<IProps> = props => {
         </Breadcrumb.Item>
         <Breadcrumb.Item onClick={props.handleClickBack}>
           <UserOutlined />
-          <span>Thuê trọ</span>
+          <span>Khóa học</span>
         </Breadcrumb.Item>
         <Breadcrumb.Item>Thông tin chi tiết</Breadcrumb.Item>
       </Breadcrumb>
       <Text className={styles.title1}>
-        Thông tin chi tiết nhà trọ
+        Thông tin chi tiết khóa học
         <br />
       </Text>
-      <Row>
-        <Col span={14}>
-          <Image src={House1} alt="House1" style={{ width: 800, height: 400 }} />
-        </Col>
-        <Col span={6} offset={2}>
-          <Card title="" className={styles.card}>
-            <p className={styles.text2}>
-              - Nếu bạn đã tìm kiếm, liên hệ và thuê được nhà trọ trong hệ thống, hãy vui lòng cho chúng tôi biết
-            </p>
-            <p className={styles.text2}>
-              - Hãy điền vào form dưới đây để cho chúng tôi biết bạn đã thuê nhà trọ nào để chúng tôi có thể phục vụ tốt
-              hơn
-            </p>
-            <p className={styles.text2}>
-              - Trước đó bạn cần cập nhật đầy đủ thông tin cá nhân ở mục Quản lý tài khoản để có thể điền form này{' '}
-            </p>
-            <ConfirmationForm setReload={props.setReload} />
-          </Card>
-        </Col>
-      </Row>
-      <div>
-        <Title ellipsis={{ rows: 1 }} className={styles.title2}>
-          {rentNews.title}
-        </Title>
-        <Text className={styles.price}>
-          {'=> Địa chỉ: ' +
-            rentNews.specificAddress +
-            ', ' +
-            rentNews.commune +
-            ', ' +
-            rentNews.district +
-            ', ' +
-            rentNews.city}{' '}
-          <br />
-        </Text>
-        <Text className={styles.price}>
-          {'=> Giá: ' + rentNews.pricePerMonth + '/tháng'}
-          <br />
-        </Text>
-        <Text className={styles.price}>
-          {'=> Diện tích: ' + rentNews.area + ' m2'}
-          <br />
-        </Text>
-        <Text className={styles.price}>
-          {'=> Mã tin đăng: ' + rentNews._id}
-          <br />
-        </Text>
-        <Text className={styles.title3}>
-          Thông tin mô tả <br />
-        </Text>
-        <pre className={styles.text} style={{ width: 800, whiteSpace: 'initial' }}>
-          {rentNews.description}
-        </pre>
-        <Text className={styles.title3}>
-          Đặc điểm tin đăng <br />
-        </Text>
-        <pre className={styles.text}>{characteristic}</pre>
-        <Text className={styles.text}>
-          {'Loại tin rao: ' + rentNews.rentNewsType} <br />
-        </Text>
-        <Text className={styles.text}>
-          {'Ngày đăng: ' + rentNews.startDay} <br />
-        </Text>
-        <Text className={styles.text}>
-          {'Ngày hết hạn: ' + rentNews.startDay}
-          <br />
-        </Text>
-        <Text className={styles.title3}>
-          Thông tin liên hệ <br />
-        </Text>
-        <Text className={styles.text}>
-          {'Liên hệ: ' + rentNews.ownerId.username} <br />
-        </Text>
-        <Text className={styles.text}>
-          {'Điện thoại: ' + rentNews.ownerId.numberPhone}
-          <br />
-        </Text>
-        <Text className={styles.text}>
-          {'Email: ' + rentNews.ownerId.email}
-          <br />
-        </Text>
 
-        <Text className={styles.title3}>
-          Bình luận <br />
-        </Text>
-        <Rate tooltips={desc} onChange={handleChangeRate} value={comment.rate} />
-        {comment.rate ? <span className="ant-rate-text">{desc[comment.rate - 1]}</span> : ''}
-        <br />
-        <Input
-          style={{ width: 800, marginBottom: 30, marginTop: 20 }}
-          placeholder="Comment"
-          onChange={e => handleChangeComment(e)}
+      <div>
+        <Menu
+          onClick={({ key }) => handleClickMenuItem(key)}
+          // style={{ width: 230, height: 1165 }}
+          defaultSelectedKeys={['1']}
+          defaultOpenKeys={['sub1']}
+          mode="horizontal"
+          items={items}
+          className={styles.menu}
         />
-        <Button style={{ backgroundColor: '#6078f7', color: '#fff', marginLeft: 30 }} onClick={handleSubmitComment}>
-          Gửi
-        </Button>
-        {rentNews.comments &&
-          rentNews.comments.map(comment => (
-            <div key={comment._id}>
-              <Comments commentData={comment} />
-              <Divider />
-            </div>
-          ))}
+        {selectedMenuItem === 'setting' && <CourseSetting />}
+        {selectedMenuItem === 'participant' && <Participant />}
+        {selectedMenuItem === 'question_bank' && <QuestionBank />}
+        {selectedMenuItem === 'exam_bank' && <ExamBank />}
+        {selectedMenuItem === 'grade' && <Grade />}
+        {selectedMenuItem === 'discuss' && <Discuss />}
       </div>
     </div>
   )
 }
 
-export default DetailHouseContent
+export default DetailCourseContent

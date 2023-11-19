@@ -13,17 +13,14 @@ function IntroductionRent() {
     <div>
       <div style={{ marginTop: 100 }}>
         <Text className={styles.title}>
-          Student Accommodation
+          Find suitable courses for you
           <br />
         </Text>
         <div style={{ display: 'flex', alignItems: 'center', marginTop: 50, marginLeft: 135 }}>
           <Image src={StudentHouse} alt="House1" className={styles.image} />
           <Text className={styles.text}>
-            Hệ thống tìm và cho thuê phòng trọ trực tuyến an toàn, hoàn chỉnh
-            <br />
-            với các đánh giá giúp bạn yên tâm rằng thông tin nhà trọ hiện đã
-            <br />
-            được kiểm chứng và tin cậy.
+            Hệ thống cung cấp vô vàn các khóa học để nâng cao các kỹ năng của bạn. Với các đánh giá giúp bạn yên tâm
+            rằng thông tin khóa học là chính xác, được kiểm chứng và tin cậy.
           </Text>
         </div>
       </div>

@@ -1,20 +1,18 @@
-import { Alert, Button, Menu, MenuProps, Space, Typography } from 'antd'
+import { Alert, Button, Layout, Menu, MenuProps, Space, Typography } from 'antd'
 import styles from './style.module.scss'
 import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons'
-import AvatarImage from '../../../assets/images/avatar.png'
-import Image from 'next/image'
-import React, { useCallback, useState } from 'react'
-import CreateRentalnews from './components/create-rentalnews'
+import React, { useCallback, useEffect, useState } from 'react'
+import CreateRentalnews from './components/create-course'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import ManagementRentalNews from './components/management-news'
 import { authSliceActions } from '../../../store/auth/authSlice'
 import Contact from './components/management-news/components/contact'
 import ManagementCourse, { TSearchCourse } from './components/management-course'
-import { RentNews } from '../../../types'
-import { TSearch } from '../rent'
-import { handleURLWhenClickSearchButton } from '../../../utils/url'
-import DetailHouseContent from '../detail-house'
+import DetailCourseContent from '../detail-course'
+import AxiosService from '../../../utils/axios'
+import { NextPage } from 'next'
+import CreateCourse from './components/create-course'
 
 type MenuItem = Required<MenuProps>['items'][number]
 const { Text } = Typography
@@ -36,30 +34,26 @@ function getItem(
 
 const items: MenuProps['items'] = [
   getItem('Quản lý khóa học', 'managementCourse', <AppstoreOutlined />),
-  getItem('Tạo khóa học mới', 'createNews', <AppstoreOutlined />),
+  getItem('Tạo khóa học mới', 'createCourse', <AppstoreOutlined />),
   getItem('Quản lí tin đăng', 'managementNews', <AppstoreOutlined />),
   getItem('Liên hệ', 'contact', <MailOutlined />)
 ]
 
-//TODO:
-const data = [
-  { _id: '1', author: '12324', name: 'name', tag: 'tag', status: 'status' },
-  { _id: '1', author: '12324', name: 'name', tag: 'tag', status: 'status' },
-  { _id: '1', author: '12324', name: 'name', tag: 'tag', status: 'status' },
-  { _id: '1', author: '12324', name: 'name', tag: 'tag', status: 'status' },
-  { _id: '1', author: '12324', name: 'name', tag: 'tag', status: 'status' },
-  { _id: '1', author: '12324', name: 'name', tag: 'tag', status: 'status' },
-  { _id: '1', author: '12324', name: 'name', tag: 'tag', status: 'status' },
-  { _id: '1', author: '12324', name: 'name', tag: 'tag', status: 'status' },
-  { _id: '1', author: '12324', name: 'name', tag: 'tag', status: 'status' },
-  { _id: '1', author: '12324', name: 'name', tag: 'tag', status: 'status' },
-  { _id: '1', author: '12324', name: 'name', tag: 'tag', status: 'status' },
-  { _id: '1', author: '12324', name: 'name', tag: 'tag', status: 'status' },
-  { _id: '1', author: '12324', name: 'name', tag: 'tag', status: 'status' },
-  { _id: '1', author: '12324', name: 'name', tag: 'tag', status: 'status' }
-]
+export interface ICourse {
+  _id: string
+  name?: string
+  tags?: string
+  description?: string
+  img?: string
+  start_time?: Date
+  end_time?: Date
+  status?: string
+  author?: string
+  created_at: Date
+  updated_at: Date
+}
 
-function CourseContent() {
+const CourseContent: NextPage = () => {
   const router = useRouter()
   const dispatch = useDispatch()
   const [selectedMenuItem, setSelectedMenuItem] = React.useState('managementCourse')
@@ -71,6 +65,8 @@ function CourseContent() {
   const initialUrl = '/course'
   const [reload, setReload] = useState<boolean>(false)
   const [appliedFilter, setAppliedFilter] = useState<TSearchCourse>({})
+  const [courses, setCourses] = useState<ICourse[]>()
+  console.log('reload', reload)
 
   const handleUserNotLogin = useCallback(() => {
     window.location.href = '/signin'
@@ -97,12 +93,33 @@ function CourseContent() {
     )
   }
 
+  useEffect(() => {
+    const axiosService = new AxiosService('application/json')
+    const fetchData = async () => {
+      const response = await axiosService.get('/course')
+      const data: ICourse[] = response.data
+      setCourses(data)
+      setReload(false)
+    }
+    fetchData()
+  }, [reload])
+
+  // if (!courses) {
+  //   return (
+  //     <Layout>
+  //       <CustomHeader />
+  //       <Content className="site-layout" style={{ padding: '0px', margin: '0px' }}></Content>
+  //     </Layout>
+  //   )
+  // }
+
   const handleClickMenuItem = async (key: string) => {
     if (key === 'logout') {
       dispatch(authSliceActions.logOut())
       router.push('/home')
     }
     setSelectedMenuItem(key)
+    handleReload()
   }
 
   //TODO:
@@ -120,6 +137,10 @@ function CourseContent() {
     setIsOpenDetailCourse(true)
   }
 
+  const handleClickBack = () => {
+    setIsOpenDetailCourse(false)
+  }
+
   return (
     <div>
       {isOpenDetailCourse === false && (
@@ -128,7 +149,7 @@ function CourseContent() {
             <div>
               <Menu
                 onClick={({ key }) => handleClickMenuItem(key)}
-                style={{ width: 230, height: 1165 }}
+                style={{ width: 215, height: 1165 }}
                 defaultSelectedKeys={['1']}
                 defaultOpenKeys={['sub1']}
                 mode="inline"
@@ -136,16 +157,16 @@ function CourseContent() {
                 className={styles.menu}
               />
             </div>
-            {selectedMenuItem === 'managementCourse' && (
+            {selectedMenuItem === 'managementCourse' && courses && (
               <ManagementCourse
-                data={data}
+                data={courses}
                 handleSearch={handleClickSearchButton}
                 appliedFilter={appliedFilter}
                 setReload={handleReload}
                 openDetailCourse={handleClickCourseDetail}
               />
             )}
-            {selectedMenuItem === 'createNews' && <CreateRentalnews />}
+            {selectedMenuItem === 'createCourse' && <CreateCourse />}
             {selectedMenuItem === 'managementNews' && <ManagementRentalNews />}
             {selectedMenuItem === 'contact' && (
               <div className={styles.contact}>
@@ -156,7 +177,7 @@ function CourseContent() {
         </div>
       )}
       {isOpenDetailCourse === true && (
-        <DetailHouseContent rentNews={detailHouse} handleClickBack={handleClickBack} setReload={props.setReload} />
+        <DetailCourseContent rentNews={{}} handleClickBack={handleClickBack} setReload={handleReload} />
       )}
     </div>
   )

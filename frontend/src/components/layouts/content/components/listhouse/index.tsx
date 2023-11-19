@@ -14,7 +14,7 @@ function ListHouse() {
   return (
     <div>
       <Typography style={{ marginTop: 50, marginBottom: 50, textAlign: 'center' }}>
-        <Text className={styles.text}>Nhà trọ nổi bật</Text>
+        <Text className={styles.text}>Trending courses</Text>
       </Typography>
       <Row>
         <Col span={6} style={{ display: 'flex', justifyContent: 'center' }}>

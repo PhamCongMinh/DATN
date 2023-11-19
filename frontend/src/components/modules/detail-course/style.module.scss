@@ -1,15 +1,19 @@
 .content {
-  display: flex;
-  flex-direction: column;
-  background-color: #f5f5f5;
-  margin-left: 200px;
-  margin-top: 25px;
+  //display: flex;
+  //flex-direction: column;
+  background-color: #ffffff;
+  padding-left: 130px;
+  padding-top: 15px;
+  margin-top: 5px;
+  position: relative;
 }
 
 .title1 {
   font-family: "Open Sans";
   font-weight: 500;
   font-size: 2rem !important;
+  margin-top: 5px;
+  margin-bottom: 10px;
 }
 
 .text {
@@ -57,4 +61,10 @@
   background: #f6efc8;
   color: #c1a140;
   min-height: 400px;
+}
+
+.menu {
+  font-family: "Open Sans";
+  font-weight: normal;
+  font-size: 16px !important;
 }

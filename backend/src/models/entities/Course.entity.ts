@@ -16,69 +16,92 @@ export class Course {
   @Prop({
     type: String,
     required: false,
-    unique: true,
   })
-  name: string;
+  name?: string;
 
   @Prop({
     type: String,
     required: false,
   })
-  students: string;
+  tags?: string;
 
   @Prop({
     type: String,
     required: false,
   })
-  teachers: string;
+  description?: string;
 
   @Prop({
     type: String,
     required: false,
   })
-  description: string;
+  img?: string;
+
+  @Prop({
+    type: Date,
+    required: false,
+  })
+  start_time?: Date;
+
+  @Prop({
+    type: Date,
+    required: false,
+  })
+  end_time?: Date;
 
   @Prop({
     type: String,
     required: false,
   })
-  tags: string;
+  status?: string;
 
   @Prop({
     type: String,
     required: false,
   })
-  img: string;
+  author?: string;
 
   @Prop({
     type: String,
     required: false,
   })
-  files: string;
+  files?: string;
 
   @Prop({
     type: String,
     required: false,
   })
-  assessments: string;
+  assessments?: string;
 
   @Prop({
     type: String,
     required: false,
   })
-  lectures: string;
+  lectures?: string;
 
   @Prop({
     type: String,
     required: false,
   })
-  survey_request: string;
+  survey_request?: string;
 
   @Prop({
     type: String,
     required: false,
   })
-  reviews: string;
+  reviews?: string;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  students?: string;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  teachers?: string;
 }
 
 export const CourseSchema = SchemaFactory.createForClass(Course);

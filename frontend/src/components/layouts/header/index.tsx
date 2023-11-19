@@ -30,7 +30,7 @@ function CustomHeader() {
             </a>
           </Typography>
         </Col>
-        <Col span={9} offset={7}>
+        <Col span={!jwt ? 12 : 9} offset={7}>
           <Menu
             theme="light"
             mode="horizontal"

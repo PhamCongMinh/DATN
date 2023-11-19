@@ -7,6 +7,8 @@ import { JuggingEngineModule } from '@modules/judging-engine/jugging-engine.modu
 import { ConsoleModule } from 'nestjs-console';
 import QuestionModule from '@modules/question/question.module';
 import SubmissionModule from '@modules/submission/submission.module';
+import TestModule from '@modules/test/test.module';
+import CourseModule from '@modules/course/course.module';
 
 export const MODULES = [
   AuthModule,
@@ -17,4 +19,6 @@ export const MODULES = [
   JuggingEngineModule,
   QuestionModule,
   SubmissionModule,
+  TestModule,
+  CourseModule,
 ];
