@@ -10,12 +10,12 @@ import { authSliceActions } from '../../../store/auth/authSlice'
 import CreateRentalnews from '../course/components/create-course'
 import ManagementRentalNews from '../course/components/management-news'
 import Contact from '../course/components/management-news/components/contact'
-import CourseSetting from './components/setting'
 import Participant from './components/participant'
 import QuestionBank from './components/question-bank'
 import ExamBank from './components/exam-bank'
 import Grade from './components/grade'
 import Discuss from './components/discuss'
+import CourseContent from './components/content'
 
 const { Text, Title } = Typography
 
@@ -57,7 +57,7 @@ function getItem(
 }
 
 const items: MenuProps['items'] = [
-  getItem('Khóa học', 'setting', <AppstoreOutlined />),
+  getItem('Khóa học', 'content', <AppstoreOutlined />),
   getItem('Người tham gia', 'participant', <AppstoreOutlined />),
   getItem('Ngân hàng câu hỏi', 'question_bank', <AppstoreOutlined />),
   getItem('Đề thi', 'exam_bank', <MailOutlined />),
@@ -66,7 +66,7 @@ const items: MenuProps['items'] = [
 ]
 
 const DetailCourseContent: NextPage<IProps> = props => {
-  const [selectedMenuItem, setSelectedMenuItem] = React.useState('managementCourse')
+  const [selectedMenuItem, setSelectedMenuItem] = React.useState('content')
   const jwt = useSelector((state: any) => state.auth?.user?.jwt)
   const axiosService = new AxiosService('application/json', jwt)
   const router = useRouter()
@@ -97,7 +97,7 @@ const DetailCourseContent: NextPage<IProps> = props => {
         <br />
       </Text>
 
-      <div>
+      <div style={{ background: '#ffffff', minHeight: 1110 }}>
         <Menu
           onClick={({ key }) => handleClickMenuItem(key)}
           // style={{ width: 230, height: 1165 }}
@@ -107,7 +107,7 @@ const DetailCourseContent: NextPage<IProps> = props => {
           items={items}
           className={styles.menu}
         />
-        {selectedMenuItem === 'setting' && <CourseSetting />}
+        {selectedMenuItem === 'content' && <CourseContent />}
         {selectedMenuItem === 'participant' && <Participant />}
         {selectedMenuItem === 'question_bank' && <QuestionBank />}
         {selectedMenuItem === 'exam_bank' && <ExamBank />}
