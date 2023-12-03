@@ -6,6 +6,8 @@ import styles from './style.module.scss'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
 import React from 'react'
+import Image from 'next/image'
+import AvatarImage from '../../../assets/images/avatar.png'
 
 const { Text } = Typography
 
@@ -24,11 +26,11 @@ function CustomHeader() {
         <Col span={5} style={{ display: 'flex', alignItems: 'center', paddingLeft: 135 }}>
           <Typography>
             <a href="http://localhost:3000/home">
-              <Text className={styles.logo_text}>RentHouse</Text>
+              <Text className={styles.logo_text}>Learning</Text>
             </a>
           </Typography>
         </Col>
-        <Col span={10} offset={9}>
+        <Col span={!jwt ? 12 : 9} offset={7}>
           <Menu
             theme="light"
             mode="horizontal"
@@ -37,6 +39,16 @@ function CustomHeader() {
             className={styles.menu}
             onClick={({ key }) => handleClickMenuItem(key)}
           />
+        </Col>
+        <Col span={3}>
+          {jwt && (
+            <div className={styles.container}>
+              <Image src={AvatarImage} alt="avatar" className={styles.avatar} />
+              <Text strong style={{ marginLeft: '10px' }} className={styles.name}>
+                {user.username}
+              </Text>
+            </div>
+          )}
         </Col>
       </Row>
     </Header>

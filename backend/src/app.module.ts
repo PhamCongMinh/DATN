@@ -7,6 +7,7 @@ import { DatabaseModule } from '@config/database.module';
 import { LoggingModule } from '@shared/modules/loggers/logger.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConsoleModule } from 'nestjs-console';
+import { AssetUploadModule } from '@modules/asset-upload/asset-upload.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ConsoleModule } from 'nestjs-console';
     DatabaseModule,
     ConsoleModule,
     LoggingModule,
+    AssetUploadModule,
     JwtModule.register({}),
     ...MODULES,
   ],

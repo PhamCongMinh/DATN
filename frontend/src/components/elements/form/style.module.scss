@@ -1,8 +1,8 @@
 .form {
   padding: 30px;
-  min-width: 450px;
-  min-height: 280px;
-  background-color: rgba(0, 0, 0, 0.5);
+  //min-width: 450px;
+  //min-height: 280px;
+  //background-color: rgba(0, 0, 0, 0.5);
 }
 
 .title {
@@ -11,12 +11,13 @@
   line-height: 1.4em;
   font-weight: 400;
   font-family: "Open Sans";
+  margin-left: 270px;
 }
 
 .button {
   background: #CA005D;
-  width: 100%;
-  height: 2.915em;
+  width: 140px;
+  height: 40px;
   text-align: center;
   color: #FFFFFF;
   font-size: 20px;

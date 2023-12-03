@@ -5,6 +5,13 @@ import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import { v4 } from 'uuid';
 import { ESubmissionLanguage } from '@constants/submission.constant';
+import Dockerode from 'dockerode';
+import stream from 'stream';
+import path from 'path';
+
+const docker = new Dockerode();
+const hostFolderPath =
+  '/home/sotatek/Projects/Hust/DATN/backend/src/modules/judging-engine';
 
 @Injectable()
 export class JuggingEngineService {
@@ -65,28 +72,31 @@ export class JuggingEngineService {
   };
 
   createCodeFile = (language: string, fileName: string, code: string) => {
+    const filePath = path.join(hostFolderPath, `${fileName}`);
     if (language === ESubmissionLanguage.C_PLUS) {
-      fs.writeFileSync(`${fileName}.cpp`, code);
+      fs.writeFileSync(`${filePath}.cpp`, code);
     } else if (language === ESubmissionLanguage.JAVASCRIPT) {
-      fs.writeFileSync(`${fileName}.js`, code);
+      fs.writeFileSync(`${filePath}.js`, code);
     }
   };
 
   removeCodeFile = (language: string, fileName: string) => {
+    const filePath = path.join(hostFolderPath, `${fileName}`);
     if (language === ESubmissionLanguage.C_PLUS) {
       // Remove the temporary files
-      fs.unlinkSync(`${fileName}.cpp`);
-      fs.unlinkSync(`${fileName}`);
+      fs.unlinkSync(`${filePath}.cpp`);
+      fs.unlinkSync(`${filePath}`);
     } else if (language === ESubmissionLanguage.JAVASCRIPT) {
-      fs.unlinkSync(`${fileName}.js`);
+      fs.unlinkSync(`${filePath}.js`);
     }
   };
 
   compileCode = async (language: string, fileName: string) => {
     if (language === ESubmissionLanguage.C_PLUS) {
+      const filePath = path.join(hostFolderPath, `${fileName}`);
       await new Promise((resolve, reject) => {
         childProcess.exec(
-          `g++ -o ${fileName} ${fileName}.cpp`,
+          `g++ -o ${filePath} ${filePath}.cpp`,
           {
             timeout: 10000,
           },
@@ -113,55 +123,111 @@ export class JuggingEngineService {
     // Use child_process to execute code
     // Capture the result and return it
     if (language === ESubmissionLanguage.C_PLUS) {
-      result = await this.createChildProcessToExecuteCode(
-        `./${fileName}`,
+      result = await this.createDockerContainerToRunCode(
+        language,
+        [`./${fileName}`],
         input,
       );
     } else if (language === ESubmissionLanguage.JAVASCRIPT) {
-      result = await this.createChildProcessToExecuteCode(
-        `node ${fileName}.js`,
+      result = await this.createDockerContainerToRunCode(
+        language,
+        ['node', `${fileName}.js`],
         input,
-        // JSON.stringify(input),
-        // input.replace(/\n|\r/g, ' '),
       );
     }
     return result;
   };
 
-  createChildProcessToExecuteCode = async (
-    command: string,
+  createDockerContainerToRunCode = async (
+    language: string,
+    command: string[],
     inputString: any,
   ): Promise<any> => {
-    return new Promise((resolve, reject) => {
-      const result = childProcess.spawn(command, {
-        timeout: 5000,
-        shell: true,
-      });
+    return new Promise(async (resolve, reject) => {
+      try {
+        const container: Dockerode.Container = await docker.createContainer({
+          Image: language === ESubmissionLanguage.JAVASCRIPT ? 'node' : 'gcc',
+          OpenStdin: true,
+          AttachStdin: false,
+          AttachStdout: true,
+          AttachStderr: true,
+          Tty: true,
+          Cmd: ['/bin/bash'],
+          HostConfig: {
+            Binds: [`${hostFolderPath}:/code`],
+          },
+          WorkingDir: '/code',
+        });
 
-      const buffer = Buffer.from(inputString);
-      result.stdin.write(buffer, 'ascii');
-      result.stdin.end();
+        await container.start();
+        console.log('Created container');
 
-      const bufferArray = [];
-      result.stdout.on('data', (data) => {
-        bufferArray.push(data);
-      });
+        // await container.changes();
 
-      result.stderr.on('data', (data) => {
-        console.error(`Compilation error: ${data.toString()}`);
-        reject(data);
-      });
+        const result = await this.executeCodeInContainer(
+          command,
+          container,
+          inputString,
+        );
 
-      result.on('close', (code) => {
-        if (code === 0) {
-          const dataBuffer = Buffer.concat(bufferArray).toString();
-          // const dataBuffer = JSON.parse(Buffer.concat(bufferArray).toString());
-          console.log(`Result: ${dataBuffer}`);
+        await container.remove({ force: true });
+        console.log('Removed container');
+
+        resolve(result);
+      } catch (err) {
+        reject(err);
+      }
+    });
+  };
+
+  executeCodeInContainer = async (
+    command: string[],
+    container: Dockerode.Container,
+    inputString: string,
+  ) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const executeExec = await container.exec({
+          AttachStdin: true,
+          AttachStdout: true,
+          AttachStderr: true,
+          WorkingDir: '/code',
+          Cmd: command,
+        });
+
+        const resultStream = new stream.PassThrough();
+        const bufferResultArray = [];
+
+        resultStream.on('data', function (data) {
+          bufferResultArray.push(data);
+        });
+
+        resultStream.on('end', function () {
+          const dataBuffer = Buffer.concat(bufferResultArray).toString();
           resolve(dataBuffer);
-        } else {
-          reject();
-        }
-      });
+        });
+
+        const errorStream = new stream.PassThrough();
+
+        executeExec.start(
+          {
+            stdin: true,
+            hijack: true,
+            Detach: false,
+          },
+          function (error, stream) {
+            stream.write(inputString, 'ascii');
+            stream.end();
+
+            docker.modem.demuxStream(stream, resultStream, errorStream);
+            stream.on('end', function () {
+              resultStream.end();
+            });
+          },
+        );
+      } catch (err) {
+        reject(err);
+      }
     });
   };
 }

@@ -10,9 +10,10 @@ import { RentNewsType } from '../../../../../types'
 const { Text } = Typography
 
 export enum Role {
-  HOST = 'host',
-  RENTER = 'renter',
-  ADMIN = 'admin'
+  ADMIN = 'admin',
+  SUB_ADMIN = 'sub-admin',
+  STUDENT = 'student',
+  TEACHER = 'teacher'
 }
 
 interface ISignUpForm {
@@ -28,7 +29,7 @@ const initialState: ISignUpForm = {
   email: '',
   numberPhone: '',
   password: '',
-  role: Role.RENTER
+  role: Role.STUDENT
 }
 export default function SignUpForm() {
   const [state, setState] = useState<ISignUpForm>(initialState)
@@ -99,8 +100,8 @@ export default function SignUpForm() {
             onChange={handleSelectRentNewsType}
             value={state?.role}
             options={[
-              { value: Role.RENTER, label: 'Người thuê trọ' },
-              { value: Role.HOST, label: 'Chủ trọ' }
+              { value: Role.TEACHER, label: 'Giáo viên' },
+              { value: Role.STUDENT, label: 'Học sinh' }
             ]}
           />
         </Form.Item>

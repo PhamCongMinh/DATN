@@ -19,13 +19,13 @@ function ListIcon() {
       </div>
       <div style={{ marginRight: 200 }}>
         <Image src={RealHomeIcon} alt="House1" className={styles.image} />
-        <Title className={styles.title}>Real Homes</Title>
-        <Text className={styles.text}>Tìm kiếm những nhà trọ phù hợp</Text>
+        <Title className={styles.title}>Real Course</Title>
+        <Text className={styles.text}>Tìm kiếm những khóa học phù hợp</Text>
       </div>
       <div>
         <Image src={RealConnectionValueIcon} alt="House1" className={styles.image} />
         <Title className={styles.title}>Real Connections</Title>
-        <Text className={styles.text}>Sử dụng các tính năng hữu ích để kết nối với người cho thuê</Text>
+        <Text className={styles.text}>Sử dụng các tính năng hữu ích để kết nối với người dạy</Text>
       </div>
     </Space>
   )

@@ -42,11 +42,11 @@ export class RolesGuard implements CanActivate {
     const isCheck = requiredRoles.some((requiredRole) => role === requiredRole);
 
     if (!isCheck) {
-      if (requiredRoles.includes(EUserRole.PROJECT_OWNER))
+      if (requiredRoles.includes(EUserRole.STUDENT))
         throw new Forbidden({
           message: ErrorConstant.AUTHORIZATION.YOU_DONT_HAVE_ROLE_PROJECT_OWNER,
         });
-      if (requiredRoles.includes(EUserRole.INVESTOR))
+      if (requiredRoles.includes(EUserRole.TEACHER))
         throw new Forbidden({
           message: ErrorConstant.AUTHORIZATION.YOU_DONT_HAVE_ROLE_INVESTOR,
         });
