@@ -16,6 +16,7 @@ import ExamBank from './components/exam-bank'
 import Grade from './components/grade'
 import Discuss from './components/discuss'
 import CourseContent from './components/content'
+import Meeting from './components/question-bank2'
 
 const { Text, Title } = Typography
 
@@ -109,7 +110,8 @@ const DetailCourseContent: NextPage<IProps> = props => {
         />
         {selectedMenuItem === 'content' && <CourseContent />}
         {selectedMenuItem === 'participant' && <Participant />}
-        {selectedMenuItem === 'question_bank' && <QuestionBank />}
+        {/*{selectedMenuItem === 'question_bank' && <QuestionBank />}*/}
+        {selectedMenuItem === 'question_bank' && <Meeting />}
         {selectedMenuItem === 'exam_bank' && <ExamBank />}
         {selectedMenuItem === 'grade' && <Grade />}
         {selectedMenuItem === 'discuss' && <Discuss />}

@@ -1,0 +1,53 @@
+@use './functions.scss' as func;
+@use './variables.scss' as var;
+@use './colors.scss' as color;
+@use './reponsive.scss' as styles;
+
+* {
+  box-sizing: border-box;
+  font-family: 'Inter';
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.flex {
+  display: flex;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+.whitespace-nowrap {
+  white-space: nowrap;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.full-width,
+.w-full {
+  width: 100%;
+}
+
+.hidden {
+  display: none;
+}
+
+.gap-20 {
+  gap: 20px !important;
+}

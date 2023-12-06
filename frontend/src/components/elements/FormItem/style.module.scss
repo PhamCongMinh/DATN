@@ -1,0 +1,87 @@
+@import 'styles/colors.scss';
+@import 'styles/variables.scss';
+
+.form-item {
+  .title {
+    font-size: 16px;
+    color: #393d49;
+    letter-spacing: -0.16px;
+    margin: 0;
+    & > span {
+      color: $color-state-error;
+      margin-left: 4px;
+    }
+  }
+
+  &.type-profile {
+    margin-bottom: 0;
+    .ant-form-item-row {
+      gap: 32px;
+    }
+
+    .ant-form-item-label {
+      width: 280px;
+
+      > label {
+        display: flex;
+        align-items: flex-start;
+
+        .title {
+          color: $color-profile-label;
+          font-family: 'Inter';
+          font-size: $font-size-2;
+          font-style: normal;
+          font-weight: 500;
+          line-height: 20px;
+        }
+      }
+
+      label::after {
+        display: none;
+      }
+    }
+  }
+
+  &.type-vertical {
+    .ant-form-item-row {
+      display: block;
+
+      .ant-form-item-label {
+        display: flex;
+
+        label {
+          p {
+            color: $color-profile-label;
+            font-family: 'Inter';
+            font-size: $font-size-2;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 20px;
+          }
+
+          &::after {
+            display: none;
+          }
+        }
+      }
+
+      .ant-input {
+        border-radius: 8px;
+        color: #8b8b8b;
+        font-family: 'Inter';
+        font-size: $font-size-2;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 24px;
+      }
+    }
+  }
+}
+
+.ant-form-item-explain {
+  margin-top: 6px;
+}
+
+.ant-form-item-explain-error {
+  color: $color-state-error !important;
+}
