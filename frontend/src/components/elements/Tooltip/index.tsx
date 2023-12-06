@@ -1,5 +1,5 @@
 import { Tooltip, TooltipProps } from 'antd'
-import './style.module.scss'
+import styles from './style.module.scss'
 
 type ICustomTooltip = {
   children: React.ReactNode
@@ -8,7 +8,7 @@ type ICustomTooltip = {
 
 const CustomTooltip = ({ children, className = '', ...props }: ICustomTooltip) => {
   return (
-    <Tooltip overlayClassName={`default-tooltip ${className}`} {...props}>
+    <Tooltip overlayClassName={styles[`default-tooltip ${className}`]} {...props}>
       {children}
     </Tooltip>
   )

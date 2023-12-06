@@ -1,5 +1,5 @@
 import { Spin } from 'antd'
-import './style.module.scss'
+import styles from './style.module.scss'
 import { SpinProps } from 'antd/es/spin'
 
 interface ISpin extends SpinProps {
@@ -8,7 +8,7 @@ interface ISpin extends SpinProps {
 
 export const Loading = ({ className, height, size = 'large', ...props }: ISpin) => {
   return (
-    <div style={{ height: `${height}px` }} className={`loading ${className}`}>
+    <div style={{ height: `${height}px` }} className={styles[`loading ${className}`]}>
       <Spin {...props} size={size} />
     </div>
   )

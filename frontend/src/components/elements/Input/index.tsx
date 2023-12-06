@@ -1,5 +1,5 @@
 import { Input, InputProps } from 'antd'
-import './style.module.scss'
+import styles from './style.module.scss'
 import { useMemo } from 'react'
 
 export interface CustomInputProps extends InputProps {
@@ -16,12 +16,12 @@ const CustomInput = ({ className, widthFull, allowNegative = true, ...restProps 
   }, [restProps.type])
 
   return (
-    <div className={'input-box ' + className}>
+    <div className={styles['input-box ' + className]}>
       {allowNegative ? (
-        <InputComponent className={`input-default input-default ${widthFull ? 'w-full' : ''}`} {...restProps} />
+        <InputComponent className={styles[`input-default input-default ${widthFull ? 'w-full' : ''}`]} {...restProps} />
       ) : (
         <InputComponent
-          className={`input-default input-default ${widthFull ? 'w-full' : ''}`}
+          className={styles[`input-default input-default ${widthFull ? 'w-full' : ''}`]}
           pattern="^\d*(\.\d{0,2})?$"
           onInput={e => {
             if (!e.currentTarget.validity.valid) {

@@ -1,6 +1,6 @@
 import { Modal, ModalProps } from 'antd'
 import React from 'react'
-import './style.module.scss'
+import styles from './style.module.scss'
 
 export interface ModalCustomProps extends ModalProps {
   headerComp?: JSX.Element
@@ -13,11 +13,11 @@ const ModalCustom = ({ children, headerComp, footer, width, className, closeIcon
       footer={footer ? footer : null}
       destroyOnClose={true}
       closeIcon={closeIcon ? closeIcon : false}
-      className={`awayday-modal ${className ? className : ''}`}
+      className={styles[`awayday-modal ${className ? className : ''}`]}
       {...props}
     >
-      {headerComp && <div className="header-wrap">{headerComp}</div>}
-      <div className="modal-container">{children}</div>
+      {headerComp && <div className={styles['header-wrap']}>{headerComp}</div>}
+      <div className={styles['modal-container']}>{children}</div>
     </Modal>
   )
 }

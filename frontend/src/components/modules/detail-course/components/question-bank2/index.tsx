@@ -156,15 +156,17 @@ const Meeting: NextPage = () => {
       sorter: (a, b) => a.id - b.id,
       sortDirections: ['descend'],
       // sortIcon: () => <SortIcon />,
-      render: (_, record: IConference) => <span className="table-event limit-text">{record.conference_name}</span>
+      render: (_, record: IConference) => (
+        <span className={styles['table-event limit-text']}>{record.conference_name}</span>
+      )
     },
     {
       title: 'Organiser',
       dataIndex: 'organiser',
       key: 'organiser',
       render: (_, record: IConference) => (
-        <div className="table-organiser">
-          <p className="table-organiser-name limit-text">{record.cme_provider}</p>
+        <div className={styles['table-organiser']}>
+          <p className={styles['table-organiser-name limit-text']}>{record.cme_provider}</p>
         </div>
       )
     },
@@ -172,9 +174,9 @@ const Meeting: NextPage = () => {
       title: 'Meeting Venue',
       dataIndex: 'location',
       render: (_, record: IConference) => (
-        <span className="table-location">
+        <span className={styles['table-location']}>
           {/*<DotIcon />*/}
-          <span className="location whitespace-nowrap">
+          <span className={styles['location whitespace-nowrap']}>
             {record.city || '--'}, {record.country || '--'}
           </span>
         </span>
@@ -184,7 +186,12 @@ const Meeting: NextPage = () => {
       title: 'Organiser URL',
       dataIndex: 'sources',
       render: (_, record: IConference) => (
-        <a href={record.cme_course_webpage_url} target="_blank" className="table-sources text-sources" rel="noreferrer">
+        <a
+          href={record.cme_course_webpage_url}
+          target="_blank"
+          className={styles['table-sources text-sources']}
+          rel="noreferrer"
+        >
           {record.cme_course_webpage_url}
         </a>
       )
@@ -192,13 +199,13 @@ const Meeting: NextPage = () => {
     {
       title: 'Medical Field',
       dataIndex: 'type',
-      render: (_, record: IConference) => <span className="table-sources">{record.profession}</span>
+      render: (_, record: IConference) => <span className={styles['table-sources']}>{record.profession}</span>
     },
     {
       title: 'Start Date',
       dataIndex: 'start_date',
       render: (_, record: IConference) => (
-        <span className="table-envent-date whitespace-nowrap">
+        <span className={styles['table-envent-date whitespace-nowrap']}>
           {dayjs(record?.start_date).format('D MMM YYYY').toString()}
         </span>
       )
@@ -207,7 +214,7 @@ const Meeting: NextPage = () => {
       title: 'End Date',
       dataIndex: 'end_date',
       render: (_, record: IConference) => (
-        <span className="table-created-date whitespace-nowrap">
+        <span className={styles['table-created-date whitespace-nowrap']}>
           {dayjs(record?.end_date).format('D MMM YYYY').toString()}
         </span>
       )
@@ -215,9 +222,9 @@ const Meeting: NextPage = () => {
     {
       dataIndex: 'action',
       render: (_, record: IConference) => (
-        <span className="table-action">
+        <span className={styles['table-action']}>
           <Button
-            className="trash-btn"
+            className={styles['trash-btn']}
             type="link"
             onClick={() => {
               setCurrentEvent(record)
@@ -231,7 +238,7 @@ const Meeting: NextPage = () => {
               setIsEditEvent(true)
               setIsAddEvent(false)
             }}
-            className="edit-btn"
+            className={styles['edit-btn']}
             type="link"
             // icon={<EditIcon />}
           />
@@ -254,7 +261,7 @@ const Meeting: NextPage = () => {
             setEventFilter(item.key)
           }
         }}
-        className={`filter-option ${eventFilter === item.key ? 'filter-active' : ''}`}
+        className={styles[`filter-option ${eventFilter === item.key ? 'filter-active' : ''}`]}
       >
         {item.label}
       </span>

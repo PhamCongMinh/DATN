@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { ReactComponent as CelanderIcon } from 'assets/icons/admin/calendar.svg'
+// import { ReactComponent as CelanderIcon } from 'assets/icons/admin/calendar.svg'
 import ModalCustom, { ModalCustomProps } from 'components/elements/Modal'
 import ButtonContained from 'components/elements/ButtonCustom/ButtonContainer'
 import { Col, Form, Row } from 'antd'
@@ -9,7 +9,7 @@ import CustomDatePicker from 'components/elements/DatePicker'
 import CustomSelect from 'components/elements/Select'
 import ButtonOutlined from 'components/elements/ButtonCustom/ButtonOutlined'
 import { FormInstance } from 'antd/es/form/Form'
-import './style.module.scss'
+import styles from './style.module.scss'
 import { URL_REGEX } from 'utils/regex'
 import { handleDisableEndDate } from 'utils/functions'
 import { useEffect, useState } from 'react'
@@ -71,17 +71,17 @@ const AddMeetingModal: NextPage<IProps> = ({ form, handleAddEvent, data, ...prop
     <ModalCustom
       {...props}
       width={'738px'}
-      className="update-meeting-modal"
+      className={styles['update-meeting-modal']}
       headerComp={
-        <span className="update-meeting-modal-title">
-          <CelanderIcon />
+        <span className={styles['update-meeting-modal-title']}>
+          {/*<CelanderIcon />*/}
           Add Meeting/Event
         </span>
       }
     >
       <Form
         form={form}
-        className="update-meeting-modal-form"
+        className={styles['update-meeting-modal-form']}
         onFinish={handleSubmit}
         initialValues={{
           event: data?.conference_name || '',
@@ -97,7 +97,7 @@ const AddMeetingModal: NextPage<IProps> = ({ form, handleAddEvent, data, ...prop
           country: data?.country
         }}
       >
-        <div className="update-meeting-modal-form-input">
+        <div className={styles['update-meeting-modal-form-input']}>
           <Row gutter={[20, 32]}>
             <Col span={12}>
               <CustomFormItem
@@ -146,11 +146,11 @@ const AddMeetingModal: NextPage<IProps> = ({ form, handleAddEvent, data, ...prop
                 <CustomSelect placeholder="Select Event Type" options={options} />
               </CustomFormItem>
             </Col>
-            <Col span={12} className="form-date">
-              <label htmlFor="" className="form-date-label">
+            <Col span={12} className={styles['form-date']}>
+              <label htmlFor="" className={styles['form-date-label']}>
                 Select Date
               </label>
-              <div className="form-date-input-wrap">
+              <div className={styles['form-date-input-wrap']}>
                 <CustomFormItem
                   name={'startDate'}
                   rules={[
@@ -167,7 +167,7 @@ const AddMeetingModal: NextPage<IProps> = ({ form, handleAddEvent, data, ...prop
                   />
                 </CustomFormItem>
 
-                <span className="form-date-text">to</span>
+                <span className={styles['form-date-text']}>to</span>
 
                 <CustomFormItem
                   name={'endDate'}
@@ -225,11 +225,11 @@ const AddMeetingModal: NextPage<IProps> = ({ form, handleAddEvent, data, ...prop
             </Col>
           </Row>
         </div>
-        <div className="update-meeting-modal-form-action">
-          <ButtonOutlined onClick={onCancel} className="cancel-btn" type="link">
+        <div className={styles['update-meeting-modal-form-action']}>
+          <ButtonOutlined onClick={onCancel} className={styles['cancel-btn']} type="link">
             Cancel
           </ButtonOutlined>
-          <ButtonContained className="continue-btn" btnType="dark" onClick={() => form.submit()}>
+          <ButtonContained className={styles['continue-btn']} btnType="dark" onClick={() => form.submit()}>
             {data ? 'Edit Event' : 'Add Event'}
           </ButtonContained>
         </div>

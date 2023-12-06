@@ -1,7 +1,7 @@
 import { Select } from 'antd'
 import { DefaultOptionType, SelectProps } from 'antd/es/select'
-import { ReactComponent as ArrowDownIcon } from '../../../assets/icons/common/arrow-down.svg'
-import './style.module.scss'
+// import { ReactComponent as ArrowDownIcon } from '../../../assets/icons/common/arrow-down.svg'
+import styles from './style.module.scss'
 
 interface Props extends SelectProps {
   value?: string
@@ -12,15 +12,11 @@ interface Props extends SelectProps {
 
 const CustomSelect = ({ value, onChange, widthFull, ...props }: Props) => {
   return (
-    <div className="select-container">
+    <div className={styles['select-container']}>
       <Select
-        className={widthFull ? 'w-full' : undefined}
-        popupClassName="custom-select-popup"
-        suffixIcon={
-          <div className="icon-box">
-            <ArrowDownIcon />
-          </div>
-        }
+        className={widthFull ? styles['w-full'] : undefined}
+        popupClassName={styles['custom-select-popup']}
+        suffixIcon={<div className={styles['icon-box']}>{/*<ArrowDownIcon />*/}</div>}
         value={value}
         onChange={onChange}
         {...props}

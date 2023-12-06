@@ -6,7 +6,7 @@ import CustomInput from '../Input'
 // import { ReactComponent as SearchIcon } from 'assets/icons/meeting/search.svg'
 import ButtonGroup from 'antd/es/button/button-group'
 import CustomEmpty from '../Empty'
-import './style.module.scss'
+import styles from './style.module.scss'
 export enum MeetingTimeFilter {
   ALL = '',
   LASTWEEK = 'LAST_WEEK',
@@ -56,11 +56,11 @@ const TableCustom: React.FC<ITable> = ({
   }
 
   return (
-    <div className="table-custom-container">
+    <div className={styles['table-custom-container']}>
       {!hiddenFilter && (
-        <div className="table-custom-filter">
+        <div className={styles['table-custom-filter']}>
           {!hiddenFilterDate && (
-            <ButtonGroup className="filter-btn-group">
+            <ButtonGroup className={styles['filter-btn-group']}>
               <ButtonOutlined
                 btnType="base"
                 height={40}
@@ -87,9 +87,9 @@ const TableCustom: React.FC<ITable> = ({
               </ButtonOutlined>
             </ButtonGroup>
           )}
-          <div className={`search-filer-wrap ${hiddenFilterDate ? 'w-full gap-20' : ''}`}>
+          <div className={styles[`search-filer-wrap ${hiddenFilterDate ? 'w-full gap-20' : ''}`]}>
             <CustomInput
-              className="search-input"
+              className={styles['search-input']}
               // prefix={<SearchIcon />}
               placeholder={placeholder}
               onChange={e => {
@@ -101,10 +101,10 @@ const TableCustom: React.FC<ITable> = ({
               <Dropdown
                 menu={{ items: filterOptions || [] }}
                 placement="bottomRight"
-                overlayClassName="dropdown-filter"
+                overlayClassName={styles['dropdown-filter']}
               >
                 <ButtonOutlined
-                  className="filter-btn"
+                  className={styles['filter-btn']}
                   btnType="base"
                   height={40}
                   // icon={<FilterIcon />}
@@ -117,7 +117,7 @@ const TableCustom: React.FC<ITable> = ({
         </div>
       )}
       <Table
-        className="table-custom-content"
+        className={styles['table-custom-content']}
         scroll={{ x: '100%' }}
         pagination={false}
         locale={{ emptyText: <CustomEmpty /> }}
@@ -125,13 +125,13 @@ const TableCustom: React.FC<ITable> = ({
       />
 
       {!hiddenPagination && (
-        <div className="meetings-pagination">
-          <span className="current-page">
+        <div className={styles['meetings-pagination']}>
+          <span className={styles['current-page']}>
             Page {paginate?.curPage} of {paginate?.totalPages}
           </span>
-          <span className="pagination-action">
+          <span className={styles['pagination-action']}>
             <ButtonOutlined
-              className="btn"
+              className={styles['btn']}
               btnType="text-dark"
               height={36}
               disabled={paginate?.curPage === 1}
@@ -140,7 +140,7 @@ const TableCustom: React.FC<ITable> = ({
               Previous
             </ButtonOutlined>
             <ButtonOutlined
-              className="btn"
+              className={styles['btn']}
               btnType="text-dark"
               height={36}
               disabled={paginate?.curPage === paginate?.totalPages}

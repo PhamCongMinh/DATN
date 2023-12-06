@@ -1,6 +1,6 @@
 import { DatePicker, DatePickerProps } from 'antd'
 import styles from './style.module.scss'
-import { ReactComponent as CelanderIcon } from 'assets/icons/common/celander-field.svg'
+// import { ReactComponent as CelanderIcon } from 'assets/icons/common/celander-field.svg'
 
 type ICustomDatePicker = {
   dpSize?: 'large' | 'medium' | 'small'
@@ -10,15 +10,13 @@ type ICustomDatePicker = {
 /* eslint-disable react/prop-types */
 const CustomDatePicker: React.FC<ICustomDatePicker> = ({ dpSize = 'medium', prefixIcon, className, ...props }) => {
   return (
-    <div className="date-picker-container">
+    <div className={styles['date-picker-container']}>
       <DatePicker
         className={styles[`${className} default-date-picker date-picker-${dpSize}`]}
-        popupClassName="default-popup-dp"
+        popupClassName={styles['default-popup-dp']}
         {...props}
       />
-      <span className={styles[`date-icon date-picker-icon-${dpSize}`]}>
-        {prefixIcon ? prefixIcon : <CelanderIcon />}
-      </span>
+      <span className={styles[`date-icon date-picker-icon-${dpSize}`]}>{prefixIcon ? prefixIcon : null}</span>
     </div>
   )
 }

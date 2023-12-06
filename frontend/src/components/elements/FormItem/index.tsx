@@ -60,7 +60,7 @@ const CustomFormItem: React.FC<ICustomFormItem> = ({
     if (textAreaProps) {
       return (
         <Input.TextArea
-          className="input-message"
+          className={styles['input-message']}
           placeholder="Would you like to send a message with this offer?"
           autoSize={{ minRows: 5, maxRows: 5 }}
           onChange={handleCheckValue as any}
@@ -74,7 +74,7 @@ const CustomFormItem: React.FC<ICustomFormItem> = ({
 
   return (
     <Form.Item
-      className={`form-item type-${mode} ${className}`}
+      className={styles[`form-item type-${mode} ${className}`]}
       label={
         label ? (
           <p className="title">
