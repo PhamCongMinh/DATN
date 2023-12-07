@@ -1,11 +1,11 @@
 /* eslint-disable react/prop-types */
 import { Dropdown, MenuProps, Table, TableProps } from 'antd'
-import ButtonOutlined from '../ButtonCustom/ButtonOutlined'
+import ButtonOutlined from '../button-custom/ButtonOutlined'
 import CustomInput from '../Input'
 // import { ReactComponent as FilterIcon } from 'assets/icons/common/filter.svg'
 // import { ReactComponent as SearchIcon } from 'assets/icons/meeting/search.svg'
 import ButtonGroup from 'antd/es/button/button-group'
-import CustomEmpty from '../Empty'
+import CustomEmpty from '../empty'
 import styles from './style.module.scss'
 export enum MeetingTimeFilter {
   ALL = '',

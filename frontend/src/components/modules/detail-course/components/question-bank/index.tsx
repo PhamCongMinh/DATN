@@ -1,6 +1,6 @@
 import { ColumnsType } from 'antd/es/table'
-import ButtonOutlined from 'components/elements/ButtonCustom/ButtonOutlined'
-import TableCustom from 'components/elements/Table'
+import ButtonOutlined from 'components/elements/button-custom/ButtonOutlined'
+import TableCustom from 'components/elements/table'
 // import { ReactComponent as ImportIcon } from 'assets/icons/meeting/import.svg'
 // import { ReactComponent as PlusIcon } from 'assets/icons/meeting/plus.svg'
 // import { ReactComponent as SortIcon } from 'assets/icons/meeting/sortArrowIcon.svg'
@@ -10,11 +10,11 @@ import TableCustom from 'components/elements/Table'
 import DefaultOrganier from 'assets/icons/meeting/organiser.png'
 import React, { useState } from 'react'
 import styles from './style.module.scss'
-import ButtonContained from 'components/elements/ButtonCustom/ButtonContainer'
+import ButtonContained from 'components/elements/button-custom/ButtonContainer'
 import { Button } from 'antd'
 import dayjs from 'dayjs'
-import AddMeetingModal from './AddMeetingModal'
-import NotiModal from 'components/elements/NotiModal'
+import AddQuestionModal from './add-question-modal'
+import NotiModal from 'components/elements/noti-modal'
 import { MenuProps } from 'antd/lib'
 import cx from 'classnames'
 import {
@@ -32,7 +32,7 @@ import {
 //   useUpdateConferenceMutation
 // } from 'store/slices/meeting/api'
 import debounce from 'lodash/debounce'
-import RemovedModal from 'components/elements/RemovedModal'
+import RemovedModal from 'components/elements/removed-modal'
 import { useForm } from 'antd/es/form/Form'
 import moment from 'moment'
 import { toast } from 'react-toastify'
@@ -40,7 +40,7 @@ import { NextPage } from 'next'
 
 export const DATE_FORMAT_FULL = 'YYYY-MM-DDTHH:mm:ss.SSS[Z]'
 
-const Meeting: NextPage = () => {
+const QuestionBank: NextPage = () => {
   const [isAddEvent, setIsAddEvent] = useState(false)
   const [isEditEvent, setIsEditEvent] = useState(false)
   const [isRemove, setIsRemove] = useState(false)
@@ -328,7 +328,7 @@ const Meeting: NextPage = () => {
         }}
       />
       <>
-        <AddMeetingModal
+        <AddQuestionModal
           data={currentEvent}
           form={form}
           open={isAddEvent || isEditEvent}
@@ -357,4 +357,4 @@ const Meeting: NextPage = () => {
   )
 }
 
-export default Meeting
+export default QuestionBank

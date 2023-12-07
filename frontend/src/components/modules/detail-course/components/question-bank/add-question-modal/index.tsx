@@ -1,13 +1,13 @@
 /* eslint-disable react/prop-types */
 // import { ReactComponent as CelanderIcon } from 'assets/icons/admin/calendar.svg'
-import ModalCustom, { ModalCustomProps } from 'components/elements/Modal'
-import ButtonContained from 'components/elements/ButtonCustom/ButtonContainer'
+import ModalCustom, { ModalCustomProps } from 'components/elements/modal'
+import ButtonContained from 'components/elements/button-custom/ButtonContainer'
 import { Col, Form, Row } from 'antd'
-import CustomFormItem from 'components/elements/FormItem'
+import CustomFormItem from 'components/elements/form-item'
 import CustomInput from 'components/elements/Input'
-import CustomDatePicker from 'components/elements/DatePicker'
-import CustomSelect from 'components/elements/Select'
-import ButtonOutlined from 'components/elements/ButtonCustom/ButtonOutlined'
+import CustomDatePicker from 'components/elements/date-picker'
+import CustomSelect from 'components/elements/select'
+import ButtonOutlined from 'components/elements/button-custom/ButtonOutlined'
 import { FormInstance } from 'antd/es/form/Form'
 import styles from './style.module.scss'
 import { URL_REGEX } from 'utils/regex'
@@ -31,7 +31,7 @@ interface IProps extends ModalCustomProps {
   data?: IConference
 }
 
-const AddMeetingModal: NextPage<IProps> = ({ form, handleAddEvent, data, ...props }) => {
+const AddQuestionModal: NextPage<IProps> = ({ form, handleAddEvent, data, ...props }) => {
   const { onCancel } = props
 
   const [location, setLocation] = useState<Location | null>(null)
@@ -238,4 +238,4 @@ const AddMeetingModal: NextPage<IProps> = ({ form, handleAddEvent, data, ...prop
   )
 }
 
-export default AddMeetingModal
+export default AddQuestionModal

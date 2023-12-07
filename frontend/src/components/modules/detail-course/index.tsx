@@ -11,12 +11,11 @@ import CreateRentalnews from '../course/components/create-course'
 import ManagementRentalNews from '../course/components/management-news'
 import Contact from '../course/components/management-news/components/contact'
 import Participant from './components/participant'
-import QuestionBank from './components/question-bank'
 import ExamBank from './components/exam-bank'
 import Grade from './components/grade'
 import Discuss from './components/discuss'
 import CourseContent from './components/content'
-import Meeting from './components/question-bank'
+import QuestionBank from './components/question-bank'
 
 const { Text, Title } = Typography
 
@@ -110,8 +109,7 @@ const DetailCourseContent: NextPage<IProps> = props => {
         />
         {selectedMenuItem === 'content' && <CourseContent />}
         {selectedMenuItem === 'participant' && <Participant />}
-        {/*{selectedMenuItem === 'question_bank' && <QuestionBank />}*/}
-        {selectedMenuItem === 'question_bank' && <Meeting />}
+        {selectedMenuItem === 'question_bank' && <QuestionBank />}
         {selectedMenuItem === 'exam_bank' && <ExamBank />}
         {selectedMenuItem === 'grade' && <Grade />}
         {selectedMenuItem === 'discuss' && <Discuss />}
