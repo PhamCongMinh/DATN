@@ -45,7 +45,7 @@
           border-top: 1px solid $color-border-settings;
           background: #fcfcfd;
           color: $color-subtitle;
-          font-family: 'Inter';
+          font-family: "Open Sans";
           font-size: $font-size-1;
           font-style: normal;
           font-weight: 500;
@@ -90,7 +90,7 @@
             &-name {
               &-title {
                 color: $color-title;
-                font-family: 'Inter';
+                font-family: "Open Sans";
                 font-size: $font-size-2;
                 font-style: normal;
                 font-weight: 500;
@@ -100,7 +100,7 @@
 
               &-subtitle {
                 color: $color-subtitle;
-                font-family: 'Inter';
+                font-family: "Open Sans";
                 font-size: $font-size-2;
                 font-style: normal;
                 font-weight: 400;
@@ -113,7 +113,7 @@
           .table-id,
           .table-points {
             color: #212121;
-            font-family: 'Inter';
+            font-family: "Open Sans";
             font-size: $font-size-2;
             font-style: normal;
             font-weight: 600;
@@ -122,7 +122,7 @@
 
           .table-date {
             color: $color-subtitle;
-            font-family: 'Inter';
+            font-family: "Open Sans";
             font-size: $font-size-2;
             font-style: normal;
             font-weight: 400;
@@ -141,7 +141,7 @@
 
             .location {
               color: #3b3b3b;
-              font-family: 'Inter';
+              font-family: "Open Sans";
               font-size: $font-size-1;
               font-style: normal;
               font-weight: 500;
@@ -157,7 +157,7 @@
             .view-btn {
               width: 108px;
               color: $color-black-0;
-              font-family: 'Inter';
+              font-family: "Open Sans";
               font-size: $font-size-1;
               font-style: normal;
               font-weight: 500;
@@ -182,7 +182,7 @@
 
     .current-page {
       color: $color-profile-label;
-      font-family: 'Inter';
+      font-family: "Open Sans";
       font-size: $font-size-2;
       font-style: normal;
       font-weight: 500;

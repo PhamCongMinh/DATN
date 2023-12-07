@@ -16,7 +16,7 @@ import ExamBank from './components/exam-bank'
 import Grade from './components/grade'
 import Discuss from './components/discuss'
 import CourseContent from './components/content'
-import Meeting from './components/question-bank2'
+import Meeting from './components/question-bank'
 
 const { Text, Title } = Typography
 
