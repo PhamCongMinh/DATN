@@ -3,6 +3,7 @@ import { JwtAuthGuard } from '@shared/guards/auth.guard';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -79,5 +80,11 @@ export class QuestionController {
   @Get('/quiz')
   async getQuestionQuiz(@Query() getQuizDto: GetQuizDto, @Req() req) {
     return this.questionService.getQuestionQuiz(req.user._id, getQuizDto);
+  }
+
+  @UseAuth(Object.values(EUserRole))
+  @Delete('/quiz/:id')
+  async deleteQuestionQuiz(@Param('id') id: string, @Req() req) {
+    return this.questionService.deleteQuestionQuiz(req.user._id, id);
   }
 }

@@ -34,11 +34,11 @@ interface IProps extends ModalCustomProps {
   course: ICourse
   form: FormInstance<any>
   handleAddQuestion: () => void
-  data?: IQuestion
+  currentQuestion?: IQuestion
   questionType?: EQuestionType
 }
 
-const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, data, ...props }) => {
+const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, currentQuestion, ...props }) => {
   const { onCancel } = props
   const jwt = useSelector((state: any) => state.auth?.user?.jwt)
   const axiosService = new AxiosService('application/json', jwt)
@@ -55,9 +55,9 @@ const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, data, ...
         draft['type'] = props.questionType
       })
     )
-  }, [props.questionType])
+  }, [props.questionType, currentQuestion])
 
-  console.log('state', state)
+  console.log('Create/edit question', state)
 
   const handleSubmit = async () => {
     // const isUpdatedInfo = await checkUpdatedInfo()
@@ -69,15 +69,19 @@ const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, data, ...
     // }
     handleAddQuestion()
 
-    try {
-      console.log(state)
-      const response = await axiosService.post('/question/quiz', state)
-      console.log(response)
-      message.success(`Tạo câu hỏi thành công`)
-    } catch (error) {
-      alert('Tạo câu hỏi thất bại, vui lòng kiểm tra lại thông tin trước khi thử lại')
-      console.log(error)
-    }
+    // Create new question
+    if (!currentQuestion)
+      try {
+        console.log(state)
+        const response = await axiosService.post('/question/quiz', state)
+        console.log(response)
+        message.success(`Tạo câu hỏi thành công`)
+      } catch (error) {
+        alert('Tạo câu hỏi thất bại, vui lòng kiểm tra lại thông tin trước khi thử lại')
+        console.log(error)
+      }
+
+    // Edit question
   }
 
   const handleGeneralQuestion = (value: any) => {
@@ -111,7 +115,7 @@ const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, data, ...
       label: 'Câu hỏi',
       children: (
         <>
-          <GeneralQuestionForm onFinish={handleGeneralQuestion} />
+          <GeneralQuestionForm currentQuestion={currentQuestion} onFinish={handleGeneralQuestion} />
         </>
       )
     },
@@ -120,7 +124,7 @@ const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, data, ...
       label: 'Đáp án',
       children: (
         <>
-          <QuestionAnswerForm onFinish={handleAddQuestionAnswers} />
+          <QuestionAnswerForm currentQuestion={currentQuestion} onFinish={handleAddQuestionAnswers} />
         </>
       )
     },

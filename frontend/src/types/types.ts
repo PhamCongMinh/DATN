@@ -60,6 +60,12 @@ export interface IQuestion {
   description?: string
   points?: number
   question_choice?: IQuestionChoice[]
+
+  memory_limit?: number
+  time_limit?: number
+  example_output?: string
+  example_input?: string
+  test_cases?: string[]
 }
 
 export enum EQuestionStatus {

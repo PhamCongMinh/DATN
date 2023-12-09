@@ -11,7 +11,7 @@ import DefaultOrganier from 'assets/icons/meeting/organiser.png'
 import React, { useEffect, useState } from 'react'
 import styles from './style.module.scss'
 import ButtonContained from 'components/elements/button-custom/ButtonContainer'
-import { Button } from 'antd'
+import { Button, message } from 'antd'
 import dayjs from 'dayjs'
 import AddQuestionModal from './add-question-modal'
 import NotiModal from 'components/elements/noti-modal'
@@ -57,6 +57,8 @@ type IProps = {
 
 const QuestionBank: NextPage<IProps> = props => {
   const jwt = useSelector((state: any) => state.auth?.user?.jwt)
+  const axiosService = new AxiosService('application/json', jwt)
+
   const user = useSelector((state: any) => state.auth?.user)
   const [questions, setQuestions] = useState<IQuestion[]>()
   const [reload, setReload] = useState<boolean>(false)
@@ -66,7 +68,7 @@ const QuestionBank: NextPage<IProps> = props => {
   const [isAddEvent, setIsAddEvent] = useState(false)
   const [isEditEvent, setIsEditEvent] = useState(false)
   const [isRemove, setIsRemove] = useState(false)
-  const [currentEvent, setCurrentEvent] = useState<IQuestion>()
+  const [currentQuestion, setCurrentQuestion] = useState<IQuestion>()
   const [timeFilter, setTimeFilter] = useState<MeetingTimeFilter>(MeetingTimeFilter.ALL)
   const [eventFilter, setEventFilter] = useState<EventFiter>()
   const [searchString, setSearchString] = useState<string>()
@@ -78,6 +80,7 @@ const QuestionBank: NextPage<IProps> = props => {
     type: 'success' as 'success' | 'failed',
     text: ''
   })
+  console.log('currentQuestion', currentQuestion)
 
   useEffect(() => {
     const axiosService = new AxiosService('application/json', jwt)
@@ -94,23 +97,6 @@ const QuestionBank: NextPage<IProps> = props => {
     fetchData()
   }, [reload])
 
-  // const { data: meetingList, isFetching } = useGetMeetingListQuery({
-  //   limit: 10,
-  //   page: currentPage,
-  //   sort_by: MeetingSortBy.CREATED_AT,
-  //   direction: MeetingSortDirection.DESC,
-  //   time_filter: timeFilter,
-  //   event_filter: eventFilter,
-  //   search_filter: searchString
-  // })
-
-  // const totalItem = meetingList?._metadata?.total_item
-  // const totalPage = meetingList?._metadata?.total_page
-
-  // const [createConference] = useCreateConferenceMutation()
-  // const [removeConference] = useRemoveConferenceMutation()
-  // const [updateConference] = useUpdateConferenceMutation()
-
   const handleSubmitQuestion = async () => {
     setReload(true)
     setQuestionType(undefined)
@@ -120,19 +106,18 @@ const QuestionBank: NextPage<IProps> = props => {
   const handleSearch = debounce(setSearchString, 500)
 
   const handleRemoveEvent = async () => {
-    // try {
-    //   if (currentEvent) {
-    //     await removeConference({ conferenceId: currentEvent.id })
-    //     toast.success('Event deleted')
-    //     const meetingListLength = meetingList?.data?.length
-    //     if (meetingListLength && meetingListLength === 1 && currentPage > 1) {
-    //       setCurrentPage(currentPage - 1)
-    //     }
-    //   }
-    // } catch (error) {
-    //   toast.error('Delete event failed')
-    // }
-    // setIsRemove(false)
+    try {
+      if (currentQuestion?._id) {
+        const response = await axiosService.delete(`/question/quiz/${currentQuestion?._id}`)
+        console.log(response)
+        message.success(`Xóa câu hỏi thành công`)
+      }
+      setIsRemove(false)
+      setReload(true)
+    } catch (error) {
+      alert('Xóa câu hỏi thất bại, vui lòng kiểm tra lại thông tin trước khi thử lại')
+      console.log(error)
+    }
   }
 
   const handleChoiceQuestionType = async (type: EQuestionType) => {
@@ -224,14 +209,14 @@ const QuestionBank: NextPage<IProps> = props => {
             className={styles['trash-btn']}
             type="link"
             onClick={() => {
-              setCurrentEvent(record)
+              setCurrentQuestion(record)
               setIsRemove(true)
             }}
             icon={<Image src={TrashIcon} alt="House1" style={{ height: 19, width: 17 }} />}
           />
           <Button
             onClick={() => {
-              setCurrentEvent(record)
+              setCurrentQuestion(record)
               setIsEditEvent(true)
               setIsAddEvent(false)
             }}
@@ -277,7 +262,7 @@ const QuestionBank: NextPage<IProps> = props => {
               setIsChooseQuestionType(true)
               setIsAddEvent(false)
               setIsEditEvent(false)
-              setCurrentEvent(undefined)
+              setCurrentQuestion(undefined)
             }}
             btnType="green"
             height={40}
@@ -306,13 +291,13 @@ const QuestionBank: NextPage<IProps> = props => {
       <>
         <AddQuestionModal
           questionType={questionType}
-          data={currentEvent}
+          currentQuestion={currentQuestion}
           form={form}
           open={isAddEvent || isEditEvent}
           onCancel={() => {
             setIsAddEvent(false)
             setIsEditEvent(false)
-            setCurrentEvent(undefined)
+            setCurrentQuestion(undefined)
             setQuestionType(undefined)
           }}
           handleAddQuestion={handleSubmitQuestion}

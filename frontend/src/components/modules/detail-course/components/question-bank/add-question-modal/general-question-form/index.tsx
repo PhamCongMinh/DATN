@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { CloseOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { Button, Card, Form, Input, Select, Space, Typography } from 'antd'
 import { NextPage } from 'next'
@@ -6,15 +6,19 @@ import { EQuestionDifficultyLevel, EQuestionStatus, IQuestionChoice, IQuestion }
 
 interface IProps {
   onFinish: (value: IQuestion) => void
+  currentQuestion?: IQuestion
 }
 
 const GeneralQuestionForm: NextPage<IProps> = props => {
-  const { onFinish } = props
-  // const [form] = Form.useForm<IQuestionQuiz>()
+  const [form] = Form.useForm<IQuestion>()
+
+  useEffect(() => {
+    if (props?.currentQuestion) form.setFieldsValue(props?.currentQuestion)
+  }, [props?.currentQuestion])
 
   return (
     <>
-      <Form onFinish={props.onFinish} layout="vertical" autoComplete="off">
+      <Form form={form} onFinish={props.onFinish} layout="vertical" autoComplete="off">
         <Form.Item name="title" label="Tiêu đề câu hỏi:">
           <Input />
         </Form.Item>

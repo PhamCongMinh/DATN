@@ -109,6 +109,20 @@ export class QuestionService {
       query['$text'] = { $search: getQuizDto.search };
     }
 
-    return this.questionRepository.questionDocument.find(query).exec();
+    return this.questionRepository.questionDocument
+      .find(query)
+      .populate('question_choice')
+      .exec();
+  }
+
+  async deleteQuestionQuiz(author_id: string, question_id: string) {
+    const question = await this.questionRepository.findById(question_id);
+
+    if (question.question_choice.length > 0)
+      for (const question_choice_id of question.question_choice) {
+        await this.questionChoiceRepository.delete(question_choice_id);
+      }
+
+    return this.questionRepository.delete(question_id);
   }
 }
