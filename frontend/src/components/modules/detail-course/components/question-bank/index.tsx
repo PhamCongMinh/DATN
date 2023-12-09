@@ -18,6 +18,7 @@ import NotiModal from 'components/elements/noti-modal'
 import { MenuProps } from 'antd/lib'
 import cx from 'classnames'
 import {
+  EQuestionType,
   // ConferencePrams,
   EventFiter,
   IQuestion,
@@ -46,6 +47,7 @@ import * as url from 'url'
 import TrashIcon from '../../../../../assets/icons/trash.png'
 import EditIcon from '../../../../../assets/icons/edit.png'
 import Image from 'next/image'
+import QuestionTypeChoose from './question-type-choose'
 
 export const DATE_FORMAT_FULL = 'YYYY-MM-DDTHH:mm:ss.SSS[Z]'
 
@@ -55,6 +57,8 @@ const QuestionBank: NextPage = () => {
   const [questions, setQuestions] = useState<IQuestion[]>()
   const [reload, setReload] = useState<boolean>(false)
 
+  const [isChooseQuestionType, setIsChooseQuestionType] = useState<boolean>(false)
+  const [questionType, setQuestionType] = useState<EQuestionType>()
   const [isAddEvent, setIsAddEvent] = useState(false)
   const [isEditEvent, setIsEditEvent] = useState(false)
   const [isRemove, setIsRemove] = useState(false)
@@ -168,6 +172,12 @@ const QuestionBank: NextPage = () => {
     //   toast.error('Delete event failed')
     // }
     // setIsRemove(false)
+  }
+
+  const handleChoiceQuestionType = async (type: EQuestionType) => {
+    setQuestionType(type)
+    setIsChooseQuestionType(false)
+    setIsAddEvent(true)
   }
 
   interface DataType {
@@ -323,7 +333,8 @@ const QuestionBank: NextPage = () => {
           </ButtonOutlined>
           <ButtonContained
             onClick={() => {
-              setIsAddEvent(true)
+              setIsChooseQuestionType(true)
+              setIsAddEvent(false)
               setIsEditEvent(false)
               setCurrentEvent(undefined)
             }}
@@ -361,6 +372,7 @@ const QuestionBank: NextPage = () => {
             setIsAddEvent(false)
             setIsEditEvent(false)
             setCurrentEvent(undefined)
+            setQuestionType(undefined)
           }}
           handleAddEvent={handleSubmitEvent}
         />
@@ -376,6 +388,13 @@ const QuestionBank: NextPage = () => {
           centered
           content="Are you sure you wanted to remove this event?"
           handleDeleteAdmin={handleRemoveEvent}
+        />
+        <QuestionTypeChoose
+          open={isChooseQuestionType}
+          onCancel={() => {
+            setIsChooseQuestionType(false)
+          }}
+          onOk={handleChoiceQuestionType}
         />
       </>
     </div>

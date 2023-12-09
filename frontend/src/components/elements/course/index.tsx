@@ -22,7 +22,7 @@ const Course: React.FC<IProps> = (props): JSX.Element => {
   return (
     <div style={{ textAlign: 'center' }} onClick={props.onClick}>
       <div className={styles.space}>
-        <Image src={CourseImage} alt="CourseImage" style={{ width: 280, height: 200 }} />
+        <Image src={CourseImage} alt="CourseImage" style={{ width: 280, height: 180 }} />
         <div className={styles.container}>
           <Title ellipsis={{ rows: 1 }} className={styles.title}>
             {name}
