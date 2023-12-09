@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -17,6 +18,8 @@ import { EUserRole } from '@models/entities/User.entity';
 import { QuestionService } from '@modules/question/question.service';
 import { CreateQuestionAboutProgramingDto } from '@modules/question/dto/create-question-about-programing.dto';
 import { UpdateQuestionAboutProgramingDto } from '@modules/question/dto/update-question-about-programing.dto';
+import { CreateQuizDto } from '@modules/question/dto/create-quiz.dto';
+import { GetQuizDto } from '@modules/question/dto/get-quiz.dto';
 
 @ApiTags('Question')
 @Controller('question')
@@ -64,5 +67,17 @@ export class QuestionController {
   @Get('/programing')
   async getQuestionAboutPrograming() {
     return this.questionService.getQuestionAboutPrograming();
+  }
+
+  @UseAuth(Object.values(EUserRole))
+  @Post('/quiz')
+  async createQuestionQuiz(@Body() createQuizDto: CreateQuizDto, @Req() req) {
+    return this.questionService.createQuestionQuiz(req.user._id, createQuizDto);
+  }
+
+  @UseAuth(Object.values(EUserRole))
+  @Get('/quiz')
+  async getQuestionQuiz(@Query() getQuizDto: GetQuizDto, @Req() req) {
+    return this.questionService.getQuestionQuiz(req.user._id, getQuizDto);
   }
 }

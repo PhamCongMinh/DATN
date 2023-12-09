@@ -1,7 +1,12 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { Prop } from '@shared/swagger';
-import { EQuestionDifficultyLevel } from '@constants/questions.constant';
+import {
+  EQuestionDifficultyLevel,
+  EQuestionStatus,
+  EQuestionType,
+} from '@constants/questions.constant';
+import { QuestionChoice } from '@models/entities/QuestionChoice.entity';
 
 export type QuestionDocument = Question & Document;
 
@@ -18,13 +23,13 @@ export class Question {
     type: String,
     required: false,
   })
-  title: string;
+  title?: string;
 
   @Prop({
     type: String,
     required: false,
   })
-  description: string;
+  description?: string;
 
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],
@@ -38,7 +43,7 @@ export class Question {
     ref: 'User',
     required: true,
   })
-  author_id: string;
+  author_id?: string;
 
   @Prop({
     type: Number,
@@ -50,7 +55,7 @@ export class Question {
     type: String,
     default: EQuestionDifficultyLevel.EASY,
   })
-  difficulty_level: EQuestionDifficultyLevel;
+  difficulty_level?: EQuestionDifficultyLevel;
 
   @Prop({
     type: String,
@@ -75,6 +80,39 @@ export class Question {
     required: false,
   })
   memory_limit?: number;
+
+  @Prop({
+    type: String,
+    required: false,
+    default: EQuestionStatus.DRAFT,
+  })
+  status?: EQuestionStatus;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  type?: EQuestionType;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  comment?: string;
+
+  @Prop({
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'QuestionChoice',
+    required: false,
+  })
+  question_choice?: string[];
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Course',
+    required: true,
+  })
+  course_id?: string;
 }
 
 export const QuestionSchema = SchemaFactory.createForClass(Question);

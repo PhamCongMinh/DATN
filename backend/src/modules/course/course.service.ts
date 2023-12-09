@@ -18,12 +18,21 @@ export class CourseService {
     this.loggerService.getLogger('CourseService');
   }
 
-  async createCourse(data: CreateCourseDto) {
-    return this.courseRepository.create(data);
+  async createCourse(author_id: string, data: CreateCourseDto) {
+    return this.courseRepository.create({
+      ...data,
+      author_id: author_id,
+    });
   }
 
   async getCourse() {
     return this.courseRepository.getAll();
+  }
+
+  async getCourseByAuthor(author_id: string) {
+    return this.courseRepository.courseDocument.find({
+      author_id: author_id,
+    });
   }
 
   async createSection(data: CreateSectionDto) {

@@ -8,7 +8,7 @@ import TableCustom from 'components/elements/table'
 // import { ReactComponent as TrashIcon } from 'assets/icons/meeting/trash.svg'
 // import { ReactComponent as EditIcon } from 'assets/icons/meeting/edit.svg'
 import DefaultOrganier from 'assets/icons/meeting/organiser.png'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './style.module.scss'
 import ButtonContained from 'components/elements/button-custom/ButtonContainer'
 import { Button } from 'antd'
@@ -18,10 +18,10 @@ import NotiModal from 'components/elements/noti-modal'
 import { MenuProps } from 'antd/lib'
 import cx from 'classnames'
 import {
-  ConferencePrams,
+  // ConferencePrams,
   EventFiter,
-  IConference,
-  MeetingSortBy,
+  IQuestion,
+  // MeetingSortBy,
   MeetingSortDirection,
   MeetingTimeFilter
 } from 'types/types'
@@ -37,14 +37,25 @@ import { useForm } from 'antd/es/form/Form'
 import moment from 'moment'
 import { toast } from 'react-toastify'
 import { NextPage } from 'next'
+import { useSelector } from 'react-redux'
+import { ICourse } from '../../../course'
+import { parseUrlToJson2 } from '../../../../../utils/url'
+import { RentNews } from '../../../../../types'
+import AxiosService from '../../../../../utils/axios'
+import * as url from 'url'
 
 export const DATE_FORMAT_FULL = 'YYYY-MM-DDTHH:mm:ss.SSS[Z]'
 
 const QuestionBank: NextPage = () => {
+  const jwt = useSelector((state: any) => state.auth?.user?.jwt)
+  const user = useSelector((state: any) => state.auth?.user)
+  const [questions, setQuestions] = useState<IQuestion[]>()
+  const [reload, setReload] = useState<boolean>(false)
+
   const [isAddEvent, setIsAddEvent] = useState(false)
   const [isEditEvent, setIsEditEvent] = useState(false)
   const [isRemove, setIsRemove] = useState(false)
-  const [currentEvent, setCurrentEvent] = useState<IConference>()
+  const [currentEvent, setCurrentEvent] = useState<IQuestion>()
   const [timeFilter, setTimeFilter] = useState<MeetingTimeFilter>(MeetingTimeFilter.ALL)
   const [eventFilter, setEventFilter] = useState<EventFiter>()
   const [searchString, setSearchString] = useState<string>()
@@ -56,6 +67,17 @@ const QuestionBank: NextPage = () => {
     type: 'success' as 'success' | 'failed',
     text: ''
   })
+
+  useEffect(() => {
+    const axiosService = new AxiosService('application/json')
+    const fetchData = async () => {
+      const response = await axiosService.get('/rent', { params: url })
+      const data: IQuestion[] = response.data
+      setQuestions(data)
+      setReload(false)
+    }
+    fetchData()
+  }, [reload])
 
   // const { data: meetingList, isFetching } = useGetMeetingListQuery({
   //   limit: 10,
@@ -148,80 +170,76 @@ const QuestionBank: NextPage = () => {
     address: string
   }
 
-  const columns: ColumnsType<IConference> = [
+  const columns: ColumnsType<IQuestion> = [
     {
-      title: 'Event Name',
-      dataIndex: 'event',
-      key: 'event',
+      title: 'Question Name',
+      dataIndex: 'question_name',
+      key: 'question_name',
       sorter: (a, b) => a.id - b.id,
       sortDirections: ['descend'],
       // sortIcon: () => <SortIcon />,
-      render: (_, record: IConference) => (
-        <span className={styles['table-event limit-text']}>{record.conference_name}</span>
-      )
+      render: (_, record: IQuestion) => <span className={styles['table-event limit-text']}>{record.question_name}</span>
     },
     {
-      title: 'Organiser',
-      dataIndex: 'organiser',
-      key: 'organiser',
-      render: (_, record: IConference) => (
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      render: (_, record: IQuestion) => (
         <div className={styles['table-organiser']}>
-          <p className={styles['table-organiser-name limit-text']}>{record.cme_provider}</p>
+          <p className={styles['table-organiser-name limit-text']}>{record.status}</p>
         </div>
       )
     },
     {
-      title: 'Meeting Venue',
-      dataIndex: 'location',
-      render: (_, record: IConference) => (
+      title: 'Question type',
+      dataIndex: 'type',
+      render: (_, record: IQuestion) => (
         <span className={styles['table-location']}>
           {/*<DotIcon />*/}
-          <span className={styles['location whitespace-nowrap']}>
-            {record.city || '--'}, {record.country || '--'}
-          </span>
+          <span className={styles['location whitespace-nowrap']}>{record.type}</span>
         </span>
       )
     },
     {
-      title: 'Organiser URL',
-      dataIndex: 'sources',
-      render: (_, record: IConference) => (
-        <a
-          href={record.cme_course_webpage_url}
-          target="_blank"
-          className={styles['table-sources text-sources']}
-          rel="noreferrer"
-        >
-          {record.cme_course_webpage_url}
-        </a>
+      title: 'Question Level',
+      dataIndex: 'question_level',
+      render: (_, record: IQuestion) => (
+        <div className={styles['table-organiser']}>
+          <p className={styles['table-organiser-name limit-text']}>{record.question_level}</p>
+        </div>
       )
     },
     {
-      title: 'Medical Field',
-      dataIndex: 'type',
-      render: (_, record: IConference) => <span className={styles['table-sources']}>{record.profession}</span>
+      title: 'Comment',
+      dataIndex: 'comment',
+      render: (_, record: IQuestion) => <span className={styles['table-sources']}>{record.comment}</span>
     },
     {
-      title: 'Start Date',
-      dataIndex: 'start_date',
-      render: (_, record: IConference) => (
-        <span className={styles['table-envent-date whitespace-nowrap']}>
-          {dayjs(record?.start_date).format('D MMM YYYY').toString()}
-        </span>
-      )
+      title: 'Created By',
+      dataIndex: 'created_by',
+      render: (_, record: IQuestion) => <span className={styles['table-sources']}>{record.created_by}</span>
     },
     {
-      title: 'End Date',
-      dataIndex: 'end_date',
-      render: (_, record: IConference) => (
+      title: 'Created Date',
+      dataIndex: 'created_at',
+      render: (_, record: IQuestion) => (
         <span className={styles['table-created-date whitespace-nowrap']}>
-          {dayjs(record?.end_date).format('D MMM YYYY').toString()}
+          {dayjs(record?.created_at).format('D MMM YYYY').toString()}
+        </span>
+      )
+    },
+    {
+      title: 'Updated Date',
+      dataIndex: 'updated_at',
+      render: (_, record: IQuestion) => (
+        <span className={styles['table-created-date whitespace-nowrap']}>
+          {dayjs(record?.updated_at).format('D MMM YYYY').toString()}
         </span>
       )
     },
     {
       dataIndex: 'action',
-      render: (_, record: IConference) => (
+      render: (_, record: IQuestion) => (
         <span className={styles['table-action']}>
           <Button
             className={styles['trash-btn']}

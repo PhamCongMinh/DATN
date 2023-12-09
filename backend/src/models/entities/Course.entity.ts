@@ -56,10 +56,12 @@ export class Course {
   status?: string;
 
   @Prop({
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: false,
+    default: '6537ea83727eb5e01b13ec70',
   })
-  author?: string;
+  author_id: string;
 
   @Prop({
     type: String,

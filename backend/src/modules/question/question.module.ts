@@ -12,6 +12,11 @@ import {
 } from '@models/entities';
 import TestcaseModule from '@modules/testcase/testcase.module';
 import TestcaseRepository from '@models/repositories/Testcase.repository';
+import QuestionChoiceRepository from '@models/repositories/QuestionChoice.repository';
+import {
+  QuestionChoice,
+  QuestionChoiceSchema,
+} from '@models/entities/QuestionChoice.entity';
 
 @Module({
   imports: [
@@ -24,11 +29,20 @@ import TestcaseRepository from '@models/repositories/Testcase.repository';
         name: Testcase.name,
         schema: TestcaseSchema,
       },
+      {
+        name: QuestionChoice.name,
+        schema: QuestionChoiceSchema,
+      },
     ]),
     LoggingModule,
   ],
   controllers: [QuestionController],
-  providers: [QuestionService, QuestionRepository, TestcaseRepository],
+  providers: [
+    QuestionService,
+    QuestionRepository,
+    TestcaseRepository,
+    QuestionChoiceRepository,
+  ],
   exports: [QuestionService],
 })
 export default class QuestionModule {}
