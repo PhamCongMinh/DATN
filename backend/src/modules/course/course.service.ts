@@ -42,4 +42,27 @@ export class CourseService {
   async createLesson(data: CreateLessonDto) {
     return this.lessonRepository.create(data);
   }
+
+  async getListStudentInCourse(author_id: string, course_id: string) {
+    const course = await this.courseRepository.courseDocument
+      .findOne({ _id: course_id })
+      .populate('students')
+      .exec();
+
+    return course?.students ? course?.students : null;
+  }
+
+  async joinCourse(student_id: string, course_id: string) {
+    const course = await this.courseRepository.courseDocument
+      .findOne({ _id: course_id })
+      .exec();
+
+    if (!course?.students) {
+      course.students = [student_id];
+    } else {
+      course.students.push(student_id);
+    }
+
+    return course.save();
+  }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
 import { LoggerService } from '@shared/modules/loggers/logger.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CourseService } from '@modules/course/course.service';
@@ -43,5 +43,17 @@ export class CourseController {
   @Post('/lesson')
   async createLesson(@Body() data: CreateLessonDto) {
     return this.courseService.createLesson(data);
+  }
+
+  @UseAuth(Object.values(EUserRole))
+  @Get('/:id/participants')
+  async getListStudentInCourse(@Req() req, @Param('id') id: string) {
+    return this.courseService.getListStudentInCourse(req.user._id, id);
+  }
+
+  @UseAuth(Object.values(EUserRole))
+  @Post('/:id/join')
+  async joinCourse(@Req() req, @Param('id') id: string) {
+    return this.courseService.joinCourse(req.user._id, id);
   }
 }

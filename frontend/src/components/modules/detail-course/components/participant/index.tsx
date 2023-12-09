@@ -1,29 +1,47 @@
 import React, { useEffect, useState } from 'react'
-import { Breadcrumb, Divider, Typography } from 'antd'
-import { HomeOutlined, UserOutlined } from '@ant-design/icons'
+import { Typography } from 'antd'
 
 import styles from './style.module.scss'
 import RentalNewsTable from './components/table'
-import Contact from './components/contact'
 import AxiosService from '../../../../../utils/axios'
 import { useSelector } from 'react-redux'
-import { RentNews } from '../../../../../types'
+import { ICourse } from '../../../course'
+import { NextPage } from 'next'
+import { EUserRole } from '../../../../../types/user'
 
 const { Text } = Typography
-export default function Participant() {
+
+type IProps = {
+  course: ICourse
+}
+
+export type IParticipant = {
+  _id: string
+  email: string
+  username?: string
+  role: EUserRole
+  numberPhone?: string
+  zaloPhone?: string
+  facebookUrl?: string
+  avatarUrl?: string
+  created_at: string
+  updated_at: string
+}
+
+const Participant: NextPage<IProps> = props => {
   const jwt = useSelector((state: any) => state.auth?.user?.jwt)
   const axiosService = new AxiosService('application/json', jwt)
-  const [tableData, setTableData] = useState<RentNews[]>()
+  const [tableData, setTableData] = useState<IParticipant[]>()
   const [isLoading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axiosService.get('/rent-out')
+      const response = await axiosService.get(`/course/${props.course._id}/participants`)
       setTableData(response.data)
     }
     fetchData().catch(console.error)
     setLoading(false)
-  }, [isLoading])
+  }, [isLoading, props.course._id])
 
   const handleReload = () => {
     setLoading(true)
@@ -37,3 +55,5 @@ export default function Participant() {
     </div>
   )
 }
+
+export default Participant

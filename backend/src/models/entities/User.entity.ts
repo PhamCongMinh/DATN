@@ -30,9 +30,9 @@ export class User {
 
   @Prop({
     type: String,
-    required: true,
+    required: false,
   })
-  username: string;
+  username?: string;
 
   @Prop({
     type: String,
@@ -50,27 +50,27 @@ export class User {
 
   @Prop({
     type: 'string',
-    required: true,
+    required: false,
   })
-  numberPhone: string;
+  numberPhone?: string;
 
   @Prop({
     type: 'string',
     required: false,
   })
-  zaloPhone: string;
+  zaloPhone?: string;
 
   @Prop({
     type: 'string',
     required: false,
   })
-  facebookUrl: string;
+  facebookUrl?: string;
 
   @Prop({
     type: 'string',
     required: false,
   })
-  avatarUrl: string;
+  avatarUrl?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -1,6 +1,7 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { Prop } from '@shared/swagger';
+import { User } from '@models/entities/User.entity';
 
 export type CourseDocument = Course & Document;
 
@@ -59,7 +60,6 @@ export class Course {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: false,
-    default: '6537ea83727eb5e01b13ec70',
   })
   author_id: string;
 
@@ -94,16 +94,18 @@ export class Course {
   reviews?: string;
 
   @Prop({
-    type: String,
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'User',
     required: false,
   })
-  students?: string;
+  students?: string[];
 
   @Prop({
-    type: String,
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'User',
     required: false,
   })
-  teachers?: string;
+  teachers?: string[];
 }
 
 export const CourseSchema = SchemaFactory.createForClass(Course);
