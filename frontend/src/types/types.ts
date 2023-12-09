@@ -49,7 +49,7 @@ export interface IQuestion {
   id: number
   title?: string
   status?: EQuestionStatus
-  type?: string
+  type?: EQuestionType
   created_at?: string
   updated_at?: string
   comment?: string
@@ -66,4 +66,20 @@ export enum EQuestionDifficultyLevel {
   EASY = 'EASY',
   MEDIUM = 'MEDIUM',
   HARD = 'HARD'
+}
+
+export enum EQuestionType {
+  PROGRAMMING = 'PROGRAMMING',
+  MULTIPLE_CHOICE = 'MULTIPLE_CHOICE',
+  TRUE_FALSE = 'TRUE_FALSE',
+  FILL_IN_THE_BLANK = 'FILL_IN_THE_BLANK',
+  SHORT_ANSWER = 'SHORT_ANSWER',
+  MATCHING = 'MATCHING',
+  ESSAY = 'ESSAY',
+  CODE_SNIPPET = 'CODE_SNIPPET',
+  MULTIPLE_ANSWER = 'MULTIPLE_ANSWER',
+  ORDERING = 'ORDERING',
+  EQUATION = 'EQUATION',
+  HOTSPOT = 'HOTSPOT',
+  QUIZ = 'QUIZ'
 }

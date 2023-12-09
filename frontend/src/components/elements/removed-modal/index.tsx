@@ -1,6 +1,6 @@
 import ModalCustom, { ModalCustomProps } from '../modal'
-import { ReactComponent as DeleteFormIcon } from 'assets/icons/admin/trash-form.svg'
-import { ReactComponent as CloseIcon } from 'assets/icons/admin/close.svg'
+// import { ReactComponent as DeleteFormIcon } from 'assets/icons/admin/trash-form.svg'
+// import { ReactComponent as CloseIcon } from 'assets/icons/admin/close.svg'
 import ButtonOutlined from '../button-custom/ButtonOutlined'
 import ButtonContained from '../button-custom/ButtonContainer'
 import PropTypes from 'prop-types'
@@ -16,7 +16,7 @@ const RemovedModal = ({ content, handleDeleteAdmin, ...props }: IProps) => {
   const { onCancel } = props
   return (
     <ModalCustom {...props} className={styles['remove-admin-modal']}>
-      <DeleteFormIcon />
+      {/*<DeleteFormIcon />*/}
 
       <h2 className={styles['remove-admin-modal-title']}>Are you sure?</h2>
       <p className={styles['remove-admin-modal-subtitle']}>{content}</p>
@@ -31,7 +31,7 @@ const RemovedModal = ({ content, handleDeleteAdmin, ...props }: IProps) => {
       </span>
 
       <Button type="link" className={styles['close-btn']} onClick={onCancel}>
-        <CloseIcon />
+        {/*<CloseIcon />*/}
       </Button>
     </ModalCustom>
   )

@@ -1,5 +1,5 @@
-import { ReactComponent as SuccessIcon } from 'assets/icons/common/success-icon.svg'
-import { ReactComponent as FailedIcon } from 'assets/icons/common/failed-icon.svg'
+// import { ReactComponent as SuccessIcon } from 'assets/icons/common/success-icon.svg'
+// import { ReactComponent as FailedIcon } from 'assets/icons/common/failed-icon.svg'
 import { Modal, ModalProps } from 'antd'
 import styles from './style.module.scss'
 
@@ -16,7 +16,7 @@ const NotiModal = ({ type, title, text, open, ...props }: INotiModal) => {
       case 'success':
         return (
           <>
-            <SuccessIcon />
+            {/*<SuccessIcon />*/}
             <h1 className={styles['noti-modal-title']}>{title ? title : 'Success'}</h1>
             <span className={styles['noti-modal-text']}>{text}</span>
           </>
@@ -24,7 +24,7 @@ const NotiModal = ({ type, title, text, open, ...props }: INotiModal) => {
       case 'failed':
         return (
           <>
-            <FailedIcon />
+            {/*<FailedIcon />*/}
             <h1 className={styles['noti-modal-title']}>{title ? title : 'Failed'}</h1>
             <span className={styles['noti-modal-text']}>{text}</span>
           </>

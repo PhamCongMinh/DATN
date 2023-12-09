@@ -43,6 +43,9 @@ import { parseUrlToJson2 } from '../../../../../utils/url'
 import { RentNews } from '../../../../../types'
 import AxiosService from '../../../../../utils/axios'
 import * as url from 'url'
+import TrashIcon from '../../../../../assets/icons/trash.png'
+import EditIcon from '../../../../../assets/icons/edit.png'
+import Image from 'next/image'
 
 export const DATE_FORMAT_FULL = 'YYYY-MM-DDTHH:mm:ss.SSS[Z]'
 
@@ -69,10 +72,14 @@ const QuestionBank: NextPage = () => {
   })
 
   useEffect(() => {
-    const axiosService = new AxiosService('application/json')
+    const axiosService = new AxiosService('application/json', jwt)
+    const query = {
+      course_id: '65744526ef7e3dff88526be7'
+    }
     const fetchData = async () => {
-      const response = await axiosService.get('/rent', { params: url })
+      const response = await axiosService.get('/question/quiz', { params: query })
       const data: IQuestion[] = response.data
+      console.log('data', data)
       setQuestions(data)
       setReload(false)
     }
@@ -173,12 +180,12 @@ const QuestionBank: NextPage = () => {
   const columns: ColumnsType<IQuestion> = [
     {
       title: 'Question Name',
-      dataIndex: 'question_name',
-      key: 'question_name',
+      dataIndex: 'title',
+      key: 'title',
       sorter: (a, b) => a.id - b.id,
       sortDirections: ['descend'],
       // sortIcon: () => <SortIcon />,
-      render: (_, record: IQuestion) => <span className={styles['table-event limit-text']}>{record.question_name}</span>
+      render: (_, record: IQuestion) => <span className={styles['table-event limit-text']}>{record.title}</span>
     },
     {
       title: 'Status',
@@ -201,11 +208,11 @@ const QuestionBank: NextPage = () => {
       )
     },
     {
-      title: 'Question Level',
-      dataIndex: 'question_level',
+      title: 'Difficulty level',
+      dataIndex: 'difficulty_level',
       render: (_, record: IQuestion) => (
         <div className={styles['table-organiser']}>
-          <p className={styles['table-organiser-name limit-text']}>{record.question_level}</p>
+          <p className={styles['table-organiser-name limit-text']}>{record.difficulty_level}</p>
         </div>
       )
     },
@@ -215,9 +222,9 @@ const QuestionBank: NextPage = () => {
       render: (_, record: IQuestion) => <span className={styles['table-sources']}>{record.comment}</span>
     },
     {
-      title: 'Created By',
-      dataIndex: 'created_by',
-      render: (_, record: IQuestion) => <span className={styles['table-sources']}>{record.created_by}</span>
+      title: 'Author Id',
+      dataIndex: 'author_id',
+      render: (_, record: IQuestion) => <span className={styles['table-sources']}>{record.author_id}</span>
     },
     {
       title: 'Created Date',
@@ -248,7 +255,7 @@ const QuestionBank: NextPage = () => {
               setCurrentEvent(record)
               setIsRemove(true)
             }}
-            // icon={<TrashIcon />}
+            icon={<Image src={TrashIcon} alt="House1" style={{ height: 19, width: 17 }} />}
           />
           <Button
             onClick={() => {
@@ -258,7 +265,7 @@ const QuestionBank: NextPage = () => {
             }}
             className={styles['edit-btn']}
             type="link"
-            // icon={<EditIcon />}
+            icon={<Image src={EditIcon} alt="House1" style={{ height: 18, width: 18 }} />}
           />
         </span>
       )
@@ -335,7 +342,7 @@ const QuestionBank: NextPage = () => {
         columns={columns}
         // filterOptions={items}
         hiddenFilterBtn={true}
-        dataSource={[]} //{meetingList?.data || []} // TODO
+        dataSource={questions || []} //{meetingList?.data || []} // TODO
         timeFilter={timeFilter}
         setTimeFilter={setTimeFilter}
         setCurrentPage={setCurrentPage}

@@ -1,26 +1,18 @@
 import React, { useState } from 'react'
 import produce from 'immer'
-import { UploadOutlined } from '@ant-design/icons'
+import { InboxOutlined, UploadOutlined } from '@ant-design/icons'
 import { serialize } from 'object-to-formdata'
-import {
-  Button,
-  Col,
-  DatePicker,
-  DatePickerProps,
-  Input,
-  message,
-  Row,
-  Select,
-  Typography,
-  Upload,
-  UploadProps
-} from 'antd'
+import { Button, Col, DatePicker, DatePickerProps, Input, message, Row, Select, Typography, Upload } from 'antd'
+import type { UploadProps } from 'antd'
 
 import { AxiosService } from '../../../../../../../utils/axios'
 import styles from './style.module.scss'
 import { useSelector } from 'react-redux'
 import dayjs, { Dayjs } from 'dayjs'
 import { RentNewsType } from '../../../../../../../types'
+import CustomDrag from '../../../../../../elements/Drag'
+import { toast } from 'react-toastify'
+import Dragger from 'antd/es/upload/Dragger'
 
 const { TextArea } = Input
 const { Text } = Typography
@@ -46,6 +38,11 @@ export default function CreateCourseForm() {
   const [image, setImage] = useState<any>()
   const jwt = useSelector((state: any) => state.auth?.user?.jwt)
   const axiosService = new AxiosService('application/json', jwt)
+  const [avatarUrl, setAvatarUrl] = useState('')
+  const [avatarFileUpload, setAvatarFileUpload] = useState<FormData>()
+  const [isDisable, setIsDisable] = useState(true)
+
+  console.log('uploaded image', image ? image : 'no image')
 
   const handleChange = (
     key: string,
@@ -70,23 +67,23 @@ export default function CreateCourseForm() {
 
   const props: UploadProps = {
     name: 'file',
-    // action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    // headers: {
-    //   authorization: 'authorization-text'
-    // },
     multiple: false,
-    // showUploadList: false,
+    action: 'https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188',
     accept: 'image/png,image/gif,image/jpeg',
     onChange(info) {
-      if (info.file.status !== 'uploading') {
+      const { status } = info.file
+      if (status !== 'uploading') {
         console.log(info.file, info.fileList)
       }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`)
+      if (status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully.`)
         setImage(info.file.originFileObj)
-      } else if (info.file.status === 'error') {
+      } else if (status === 'error') {
         message.error(`${info.file.name} file upload failed.`)
       }
+    },
+    onDrop(e) {
+      console.log('Dropped files', e.dataTransfer.files)
     }
   }
 
@@ -171,9 +168,16 @@ export default function CreateCourseForm() {
 
       <Text className={styles.title3}>Ảnh đại diện khóa học</Text>
       <div />
-      <Upload {...props}>
-        <Button icon={<UploadOutlined />}>Click to Upload</Button>
-      </Upload>
+
+      <Dragger {...props}>
+        <p className="ant-upload-drag-icon">
+          <InboxOutlined />
+        </p>
+        <p className="ant-upload-text">Click or drag file to this area to upload</p>
+        <p className="ant-upload-hint">
+          Support for a single or bulk upload. Strictly prohibited from uploading company data or other banned files.
+        </p>
+      </Dragger>
 
       <Button type="primary" style={{ width: 200, marginTop: 40 }} onClick={handleSubmit}>
         Tạo khóa học

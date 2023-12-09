@@ -94,9 +94,9 @@ const CourseContent: NextPage = () => {
   }
 
   useEffect(() => {
-    const axiosService = new AxiosService('application/json')
+    const axiosService = new AxiosService('application/json', jwt)
     const fetchData = async () => {
-      const response = await axiosService.get('/course')
+      const response = await axiosService.get('/course/my-course')
       const data: ICourse[] = response.data
       setCourses(data)
       setReload(false)
