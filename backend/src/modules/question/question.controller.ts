@@ -87,4 +87,18 @@ export class QuestionController {
   async deleteQuestionQuiz(@Param('id') id: string, @Req() req) {
     return this.questionService.deleteQuestionQuiz(req.user._id, id);
   }
+
+  @UseAuth(Object.values(EUserRole))
+  @Put('/quiz/:id')
+  async updateQuestionQuiz(
+    @Param('id') id: string,
+    @Body() createQuizDto: CreateQuizDto,
+    @Req() req,
+  ) {
+    return this.questionService.updateQuestionQuiz(
+      req.user._id,
+      id,
+      createQuizDto,
+    );
+  }
 }

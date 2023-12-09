@@ -125,4 +125,19 @@ export class QuestionService {
 
     return this.questionRepository.delete(question_id);
   }
+
+  async updateQuestionQuiz(
+    author_id: string,
+    question_id: string,
+    createQuizDto: CreateQuizDto,
+  ) {
+    const question = await this.questionRepository.findById(question_id);
+
+    if (question.question_choice.length > 0)
+      for (const question_choice_id of question.question_choice) {
+        await this.questionChoiceRepository.delete(question_choice_id);
+      }
+
+    return this.createQuestionQuiz(author_id, createQuizDto);
+  }
 }

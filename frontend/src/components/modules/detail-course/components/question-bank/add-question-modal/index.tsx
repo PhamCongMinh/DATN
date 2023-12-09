@@ -55,7 +55,14 @@ const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, currentQu
         draft['type'] = props.questionType
       })
     )
-  }, [props.questionType, currentQuestion])
+  }, [props.questionType])
+
+  useEffect(() => {
+    if (currentQuestion) {
+      const { _id, ...rest } = currentQuestion
+      setState(rest)
+    }
+  }, [currentQuestion])
 
   console.log('Create/edit question', state)
 
@@ -82,6 +89,15 @@ const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, currentQu
       }
 
     // Edit question
+    try {
+      console.log(state)
+      const response = await axiosService.put(`/question/quiz/${currentQuestion?._id}`, state)
+      console.log(response)
+      message.success(`Sửa câu hỏi thành công`)
+    } catch (error) {
+      alert('Sửa câu hỏi thất bại, vui lòng kiểm tra lại thông tin trước khi thử lại')
+      console.log(error)
+    }
   }
 
   const handleGeneralQuestion = (value: any) => {

@@ -267,7 +267,7 @@ const QuestionBank: NextPage<IProps> = props => {
             btnType="green"
             height={40}
           >
-            Add Event/Meeting
+            Thêm câu hỏi mới
           </ButtonContained>
         </div>
       </div>
