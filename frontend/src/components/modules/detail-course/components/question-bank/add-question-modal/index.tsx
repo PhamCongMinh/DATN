@@ -19,13 +19,7 @@ import { FormInstance } from 'antd/es/form/Form'
 import styles from './style.module.scss'
 import React, { ReactNode, useEffect, useState } from 'react'
 import { NextPage } from 'next'
-import {
-  EQuestionDifficultyLevel,
-  EQuestionStatus,
-  EQuestionType,
-  IQuestion,
-  IQuestionQuiz
-} from '../../../../../../types/types'
+import { EQuestionDifficultyLevel, EQuestionStatus, EQuestionType, IQuestion } from '../../../../../../types/types'
 import { useSelector } from 'react-redux'
 import AxiosService from '../../../../../../utils/axios'
 import produce from 'immer'
@@ -49,13 +43,13 @@ const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, data, ...
   const jwt = useSelector((state: any) => state.auth?.user?.jwt)
   const axiosService = new AxiosService('application/json', jwt)
 
-  const [state, setState] = useState<IQuestionQuiz>({
+  const [state, setState] = useState<IQuestion>({
     type: props.questionType,
     course_id: props.course._id
   })
 
   useEffect(() => {
-    setState((prev: IQuestionQuiz) =>
+    setState((prev: IQuestion) =>
       produce(prev, draft => {
         // @ts-ignore
         draft['type'] = props.questionType
@@ -88,7 +82,7 @@ const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, data, ...
 
   const handleGeneralQuestion = (value: any) => {
     console.log('handleGeneralQuestion', value)
-    setState((prev: IQuestionQuiz) =>
+    setState((prev: IQuestion) =>
       produce(prev, draft => {
         // @ts-ignore
         draft['title'] = value.title
@@ -103,7 +97,7 @@ const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, data, ...
 
   const handleAddQuestionAnswers = (value: any) => {
     console.log('handleAddQuestionAnswers', value)
-    setState((prev: IQuestionQuiz) =>
+    setState((prev: IQuestion) =>
       produce(prev, draft => {
         // @ts-ignore
         draft['question_choice'] = value.items

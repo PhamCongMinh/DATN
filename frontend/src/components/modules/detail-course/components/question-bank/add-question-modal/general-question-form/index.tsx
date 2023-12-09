@@ -2,15 +2,10 @@ import React from 'react'
 import { CloseOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { Button, Card, Form, Input, Select, Space, Typography } from 'antd'
 import { NextPage } from 'next'
-import {
-  EQuestionDifficultyLevel,
-  EQuestionStatus,
-  IQuestionChoice,
-  IQuestionQuiz
-} from '../../../../../../../types/types'
+import { EQuestionDifficultyLevel, EQuestionStatus, IQuestionChoice, IQuestion } from '../../../../../../../types/types'
 
 interface IProps {
-  onFinish: (value: IQuestionQuiz) => void
+  onFinish: (value: IQuestion) => void
 }
 
 const GeneralQuestionForm: NextPage<IProps> = props => {

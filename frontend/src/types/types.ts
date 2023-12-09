@@ -59,6 +59,7 @@ export interface IQuestion {
   course_id?: string
   description?: string
   points?: number
+  question_choice?: IQuestionChoice[]
 }
 
 export enum EQuestionStatus {
@@ -96,8 +97,4 @@ export interface IQuestionChoice {
   description?: string
   is_correct?: boolean
   author_id?: string
-}
-
-export interface IQuestionQuiz extends IQuestion {
-  question_choice?: IQuestionChoice[]
 }
