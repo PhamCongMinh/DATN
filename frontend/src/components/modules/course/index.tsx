@@ -66,7 +66,7 @@ const CourseContent: NextPage = () => {
   const [reload, setReload] = useState<boolean>(false)
   const [appliedFilter, setAppliedFilter] = useState<TSearchCourse>({})
   const [courses, setCourses] = useState<ICourse[]>()
-  console.log('reload', reload)
+  const [currentCourse, setCurrentCourse] = useState<ICourse>()
 
   const handleUserNotLogin = useCallback(() => {
     window.location.href = '/signin'
@@ -133,7 +133,8 @@ const CourseContent: NextPage = () => {
     setReload(true)
   }
 
-  const handleClickCourseDetail = (course: any) => {
+  const handleClickCourseDetail = (course: ICourse) => {
+    setCurrentCourse(course)
     setIsOpenDetailCourse(true)
   }
 
@@ -177,7 +178,7 @@ const CourseContent: NextPage = () => {
         </div>
       )}
       {isOpenDetailCourse === true && (
-        <DetailCourseContent rentNews={{}} handleClickBack={handleClickBack} setReload={handleReload} />
+        <DetailCourseContent course={currentCourse} handleClickBack={handleClickBack} setReload={handleReload} />
       )}
     </div>
   )

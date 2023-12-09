@@ -87,4 +87,9 @@ export class CreateQuizDto {
   @IsOptional()
   @IsString()
   course_id?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  custom_question_id?: string;
 }

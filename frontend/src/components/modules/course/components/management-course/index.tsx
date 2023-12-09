@@ -16,7 +16,7 @@ interface IProps {
   handleSearch: (searchData: TSearchCourse) => void
   appliedFilter: TSearchCourse
   setReload: () => void
-  openDetailCourse: (course: any) => void
+  openDetailCourse: (course: ICourse) => void
 }
 
 export type TSearchCourse = {
@@ -34,9 +34,9 @@ const ManagementCourse: React.FC<IProps> = (props): JSX.Element => {
   const [detailHouse, setDetailHouse] = useState<any>({} as any)
 
   const handleClickCourseDetail = useCallback(
-    (course: any) => {
+    (course: ICourse) => {
       setDetailHouse(course)
-      props.openDetailCourse(true)
+      props.openDetailCourse(course)
     },
     [props]
   )
@@ -61,7 +61,7 @@ const ManagementCourse: React.FC<IProps> = (props): JSX.Element => {
             <List
               grid={{ gutter: 30 }}
               dataSource={props.data}
-              renderItem={course => (
+              renderItem={(course: ICourse) => (
                 <List.Item>
                   <Course
                     key={course._id}

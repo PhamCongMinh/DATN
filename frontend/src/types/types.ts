@@ -46,7 +46,7 @@ export enum EventFiter {
 // }
 
 export interface IQuestion {
-  id: number
+  _id?: number
   title?: string
   status?: EQuestionStatus
   type?: EQuestionType
@@ -55,6 +55,10 @@ export interface IQuestion {
   comment?: string
   difficulty_level?: EQuestionDifficultyLevel
   author_id?: string
+  custom_question_id?: string
+  course_id?: string
+  description?: string
+  points?: number
 }
 
 export enum EQuestionStatus {
@@ -82,4 +86,18 @@ export enum EQuestionType {
   EQUATION = 'EQUATION',
   HOTSPOT = 'HOTSPOT',
   QUIZ = 'QUIZ'
+}
+
+export interface IQuestionChoice {
+  _id?: number
+  content?: string
+  point?: number
+  order?: number
+  description?: string
+  is_correct?: boolean
+  author_id?: string
+}
+
+export interface IQuestionQuiz extends IQuestion {
+  question_choice?: IQuestionChoice[]
 }

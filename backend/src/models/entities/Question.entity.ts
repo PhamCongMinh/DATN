@@ -23,6 +23,12 @@ export class Question {
     type: String,
     required: false,
   })
+  custom_question_id?: string;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
   title?: string;
 
   @Prop({

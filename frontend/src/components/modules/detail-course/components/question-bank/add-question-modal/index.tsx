@@ -1,240 +1,161 @@
-/* eslint-disable react/prop-types */
-// import { ReactComponent as CelanderIcon } from 'assets/icons/admin/calendar.svg'
-import ModalCustom, { ModalCustomProps } from 'components/elements/modal'
-import ButtonContained from 'components/elements/button-custom/ButtonContainer'
-import { Col, Form, Row } from 'antd'
-import CustomFormItem from 'components/elements/form-item'
-import CustomInput from 'components/elements/Input'
-import CustomDatePicker from 'components/elements/date-picker'
-import CustomSelect from 'components/elements/select'
-import ButtonOutlined from 'components/elements/button-custom/ButtonOutlined'
+import { ModalCustomProps } from 'components/elements/modal'
+import {
+  Col,
+  Collapse,
+  type CollapseProps,
+  Divider,
+  Form,
+  Input,
+  message,
+  Modal,
+  Radio,
+  RadioChangeEvent,
+  Row,
+  Select,
+  Space,
+  Typography
+} from 'antd'
 import { FormInstance } from 'antd/es/form/Form'
 import styles from './style.module.scss'
-import { URL_REGEX } from 'utils/regex'
-import { handleDisableEndDate } from 'utils/functions'
-import { useEffect, useState } from 'react'
-import { IConference } from 'types/types'
-import dayjs from 'dayjs'
+import React, { ReactNode, useEffect, useState } from 'react'
 import { NextPage } from 'next'
+import {
+  EQuestionDifficultyLevel,
+  EQuestionStatus,
+  EQuestionType,
+  IQuestion,
+  IQuestionQuiz
+} from '../../../../../../types/types'
+import { useSelector } from 'react-redux'
+import AxiosService from '../../../../../../utils/axios'
+import produce from 'immer'
+import QuestionAnswerForm from './question-answer-form'
+import GeneralQuestionForm from './general-question-form'
+import { ICourse } from '../../../../course'
 
-type Location = {
-  address: string
-  lat: number
-  lng: number
-  country: string
-  city: string
-  title: string
-}
+const { TextArea } = Input
+const { Text } = Typography
+
 interface IProps extends ModalCustomProps {
+  course: ICourse
   form: FormInstance<any>
-  handleAddEvent: () => void
-  data?: IConference
+  handleAddQuestion: () => void
+  data?: IQuestion
+  questionType?: EQuestionType
 }
 
-const AddQuestionModal: NextPage<IProps> = ({ form, handleAddEvent, data, ...props }) => {
+const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, data, ...props }) => {
   const { onCancel } = props
+  const jwt = useSelector((state: any) => state.auth?.user?.jwt)
+  const axiosService = new AxiosService('application/json', jwt)
 
-  const [location, setLocation] = useState<Location | null>(null)
+  const [state, setState] = useState<IQuestionQuiz>({
+    type: props.questionType,
+    course_id: props.course._id
+  })
 
-  const options = [
-    { value: 'on-site-meeting', label: 'On-site meeting' },
-    { value: 'webinars', label: 'Webinars' },
-    { value: 'courses', label: 'Courses' }
-  ]
+  console.log('state', state)
 
-  const handleSubmit = () => {
-    if (location) handleAddEvent()
-    else {
-      form.setFields([
-        {
-          name: 'location',
-          errors: ['Please select Location']
-        }
-      ])
+  const handleSubmit = async () => {
+    // const isUpdatedInfo = await checkUpdatedInfo()
+    // if (!isUpdatedInfo) {
+    //   alert(
+    //     'Bạn chưa cập nhật thêm thông tin cá nhân cần thiết, vui lòng truy cập mục Quản lý tài khoản -> Cập nhật thông tin cá nhân để cập nhật thêm thông tin'
+    //   )
+    //   return
+    // }
+    handleAddQuestion()
+
+    try {
+      console.log(state)
+      const response = await axiosService.post('/question/quiz', state)
+      console.log(response)
+      message.success(`Tạo câu hỏi thành công`)
+    } catch (error) {
+      alert('Tạo câu hỏi thất bại, vui lòng kiểm tra lại thông tin trước khi thử lại')
+      console.log(error)
     }
   }
 
-  useEffect(() => {
-    if (data) {
-      setLocation({
-        address: data.area,
-        lat: Number(data.lat),
-        lng: Number(data.lng),
-        country: data.country,
-        city: data.city,
-        title: data.area
+  const handleGeneralQuestion = (value: any) => {
+    console.log('handleGeneralQuestion', value)
+    setState((prev: IQuestionQuiz) =>
+      produce(prev, draft => {
+        // @ts-ignore
+        draft['title'] = value.title
+        draft['description'] = value.description
+        draft['status'] = value.status
+        draft['difficulty_level'] = value.difficulty_level
+        draft['points'] = value.points
+        draft['custom_question_id'] = value.custom_question_id
       })
+    )
+  }
+
+  const handleAddQuestionAnswers = (value: any) => {
+    console.log('handleAddQuestionAnswers', value)
+    setState((prev: IQuestionQuiz) =>
+      produce(prev, draft => {
+        // @ts-ignore
+        draft['question_choice'] = value.items
+      })
+    )
+  }
+
+  const items: CollapseProps['items'] = [
+    {
+      key: '1',
+      label: 'Câu hỏi',
+      children: (
+        <>
+          <GeneralQuestionForm onFinish={handleGeneralQuestion} />
+        </>
+      )
+    },
+    {
+      key: '2',
+      label: 'Đáp án',
+      children: (
+        <>
+          <QuestionAnswerForm onFinish={handleAddQuestionAnswers} />
+        </>
+      )
+    },
+    {
+      key: '3',
+      label: 'Khác',
+      children: (
+        <p>
+          <Text className={styles.title3}>
+            <br />
+            Nhận xét:
+          </Text>
+          <TextArea
+            rows={4}
+            style={{ maxWidth: 1000, marginBottom: 30 }}
+            // onChange={e => handleChange('description', e)}
+          />
+        </p>
+      )
     }
-  }, [data])
+  ]
 
   return (
-    <ModalCustom
-      {...props}
-      width={'738px'}
-      className={styles['update-meeting-modal']}
-      headerComp={
-        <span className={styles['update-meeting-modal-title']}>
-          {/*<CelanderIcon />*/}
-          Add Meeting/Event
-        </span>
-      }
-    >
-      <Form
-        form={form}
-        className={styles['update-meeting-modal-form']}
-        onFinish={handleSubmit}
-        initialValues={{
-          event: data?.conference_name || '',
-          hostedBy: data?.cme_provider || '',
-          eventType: data?.event_type || '',
-          startDate: data?.start_date ? dayjs(data.start_date) : undefined,
-          endDate: data?.end_date ? dayjs(data.end_date) : undefined,
-          organizerURL: data?.cme_course_webpage_url,
-          location: data?.area,
-          lat: data?.lat,
-          lng: data?.lng,
-          city: data?.city,
-          country: data?.country
-        }}
+    <>
+      <Modal
+        title="Thêm câu hỏi mới"
+        open={props.open}
+        onOk={handleSubmit}
+        onCancel={props.onCancel}
+        centered
+        className={styles.modal}
       >
-        <div className={styles['update-meeting-modal-form-input']}>
-          <Row gutter={[20, 32]}>
-            <Col span={12}>
-              <CustomFormItem
-                mode="vertical"
-                label="Events"
-                name={'event'}
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please enter event name'
-                  }
-                ]}
-              >
-                <CustomInput autoComplete="off" placeholder="Enter Event Name" />
-              </CustomFormItem>
-            </Col>
-            <Col span={12}>
-              <CustomFormItem
-                mode="vertical"
-                label="Hosted By"
-                name="hostedBy"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please enter organizer name'
-                  }
-                ]}
-              >
-                <CustomInput placeholder="Enter Organizer Name" />
-              </CustomFormItem>
-            </Col>
-          </Row>
-          <Row gutter={[20, 32]}>
-            <Col span={12}>
-              <CustomFormItem
-                mode="vertical"
-                label="Event Type"
-                name={'eventType'}
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please select event type'
-                  }
-                ]}
-              >
-                <CustomSelect placeholder="Select Event Type" options={options} />
-              </CustomFormItem>
-            </Col>
-            <Col span={12} className={styles['form-date']}>
-              <label htmlFor="" className={styles['form-date-label']}>
-                Select Date
-              </label>
-              <div className={styles['form-date-input-wrap']}>
-                <CustomFormItem
-                  name={'startDate'}
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please select start date'
-                    }
-                  ]}
-                >
-                  <CustomDatePicker
-                    format={'DD-MM-YYYY'}
-                    suffixIcon={<></>}
-                    disabledDate={curDate => handleDisableEndDate(curDate, form)}
-                  />
-                </CustomFormItem>
-
-                <span className={styles['form-date-text']}>to</span>
-
-                <CustomFormItem
-                  name={'endDate'}
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please select end date'
-                    }
-                  ]}
-                >
-                  <CustomDatePicker
-                    format={'DD-MM-YYYY'}
-                    suffixIcon={<></>}
-                    disabledDate={curDate => handleDisableEndDate(curDate, form)}
-                  />
-                </CustomFormItem>
-              </div>
-            </Col>
-          </Row>
-          <Row gutter={[20, 32]}>
-            <Col span={12}>
-              <CustomFormItem
-                mode="vertical"
-                label="Select Location"
-                name={'location'}
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please select location'
-                  }
-                ]}
-              ></CustomFormItem>
-            </Col>
-            <Col span={12}>
-              <CustomFormItem
-                mode="vertical"
-                label="Organizer URL"
-                name={'organizerURL'}
-                rules={[
-                  () => ({
-                    validator: (_, value) => {
-                      if (!value) {
-                        return Promise.reject('Please enter organizer URL')
-                      }
-                      if (!URL_REGEX.test(value)) {
-                        return Promise.reject('Invalid URL')
-                      }
-                      return Promise.resolve()
-                    }
-                  })
-                ]}
-              >
-                <CustomInput autoComplete="off" placeholder="https://www.anyevent.com/event/" />
-              </CustomFormItem>
-            </Col>
-          </Row>
+        <Divider />
+        <div style={{ height: 500, overflowY: 'scroll' }}>
+          <Collapse items={items} defaultActiveKey={'1'} />
         </div>
-        <div className={styles['update-meeting-modal-form-action']}>
-          <ButtonOutlined onClick={onCancel} className={styles['cancel-btn']} type="link">
-            Cancel
-          </ButtonOutlined>
-          <ButtonContained className={styles['continue-btn']} btnType="dark" onClick={() => form.submit()}>
-            {data ? 'Edit Event' : 'Add Event'}
-          </ButtonContained>
-        </div>
-      </Form>
-    </ModalCustom>
+      </Modal>
+    </>
   )
 }
 

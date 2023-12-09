@@ -20,7 +20,7 @@ interface IQuestionType {
 const listQuestionType: IQuestionType[] = [
   {
     key: EQuestionType.QUIZ,
-    title: 'Question',
+    title: 'Quiz',
     description: EQuestionType.QUIZ
   },
   {

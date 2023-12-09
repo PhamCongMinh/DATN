@@ -16,13 +16,14 @@ import Grade from './components/grade'
 import Discuss from './components/discuss'
 import CourseContent from './components/content'
 import QuestionBank from './components/question-bank'
+import { ICourse } from '../course'
 
 const { Text, Title } = Typography
 
 const characteristic = 'Đối tượng thuê:\tTất cả\n' + 'Gói tin:\tTin VIP nổi bật\n'
 
 type IProps = {
-  rentNews: any
+  course: ICourse
   handleClickBack: () => void
   setReload: () => void
 }
@@ -109,7 +110,7 @@ const DetailCourseContent: NextPage<IProps> = props => {
         />
         {selectedMenuItem === 'content' && <CourseContent />}
         {selectedMenuItem === 'participant' && <Participant />}
-        {selectedMenuItem === 'question_bank' && <QuestionBank />}
+        {selectedMenuItem === 'question_bank' && <QuestionBank course={props.course} />}
         {selectedMenuItem === 'exam_bank' && <ExamBank />}
         {selectedMenuItem === 'grade' && <Grade />}
         {selectedMenuItem === 'discuss' && <Discuss />}

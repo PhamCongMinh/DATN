@@ -51,7 +51,11 @@ import QuestionTypeChoose from './question-type-choose'
 
 export const DATE_FORMAT_FULL = 'YYYY-MM-DDTHH:mm:ss.SSS[Z]'
 
-const QuestionBank: NextPage = () => {
+type IProps = {
+  course: ICourse
+}
+
+const QuestionBank: NextPage<IProps> = props => {
   const jwt = useSelector((state: any) => state.auth?.user?.jwt)
   const user = useSelector((state: any) => state.auth?.user)
   const [questions, setQuestions] = useState<IQuestion[]>()
@@ -78,7 +82,7 @@ const QuestionBank: NextPage = () => {
   useEffect(() => {
     const axiosService = new AxiosService('application/json', jwt)
     const query = {
-      course_id: '65744526ef7e3dff88526be7'
+      course_id: props.course._id
     }
     const fetchData = async () => {
       const response = await axiosService.get('/question/quiz', { params: query })
@@ -107,53 +111,10 @@ const QuestionBank: NextPage = () => {
   // const [removeConference] = useRemoveConferenceMutation()
   // const [updateConference] = useUpdateConferenceMutation()
 
-  const handleSubmitEvent = async () => {
-    // try {
-    //   form.validateFields()
-    //   const formStates = form.getFieldsValue(true)
-    //
-    //   const missMeetingData: ConferencePrams = {
-    //     eventName: formStates.event,
-    //     location: formStates.location,
-    //     eventType: formStates.eventType,
-    //     hostedBy: formStates.hostedBy,
-    //     startDate: moment(formStates.startDate).format(DATE_FORMAT_FULL),
-    //     endDate: moment(formStates.endDate).format(DATE_FORMAT_FULL),
-    //     organizerURL: formStates.organizerURL,
-    //     lat: String(formStates.lat),
-    //     lng: String(formStates.lng),
-    //     country: formStates.country,
-    //     city: formStates.city
-    //   }
-    //   if (isEditEvent && currentEvent) {
-    //     await updateConference({
-    //       id: currentEvent?.id,
-    //       body: missMeetingData
-    //     }).unwrap()
-    //     setIsEditEvent(false)
-    //     setNotiModal({
-    //       ...notiModal,
-    //       isOpen: true,
-    //       text: 'Successfully submit the event based on your recommendation and info given'
-    //     })
-    //   } else {
-    //     await createConference(missMeetingData).unwrap()
-    //     setIsAddEvent(false)
-    //     setNotiModal({
-    //       ...notiModal,
-    //       isOpen: true,
-    //       text: 'Successfully submit the event based on your recommendation and info given'
-    //     })
-    //   }
-    // } catch (error) {
-    //   setIsAddEvent(false)
-    //   setNotiModal({
-    //     ...notiModal,
-    //     isOpen: true,
-    //     type: 'failed',
-    //     text: 'Your submission was failed, please try it again later'
-    //   })
-    // }
+  const handleSubmitQuestion = async () => {
+    setReload(true)
+    setQuestionType(undefined)
+    setIsAddEvent(false)
   }
 
   const handleSearch = debounce(setSearchString, 500)
@@ -192,7 +153,7 @@ const QuestionBank: NextPage = () => {
       title: 'Question Name',
       dataIndex: 'title',
       key: 'title',
-      sorter: (a, b) => a.id - b.id,
+      // sorter: (a, b) => a.id - b.id,
       sortDirections: ['descend'],
       // sortIcon: () => <SortIcon />,
       render: (_, record: IQuestion) => <span className={styles['table-event limit-text']}>{record.title}</span>
@@ -365,6 +326,7 @@ const QuestionBank: NextPage = () => {
       />
       <>
         <AddQuestionModal
+          questionType={questionType}
           data={currentEvent}
           form={form}
           open={isAddEvent || isEditEvent}
@@ -374,7 +336,8 @@ const QuestionBank: NextPage = () => {
             setCurrentEvent(undefined)
             setQuestionType(undefined)
           }}
-          handleAddEvent={handleSubmitEvent}
+          handleAddQuestion={handleSubmitQuestion}
+          course={props.course}
         />
         <NotiModal
           open={notiModal.isOpen}
