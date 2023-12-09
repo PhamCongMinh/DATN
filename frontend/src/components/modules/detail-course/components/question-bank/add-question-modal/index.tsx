@@ -54,6 +54,15 @@ const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, data, ...
     course_id: props.course._id
   })
 
+  useEffect(() => {
+    setState((prev: IQuestionQuiz) =>
+      produce(prev, draft => {
+        // @ts-ignore
+        draft['type'] = props.questionType
+      })
+    )
+  }, [props.questionType])
+
   console.log('state', state)
 
   const handleSubmit = async () => {

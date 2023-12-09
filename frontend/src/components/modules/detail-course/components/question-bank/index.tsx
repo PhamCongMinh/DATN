@@ -136,6 +136,7 @@ const QuestionBank: NextPage<IProps> = props => {
   }
 
   const handleChoiceQuestionType = async (type: EQuestionType) => {
+    console.log('handleChoiceQuestionType', type)
     setQuestionType(type)
     setIsChooseQuestionType(false)
     setIsAddEvent(true)
@@ -243,27 +244,6 @@ const QuestionBank: NextPage<IProps> = props => {
     }
   ]
 
-  const items: MenuProps['items'] = [
-    { key: EventFiter.UPCOMING, label: 'Upcomming Event' },
-    { key: EventFiter.PAST, label: 'Past Event' }
-  ].map(item => ({
-    key: item.key,
-    label: (
-      <span
-        onClick={() => {
-          if (item.key === eventFilter) {
-            setEventFilter(undefined)
-          } else {
-            setEventFilter(item.key)
-          }
-        }}
-        className={styles[`filter-option ${eventFilter === item.key ? 'filter-active' : ''}`]}
-      >
-        {item.label}
-      </span>
-    )
-  }))
-
   // rowSelection object indicates the need for row selection
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
@@ -312,7 +292,6 @@ const QuestionBank: NextPage<IProps> = props => {
         onSearch={handleSearch}
         loading={false} //{isFetching} //TODO
         columns={columns}
-        // filterOptions={items}
         hiddenFilterBtn={true}
         dataSource={questions || []} //{meetingList?.data || []} // TODO
         timeFilter={timeFilter}
