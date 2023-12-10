@@ -23,9 +23,12 @@ import { EQuestionDifficultyLevel, EQuestionStatus, EQuestionType, IQuestion } f
 import { useSelector } from 'react-redux'
 import AxiosService from '../../../../../../utils/axios'
 import produce from 'immer'
-import QuestionAnswerForm from './question-answer-form'
-import GeneralQuestionForm from './general-question-form'
+import QuestionAnswerForm from './question-point-form'
+import GeneralQuestionForm from './general-exam-form'
 import { ICourse } from '../../../../course'
+import GeneralExamForm from './general-exam-form'
+import { IExam } from '../../../../../../types/exam'
+import QuestionPointForm from './question-point-form'
 
 const { TextArea } = Input
 const { Text } = Typography
@@ -33,38 +36,27 @@ const { Text } = Typography
 interface IProps extends ModalCustomProps {
   course: ICourse
   form: FormInstance<any>
-  handleAddQuestion: () => void
-  currentQuestion?: IQuestion
-  questionType?: EQuestionType
+  handleAddExam: () => void
+  currentExam?: IExam
 }
 
-const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, currentQuestion, ...props }) => {
+const AddExamModal: NextPage<IProps> = ({ form, handleAddExam, currentExam, ...props }) => {
   const { onCancel } = props
   const jwt = useSelector((state: any) => state.auth?.user?.jwt)
   const axiosService = new AxiosService('application/json', jwt)
 
   const [state, setState] = useState<IQuestion>({
-    type: props.questionType,
     course_id: props.course._id
   })
 
   useEffect(() => {
-    setState((prev: IQuestion) =>
-      produce(prev, draft => {
-        // @ts-ignore
-        draft['type'] = props.questionType
-      })
-    )
-  }, [props.questionType])
-
-  useEffect(() => {
-    if (currentQuestion) {
-      const { _id, ...rest } = currentQuestion
+    if (currentExam) {
+      const { _id, ...rest } = currentExam
       setState(rest)
     }
-  }, [currentQuestion])
+  }, [currentExam])
 
-  console.log('Create/edit question', state)
+  console.log('Create/edit exam', state)
 
   const handleSubmit = async () => {
     // const isUpdatedInfo = await checkUpdatedInfo()
@@ -74,13 +66,14 @@ const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, currentQu
     //   )
     //   return
     // }
-    handleAddQuestion()
+    handleAddExam()
+    console.log('currentExam', currentExam)
 
     // Create new question
-    if (!currentQuestion)
+    if (!currentExam)
       try {
         console.log(state)
-        const response = await axiosService.post('/question/quiz', state)
+        const response = await axiosService.post('/exam', state)
         console.log(response)
         message.success(`Tạo câu hỏi thành công`)
       } catch (error) {
@@ -91,7 +84,7 @@ const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, currentQu
     // Edit question
     try {
       console.log(state)
-      const response = await axiosService.put(`/question/quiz/${currentQuestion?._id}`, state)
+      const response = await axiosService.put(`/exam/${currentExam?._id}`, state)
       console.log(response)
       message.success(`Sửa câu hỏi thành công`)
     } catch (error) {
@@ -100,27 +93,29 @@ const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, currentQu
     }
   }
 
-  const handleGeneralQuestion = (value: any) => {
-    console.log('handleGeneralQuestion', value)
-    setState((prev: IQuestion) =>
+  const handleGeneralExam = (value: any) => {
+    console.log('handleGeneralExam', value)
+    setState((prev: IExam) =>
       produce(prev, draft => {
         // @ts-ignore
-        draft['title'] = value.title
-        draft['description'] = value.description
-        draft['status'] = value.status
-        draft['difficulty_level'] = value.difficulty_level
-        draft['points'] = value.points
-        draft['custom_question_id'] = value.custom_question_id
+        draft['exam_id'] = value.exam_id
+        draft['name'] = value.name
+        draft['point_ladder'] = value.point_ladder
+        draft['pass_point'] = value.pass_point
+        draft['retry_times_number'] = value.retry_times_number
+        draft['exam_time'] = value.exam_time
+        draft['start_time'] = value.exam_time
+        draft['end_time'] = value.exam_time
       })
     )
   }
 
-  const handleAddQuestionAnswers = (value: any) => {
-    console.log('handleAddQuestionAnswers', value)
-    setState((prev: IQuestion) =>
+  const handleAddQuestionPoint = (value: any) => {
+    console.log('handleAddQuestionPoint', value)
+    setState((prev: IExam) =>
       produce(prev, draft => {
         // @ts-ignore
-        draft['question_choice'] = value.items
+        draft['question_point'] = value.items
       })
     )
   }
@@ -128,19 +123,19 @@ const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, currentQu
   const items: CollapseProps['items'] = [
     {
       key: '1',
-      label: 'Câu hỏi',
+      label: 'Thông tin bài thi',
       children: (
         <>
-          <GeneralQuestionForm currentQuestion={currentQuestion} onFinish={handleGeneralQuestion} />
+          <GeneralExamForm currentExam={currentExam} onFinish={handleGeneralExam} />
         </>
       )
     },
     {
       key: '2',
-      label: 'Đáp án',
+      label: 'Danh sách câu hỏi',
       children: (
         <>
-          <QuestionAnswerForm currentQuestion={currentQuestion} onFinish={handleAddQuestionAnswers} />
+          <QuestionPointForm currentExam={currentExam} onFinish={handleAddQuestionPoint} />
         </>
       )
     },
@@ -166,7 +161,7 @@ const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, currentQu
   return (
     <>
       <Modal
-        title="Thêm câu hỏi mới"
+        title="Thêm bài thi mới"
         open={props.open}
         onOk={handleSubmit}
         onCancel={props.onCancel}
@@ -182,4 +177,4 @@ const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, currentQu
   )
 }
 
-export default AddQuestionModal
+export default AddExamModal

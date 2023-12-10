@@ -136,7 +136,15 @@ const QuestionBank: NextPage<IProps> = props => {
 
   const columns: ColumnsType<IQuestion> = [
     {
-      title: 'Question Name',
+      title: 'Mã câu hỏi',
+      dataIndex: 'custom_question_id',
+      key: 'custom_question_id',
+      render: (_, record: IQuestion) => (
+        <span className={styles['table-event limit-text']}>{record?.custom_question_id}</span>
+      )
+    },
+    {
+      title: 'Tên câu hỏi',
       dataIndex: 'title',
       key: 'title',
       // sorter: (a, b) => a.id - b.id,
@@ -145,7 +153,7 @@ const QuestionBank: NextPage<IProps> = props => {
       render: (_, record: IQuestion) => <span className={styles['table-event limit-text']}>{record.title}</span>
     },
     {
-      title: 'Status',
+      title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
       render: (_, record: IQuestion) => (
@@ -155,7 +163,7 @@ const QuestionBank: NextPage<IProps> = props => {
       )
     },
     {
-      title: 'Question type',
+      title: 'Loại',
       dataIndex: 'type',
       render: (_, record: IQuestion) => (
         <span className={styles['table-location']}>
@@ -165,7 +173,7 @@ const QuestionBank: NextPage<IProps> = props => {
       )
     },
     {
-      title: 'Difficulty level',
+      title: 'Độ khó',
       dataIndex: 'difficulty_level',
       render: (_, record: IQuestion) => (
         <div className={styles['table-organiser']}>
@@ -174,17 +182,17 @@ const QuestionBank: NextPage<IProps> = props => {
       )
     },
     {
-      title: 'Comment',
+      title: 'Nhận xét',
       dataIndex: 'comment',
       render: (_, record: IQuestion) => <span className={styles['table-sources']}>{record.comment}</span>
     },
     {
-      title: 'Author Id',
+      title: 'Tác giả',
       dataIndex: 'author_id',
       render: (_, record: IQuestion) => <span className={styles['table-sources']}>{record.author_id}</span>
     },
     {
-      title: 'Created Date',
+      title: 'Ngày tạo',
       dataIndex: 'created_at',
       render: (_, record: IQuestion) => (
         <span className={styles['table-created-date whitespace-nowrap']}>
@@ -193,7 +201,7 @@ const QuestionBank: NextPage<IProps> = props => {
       )
     },
     {
-      title: 'Updated Date',
+      title: 'Ngày chỉnh sửa',
       dataIndex: 'updated_at',
       render: (_, record: IQuestion) => (
         <span className={styles['table-created-date whitespace-nowrap']}>
