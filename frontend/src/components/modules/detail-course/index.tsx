@@ -113,7 +113,7 @@ const DetailCourseContent: NextPage<IProps> = props => {
         {selectedMenuItem === 'question_bank' && <QuestionBank course={props.course} />}
         {selectedMenuItem === 'exam_bank' && <ExamBank course={props.course} />}
         {selectedMenuItem === 'grade' && <Grade />}
-        {selectedMenuItem === 'discuss' && <Discuss />}
+        {selectedMenuItem === 'discuss' && <Discuss course={props.course} />}
       </div>
     </div>
   )

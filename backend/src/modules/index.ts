@@ -9,6 +9,7 @@ import QuestionModule from '@modules/question/question.module';
 import SubmissionModule from '@modules/submission/submission.module';
 import TestModule from '@modules/test/test.module';
 import CourseModule from '@modules/course/course.module';
+import DiscussModule from '@modules/discuss/discuss.module';
 
 export const MODULES = [
   AuthModule,
@@ -21,4 +22,5 @@ export const MODULES = [
   SubmissionModule,
   TestModule,
   CourseModule,
+  DiscussModule,
 ];

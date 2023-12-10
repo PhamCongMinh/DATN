@@ -1,30 +1,227 @@
-.content {
+@import 'styles/colors.scss';
+@import 'styles/variables.scss';
+
+.container {
   background: #ffffff;
   padding: 20px;
-  top: 0;
-  display: grid;
-  min-height: 1110px;
 }
 
-.card {
-  width: 360px ;
-  background: #f6efc8;
-  color: #c1a140
+.filter {
+  min-height: 68px !important;
+  min-width: 1632px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input {
+  min-width: 250px;
+  min-height: 47px;
+}
+
+
+.button {
+  width: 47px !important;
+  height: 47px;
+  padding: 0px !important;
+}
+
+.button_option {
+  min-width: 100px;
+  min-height: 47px;
+  color: #6e5555;
+}
+
+.content {
+  min-width: 1632px !important;
+  min-height: 350px !important;
+  align-items: center !important;
+  display: flex;
+  flex: 1;
 }
 
 .text {
-    font-size: 15px;
-    font-weight: 600;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 1.57;
-    letter-spacing: normal;
-    text-align: left;
-    color: #c1a140;
+  color: #512B1A;
+  font-weight: 400;
+  font-family: 'Open sans';
+  font-size: 20px;
+  line-height: 1.625em;
 }
 
 .title1 {
   font-family: "Open Sans";
   font-weight: 500;
-  font-size: 2.4rem !important;
+  font-size: 2rem !important;
+  color: #512B1A;
+}
+
+
+
+.meeting-page-container {
+  margin: 28px 16px 16px;
+  border: 1px solid $color-border-settings;
+  background: $color-white-0;
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.06),
+  0px 1px 3px 0px rgba(16, 24, 40, 0.1);
+
+  &-head {
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid $color-border-settings;
+
+    .head-text {
+      &-title {
+        color: $color-title;
+        font-family: "Open Sans";
+        font-size: $font-size-4;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 28px;
+        margin: 0;
+
+        span {
+          padding: 2px 8px;
+          border-radius: 16px;
+          background: rgba(238, 81, 30, 0.04);
+          color: $color-primary;
+          text-align: center;
+          font-family: "Open Sans";
+          font-size: $font-size-1;
+          font-style: normal;
+          font-weight: 500;
+          line-height: 18px;
+          margin-left: 8px;
+        }
+      }
+
+      &-subtitle {
+        color: $color-subtitle;
+        font-family: "Open Sans";
+        font-size: $font-size-2;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 20px;
+        margin: 0;
+        margin-top: 4px;
+      }
+    }
+
+    .head-action {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+    }
+  }
+
+  .ant-table-thead {
+    color: #475467;
+    font-size: $font-size-1;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px;
+
+    .ant-table-cell::before {
+      display: none;
+    }
+
+    .ant-table-column-sorters {
+      justify-content: flex-start;
+      gap: 4px;
+
+      span {
+        flex: 0;
+      }
+    }
+  }
+
+  .meeting-table {
+    font-size: 14px;
+    font-style: normal;
+    line-height: 20px;
+    font-weight: 400;
+
+    .table-organiser {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 12px;
+
+      &-name {
+        color: $color-title;
+        font-weight: 600;
+      }
+    }
+
+    .table-event {
+      color: $color-title;
+      font-weight: 600;
+    }
+
+    .limit-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+
+    .table-sources {
+      color: #313131;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      width: 200px;
+    }
+
+    .event_date,
+    .created_date {
+      color: #475467;
+    }
+
+    .table-location {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      height: 22px;
+      border-radius: 16px;
+      background: #f5f5f5;
+      padding: 0 4px;
+
+      .location {
+        color: #3b3b3b;
+        font-family: "Open Sans";
+        font-size: $font-size-1;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 18px;
+      }
+    }
+
+    .table-action {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+
+      .view-btn {
+        width: 108px;
+        color: $color-black-0;
+        font-family: "Open Sans";
+        font-size: $font-size-1;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 20px;
+        letter-spacing: -0.24px;
+      }
+
+      .trash-btn {
+        margin: 0 4px 0 28px;
+      }
+    }
+  }
 }

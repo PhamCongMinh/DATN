@@ -106,6 +106,13 @@ export class Course {
     required: false,
   })
   teachers?: string[];
+
+  @Prop({
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Discuss',
+    required: false,
+  })
+  discusses?: string[];
 }
 
 export const CourseSchema = SchemaFactory.createForClass(Course);

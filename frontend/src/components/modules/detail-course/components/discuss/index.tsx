@@ -1,34 +1,132 @@
-import React from 'react'
-import { Breadcrumb, Card, Col, Divider, Input, Row, Space, Typography } from 'antd'
-import { HomeOutlined, UserOutlined } from '@ant-design/icons'
+import { Breadcrumb, Divider, Space, Typography } from 'antd'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import styles from './style.module.scss'
-import RentOutForm from './components/form'
+import { HomeOutlined, UserOutlined } from '@ant-design/icons'
+import DetailDiscussContent from './components/detail-discuss'
+import { ICourse } from '../../../course'
+import { useSelector } from 'react-redux'
+import AxiosService from '../../../../../utils/axios'
+import DiscussElement from '../../../../elements/discuss'
+import ButtonContained from '../../../../elements/button-custom/ButtonContainer'
+import AddDiscussModal from './components/add-discuss-modal'
 
-const { Text, Title } = Typography
-export default function Discuss() {
+const { Text } = Typography
+
+type IProps = {
+  course: ICourse
+}
+
+export type IComment = {
+  _id?: string
+  content?: string
+  author_id?: string
+  rate?: number
+}
+
+export type IDiscuss = {
+  _id?: string
+  title?: string
+  content?: string
+  comments?: IComment[]
+  author_id?: string
+}
+
+const Discuss: React.FC<IProps> = (props): JSX.Element => {
+  const jwt = useSelector((state: any) => state.auth?.user?.jwt)
+  const axiosService = new AxiosService('application/json', jwt)
+  const [isLoading, setLoading] = useState<boolean>(false)
+  const [isAddDiscuss, setIsAddDiscuss] = useState(false)
+  const [discussData, setDiscussData] = useState<IDiscuss[]>()
+
+  const [isOpenDetailDiscuss, setIsOpenDetailDiscuss] = useState<boolean>(false)
+  const [detailDiscuss, setDetailDiscuss] = useState<IDiscuss>({} as IDiscuss)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axiosService.get(`/discuss/course/${props.course._id}`)
+      setDiscussData(response.data)
+    }
+    fetchData().catch(console.error)
+    setLoading(false)
+  }, [isLoading, props.course._id])
+
+  const handleClickDiscussDetail = (discuss: IDiscuss) => {
+    setDetailDiscuss(discuss)
+    setIsOpenDetailDiscuss(true)
+  }
+
+  const handleClickBack = () => {
+    setIsOpenDetailDiscuss(false)
+  }
+
+  const handleAddDiscuss = () => {
+    setIsAddDiscuss(false)
+    setLoading(true)
+  }
+
   return (
-    <div className={styles.content}>
-      <Row>
-        <Col span={16}>
-          <RentOutForm />
-        </Col>
-        <Col span={6} offset={2}>
-          <Card title="" className={styles.card}>
-            <p className={styles.text}>- Nội dung phải viết bằng tiếng Việt có dấu</p>
-            <p className={styles.text}>- Tiêu đề tin không dài quá 100 kí tự</p>
-            <p className={styles.text}>- Các bạn nên điền đầy đủ thông tin vào các mục để tin đăng có hiệu quả hơn</p>
-            <p className={styles.text}>
-              - Để tăng độ tin cậy và tin rao được nhiều người quan tâm hơn, hãy sửa vị trí tin rao của bạn trên bản đồ
-              bằng cách kéo icon tới đúng vị trí của tin rao.
-            </p>
-            <p className={styles.text}>
-              - Tin đăng có hình ảnh rõ ràng sẽ được xem và gọi gấp nhiều lần so với tin rao không có ảnh. Hãy đăng ảnh
-              để được giao dịch nhanh chóng
-            </p>
-          </Card>
-        </Col>
-      </Row>
+    <div>
+      <div className={styles.container}>
+        <div className={styles['meeting-page-container']}>
+          <div className={styles['meeting-page-container-head']}>
+            <div className={styles['head-text']}>
+              <h1 className={styles['head-text-title']}>
+                Trang diễn đàn
+                <span className={styles['total']}> Tổng số</span>
+              </h1>
+              <h2 className={styles['head-text-subtitle']}>
+                Thông báo, trao đổi thông tin và thảo luận liên quan đến khóa học
+              </h2>
+            </div>
+            <div className={styles['head-action']}>
+              <ButtonContained
+                onClick={() => {
+                  setIsAddDiscuss(true)
+                }}
+                btnType="green"
+                height={40}
+              >
+                Thêm thảo luận mới
+              </ButtonContained>
+            </div>
+          </div>
+          {isOpenDetailDiscuss === false && (
+            <Space className={styles.content}>
+              <div style={{ minWidth: 1008, maxHeight: 1000, overflowY: 'scroll', textAlign: 'center', marginTop: 30 }}>
+                {discussData && discussData.length !== 0 ? (
+                  discussData.map(discuss => (
+                    <DiscussElement
+                      key={discuss._id}
+                      title={discuss.title}
+                      content={discuss.content}
+                      onClick={() => handleClickDiscussDetail(discuss)}
+                    />
+                  ))
+                ) : (
+                  <Text className={styles.text}>{'Dữ liệu không tồn tại'}</Text>
+                )}
+              </div>
+            </Space>
+          )}
+
+          <AddDiscussModal
+            open={isAddDiscuss}
+            onCancel={() => {
+              setIsOpenDetailDiscuss(false)
+              setIsAddDiscuss(false)
+              setLoading(true)
+            }}
+            onOk={handleAddDiscuss}
+            course={props.course}
+          />
+        </div>
+      </div>
+      {isOpenDetailDiscuss === true && (
+        <DetailDiscussContent discuss={detailDiscuss} handleClickBack={handleClickBack} />
+      )}
     </div>
   )
 }
+
+export default React.memo(Discuss)
