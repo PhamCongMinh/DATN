@@ -4,6 +4,7 @@ import { Button, Card, DatePicker, Form, Input, Select, Space, Typography } from
 import { NextPage } from 'next'
 import { EQuestionDifficultyLevel, EQuestionStatus, IQuestionChoice, IQuestion } from '../../../../../../../types/types'
 import { IExam } from '../../../../../../../types/exam'
+import moment from 'moment'
 
 interface IProps {
   onFinish: (value: IExam) => void
@@ -11,10 +12,19 @@ interface IProps {
 }
 
 const GeneralExamForm: NextPage<IProps> = props => {
-  const [form] = Form.useForm<IExam>()
+  const [form] = Form.useForm()
 
   useEffect(() => {
-    if (props?.currentExam) form.setFieldsValue(props?.currentExam)
+    if (props?.currentExam) {
+      const { start_time, end_time, ...rest } = props?.currentExam
+      const formated_start_time = moment(start_time)
+      const formated_end_time = moment(end_time)
+      form.setFieldsValue({
+        ...rest,
+        start_time: formated_start_time,
+        end_time: formated_end_time
+      })
+    }
   }, [props?.currentExam])
 
   const onFinish = (fieldsValue: any) => {
@@ -24,6 +34,7 @@ const GeneralExamForm: NextPage<IProps> = props => {
       start_time: fieldsValue['start_time'].format('YYYY-MM-DD HH:mm:ss'),
       end_time: fieldsValue['end_time'].format('YYYY-MM-DD HH:mm:ss')
     }
+    console.log('Received values of form: ', values)
     props.onFinish(values)
   }
 

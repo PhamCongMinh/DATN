@@ -66,11 +66,10 @@ const AddExamModal: NextPage<IProps> = ({ form, handleAddExam, currentExam, ...p
     //   )
     //   return
     // }
-    handleAddExam()
     console.log('currentExam', currentExam)
 
     // Create new question
-    if (!currentExam)
+    if (!currentExam) {
       try {
         console.log(state)
         const response = await axiosService.post('/exam', state)
@@ -80,17 +79,19 @@ const AddExamModal: NextPage<IProps> = ({ form, handleAddExam, currentExam, ...p
         alert('Tạo câu hỏi thất bại, vui lòng kiểm tra lại thông tin trước khi thử lại')
         console.log(error)
       }
-
-    // Edit question
-    try {
-      console.log(state)
-      const response = await axiosService.put(`/exam/${currentExam?._id}`, state)
-      console.log(response)
-      message.success(`Sửa câu hỏi thành công`)
-    } catch (error) {
-      alert('Sửa câu hỏi thất bại, vui lòng kiểm tra lại thông tin trước khi thử lại')
-      console.log(error)
+    } else {
+      // Edit question
+      try {
+        console.log(state)
+        const response = await axiosService.put(`/exam/${currentExam?._id}`, state)
+        console.log(response)
+        message.success(`Sửa câu hỏi thành công`)
+      } catch (error) {
+        alert('Sửa câu hỏi thất bại, vui lòng kiểm tra lại thông tin trước khi thử lại')
+        console.log(error)
+      }
     }
+    handleAddExam()
   }
 
   const handleGeneralExam = (value: any) => {
@@ -104,8 +105,8 @@ const AddExamModal: NextPage<IProps> = ({ form, handleAddExam, currentExam, ...p
         draft['pass_point'] = value.pass_point
         draft['retry_times_number'] = value.retry_times_number
         draft['exam_time'] = value.exam_time
-        draft['start_time'] = value.exam_time
-        draft['end_time'] = value.exam_time
+        draft['start_time'] = value.start_time
+        draft['end_time'] = value.end_time
       })
     )
   }
