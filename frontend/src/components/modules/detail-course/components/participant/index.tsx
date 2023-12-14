@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Typography } from 'antd'
+import { Breadcrumb, Typography } from 'antd'
 
 import styles from './style.module.scss'
 import RentalNewsTable from './components/table'
@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux'
 import { ICourse } from '../../../course'
 import { NextPage } from 'next'
 import { EUserRole } from '../../../../../types/user'
+import { HomeOutlined, UserOutlined } from '@ant-design/icons'
 
 const { Text } = Typography
 
@@ -50,7 +51,20 @@ const Participant: NextPage<IProps> = props => {
 
   return (
     <div className={styles.content}>
-      {/*<Divider style={{ width: 1300 }}></Divider>*/}
+      <Breadcrumb>
+        <Breadcrumb.Item>
+          <HomeOutlined />
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <UserOutlined />
+          <span>Khóa học</span>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>Danh sách tham gia</Breadcrumb.Item>
+      </Breadcrumb>
+      <Text className={styles.title1}>
+        Danh sách tham gia khóa học
+        <br />
+      </Text>
       <RentalNewsTable table={tableData} reload={handleReload} />
     </div>
   )

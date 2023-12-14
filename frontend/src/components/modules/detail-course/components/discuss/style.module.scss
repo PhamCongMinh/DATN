@@ -4,6 +4,7 @@
 .container {
   background: #ffffff;
   padding: 20px;
+  width: 1230px !important;
 }
 
 .filter {
@@ -33,7 +34,7 @@
 }
 
 .content {
-  min-width: 1632px !important;
+  //min-width: 1632px !important;
   min-height: 350px !important;
   align-items: center !important;
   display: flex;

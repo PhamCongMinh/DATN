@@ -2,11 +2,12 @@
 @import 'styles/variables.scss';
 
 .meeting-page-container {
-  margin: 28px 16px 16px;
+  //margin: 28px 16px 16px;
   border: 1px solid $color-border-settings;
   background: $color-white-0;
   box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.06),
     0px 1px 3px 0px rgba(16, 24, 40, 0.1);
+  width: 1180px;
 
   &-head {
     padding: 20px 24px;
@@ -169,3 +170,17 @@
     }
   }
 }
+
+.content {
+  background: #ffffff;
+  padding: 20px;
+  position: absolute;
+  top: 0;
+}
+
+.title1 {
+  font-family: "Open Sans";
+  font-weight: 500;
+  font-size: 1.8rem !important;
+}
+

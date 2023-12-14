@@ -11,7 +11,7 @@ import DefaultOrganier from 'assets/icons/meeting/organiser.png'
 import React, { useEffect, useState } from 'react'
 import styles from './style.module.scss'
 import ButtonContained from 'components/elements/button-custom/ButtonContainer'
-import { Button, message } from 'antd'
+import { Breadcrumb, Button, message, Typography } from 'antd'
 import dayjs from 'dayjs'
 import AddQuestionModal from './add-question-modal'
 import NotiModal from 'components/elements/noti-modal'
@@ -48,6 +48,8 @@ import TrashIcon from '../../../../../assets/icons/trash.png'
 import EditIcon from '../../../../../assets/icons/edit.png'
 import Image from 'next/image'
 import QuestionTypeChoose from './question-type-choose'
+import { HomeOutlined, UserOutlined } from '@ant-design/icons'
+const { Text } = Typography
 
 export const DATE_FORMAT_FULL = 'YYYY-MM-DDTHH:mm:ss.SSS[Z]'
 
@@ -249,89 +251,105 @@ const QuestionBank: NextPage<IProps> = props => {
   }
 
   return (
-    <div className={styles['meeting-page-container']}>
-      <div className={styles['meeting-page-container-head']}>
-        <div className={styles['head-text']}>
-          <h1 className={styles['head-text-title']}>
-            Tạo câu hỏi
-            <span className={styles['total']}> Tổng số</span>
-          </h1>
-          <h2 className={styles['head-text-subtitle']}>Thêm câu hỏi cho đề thi và bài kiểm tra</h2>
+    <div className={styles.content}>
+      <Breadcrumb>
+        <Breadcrumb.Item>
+          <HomeOutlined />
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <UserOutlined />
+          <span>Khóa học</span>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>Ngân hàng câu hỏi</Breadcrumb.Item>
+      </Breadcrumb>
+      <Text className={styles.title1}>
+        Ngân hàng câu hỏi
+        <br />
+      </Text>
+      <div className={styles['meeting-page-container']}>
+        <div className={styles['meeting-page-container-head']}>
+          <div className={styles['head-text']}>
+            <h1 className={styles['head-text-title']}>
+              Tạo câu hỏi
+              <span className={styles['total']}> Tổng số</span>
+            </h1>
+            <h2 className={styles['head-text-subtitle']}>Thêm câu hỏi cho đề thi và bài kiểm tra</h2>
+          </div>
+          <div className={styles['head-action']}>
+            <ButtonOutlined btnType="base" height={40}>
+              Export
+            </ButtonOutlined>
+            <ButtonOutlined btnType="base" height={40}>
+              Import
+            </ButtonOutlined>
+            <ButtonContained
+              onClick={() => {
+                setIsChooseQuestionType(true)
+                setIsAddEvent(false)
+                setIsEditEvent(false)
+                setCurrentQuestion(undefined)
+              }}
+              btnType="green"
+              height={40}
+            >
+              Thêm câu hỏi mới
+            </ButtonContained>
+          </div>
         </div>
-        <div className={styles['head-action']}>
-          <ButtonOutlined btnType="base" height={40}>
-            Export
-          </ButtonOutlined>
-          <ButtonOutlined btnType="base" height={40}>
-            Import
-          </ButtonOutlined>
-          <ButtonContained
-            onClick={() => {
-              setIsChooseQuestionType(true)
+        <TableCustom
+          className={styles['meeting-table']}
+          rowSelection={rowSelection}
+          onSearch={handleSearch}
+          loading={false} //{isFetching} //TODO
+          columns={columns}
+          hiddenFilterBtn={true}
+          dataSource={questions || []} //{meetingList?.data || []} // TODO
+          timeFilter={timeFilter}
+          setTimeFilter={setTimeFilter}
+          setCurrentPage={setCurrentPage}
+          paginate={{
+            curPage: currentPage,
+            totalPages: 5, //totalPage as number, //TODO
+            setPage: setCurrentPage
+          }}
+        />
+        <>
+          <AddQuestionModal
+            questionType={questionType}
+            currentQuestion={currentQuestion}
+            form={form}
+            open={isAddEvent || isEditEvent}
+            onCancel={() => {
               setIsAddEvent(false)
               setIsEditEvent(false)
               setCurrentQuestion(undefined)
+              setQuestionType(undefined)
             }}
-            btnType="green"
-            height={40}
-          >
-            Thêm câu hỏi mới
-          </ButtonContained>
-        </div>
+            handleAddQuestion={handleSubmitQuestion}
+            course={props.course}
+          />
+          <NotiModal
+            open={notiModal.isOpen}
+            onCancel={() => setNotiModal({ isOpen: false, text: '', type: 'success' })}
+            type={notiModal.type}
+            text={notiModal.text}
+          />
+          <RemovedModal
+            open={isRemove}
+            onCancel={() => setIsRemove(false)}
+            centered
+            content="Are you sure you wanted to remove this event?"
+            handleDeleteAdmin={handleRemoveEvent}
+          />
+          <QuestionTypeChoose
+            open={isChooseQuestionType}
+            onCancel={() => {
+              setIsChooseQuestionType(false)
+            }}
+            onOk={handleChoiceQuestionType}
+          />
+        </>
       </div>
-      <TableCustom
-        className={styles['meeting-table']}
-        rowSelection={rowSelection}
-        onSearch={handleSearch}
-        loading={false} //{isFetching} //TODO
-        columns={columns}
-        hiddenFilterBtn={true}
-        dataSource={questions || []} //{meetingList?.data || []} // TODO
-        timeFilter={timeFilter}
-        setTimeFilter={setTimeFilter}
-        setCurrentPage={setCurrentPage}
-        paginate={{
-          curPage: currentPage,
-          totalPages: 5, //totalPage as number, //TODO
-          setPage: setCurrentPage
-        }}
-      />
-      <>
-        <AddQuestionModal
-          questionType={questionType}
-          currentQuestion={currentQuestion}
-          form={form}
-          open={isAddEvent || isEditEvent}
-          onCancel={() => {
-            setIsAddEvent(false)
-            setIsEditEvent(false)
-            setCurrentQuestion(undefined)
-            setQuestionType(undefined)
-          }}
-          handleAddQuestion={handleSubmitQuestion}
-          course={props.course}
-        />
-        <NotiModal
-          open={notiModal.isOpen}
-          onCancel={() => setNotiModal({ isOpen: false, text: '', type: 'success' })}
-          type={notiModal.type}
-          text={notiModal.text}
-        />
-        <RemovedModal
-          open={isRemove}
-          onCancel={() => setIsRemove(false)}
-          centered
-          content="Are you sure you wanted to remove this event?"
-          handleDeleteAdmin={handleRemoveEvent}
-        />
-        <QuestionTypeChoose
-          open={isChooseQuestionType}
-          onCancel={() => {
-            setIsChooseQuestionType(false)
-          }}
-          onOk={handleChoiceQuestionType}
-        />
-      </>
     </div>
   )
 }

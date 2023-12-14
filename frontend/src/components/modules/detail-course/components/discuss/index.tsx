@@ -89,6 +89,15 @@ const Discuss: React.FC<IProps> = (props): JSX.Element => {
               >
                 Thêm thảo luận mới
               </ButtonContained>
+              <ButtonContained
+                onClick={() => {
+                  setIsOpenDetailDiscuss(!isOpenDetailDiscuss)
+                }}
+                btnType="green"
+                height={40}
+              >
+                Quay lại
+              </ButtonContained>
             </div>
           </div>
           {isOpenDetailDiscuss === false && (

@@ -102,7 +102,7 @@ const RentalNewsTable: React.FC<IProps> = (props): JSX.Element => {
     <Table
       columns={columns}
       dataSource={tableData}
-      style={{ maxHeight: 500, overflowY: 'scroll', minWidth: 1300, marginTop: 20 }}
+      style={{ maxHeight: 500, overflowY: 'scroll', minWidth: 1150, marginTop: 20 }}
     />
   )
 }

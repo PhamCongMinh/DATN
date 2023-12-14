@@ -4,7 +4,7 @@ import TableCustom from 'components/elements/table'
 import React, { useEffect, useState } from 'react'
 import styles from './style.module.scss'
 import ButtonContained from 'components/elements/button-custom/ButtonContainer'
-import { Button, message } from 'antd'
+import { Breadcrumb, Button, message, Typography } from 'antd'
 import dayjs from 'dayjs'
 import AddQuestionModal from './add-exam-modal'
 import NotiModal from 'components/elements/noti-modal'
@@ -21,6 +21,8 @@ import EditIcon from '../../../../../assets/icons/edit.png'
 import Image from 'next/image'
 import { IExam } from '../../../../../types/exam'
 import AddExamModal from './add-exam-modal'
+import { HomeOutlined, UserOutlined } from '@ant-design/icons'
+const { Text } = Typography
 
 export const DATE_FORMAT_FULL = 'YYYY-MM-DDTHH:mm:ss.SSS[Z]'
 
@@ -215,79 +217,95 @@ const ExamBank: NextPage<IProps> = props => {
   }
 
   return (
-    <div className={styles['meeting-page-container']}>
-      <div className={styles['meeting-page-container-head']}>
-        <div className={styles['head-text']}>
-          <h1 className={styles['head-text-title']}>
-            Tạo đề thi/bài tập
-            <span className={styles['total']}> Tổng số</span>
-          </h1>
-          <h2 className={styles['head-text-subtitle']}>Thêm bài kiểm tra hoặc bài tập cho khóa học</h2>
+    <div className={styles.content}>
+      <Breadcrumb>
+        <Breadcrumb.Item>
+          <HomeOutlined />
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <UserOutlined />
+          <span>Khóa học</span>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>Ngân hàng đề thi </Breadcrumb.Item>
+      </Breadcrumb>
+      <Text className={styles.title1}>
+        Ngân hàng đề thi
+        <br />
+      </Text>
+      <div className={styles['meeting-page-container']}>
+        <div className={styles['meeting-page-container-head']}>
+          <div className={styles['head-text']}>
+            <h1 className={styles['head-text-title']}>
+              Tạo đề thi/bài tập
+              <span className={styles['total']}> Tổng số</span>
+            </h1>
+            <h2 className={styles['head-text-subtitle']}>Thêm bài kiểm tra hoặc bài tập cho khóa học</h2>
+          </div>
+          <div className={styles['head-action']}>
+            <ButtonOutlined btnType="base" height={40}>
+              Export
+            </ButtonOutlined>
+            <ButtonOutlined btnType="base" height={40}>
+              Import
+            </ButtonOutlined>
+            <ButtonContained
+              onClick={() => {
+                setIsAddEvent(true)
+                setIsEditEvent(false)
+                setCurrentExam(undefined)
+              }}
+              btnType="green"
+              height={40}
+            >
+              Thêm đề thi mới
+            </ButtonContained>
+          </div>
         </div>
-        <div className={styles['head-action']}>
-          <ButtonOutlined btnType="base" height={40}>
-            Export
-          </ButtonOutlined>
-          <ButtonOutlined btnType="base" height={40}>
-            Import
-          </ButtonOutlined>
-          <ButtonContained
-            onClick={() => {
-              setIsAddEvent(true)
+        <TableCustom
+          className={styles['meeting-table']}
+          rowSelection={rowSelection}
+          onSearch={handleSearch}
+          loading={false} //{isFetching} //TODO
+          columns={columns}
+          hiddenFilterBtn={true}
+          dataSource={exams || []} //{meetingList?.data || []} // TODO
+          timeFilter={timeFilter}
+          setTimeFilter={setTimeFilter}
+          setCurrentPage={setCurrentPage}
+          paginate={{
+            curPage: currentPage,
+            totalPages: 5, //totalPage as number, //TODO
+            setPage: setCurrentPage
+          }}
+        />
+        <>
+          <AddExamModal
+            currentExam={currentExam}
+            form={form}
+            open={isAddEvent || isEditEvent}
+            onCancel={() => {
+              setIsAddEvent(false)
               setIsEditEvent(false)
               setCurrentExam(undefined)
             }}
-            btnType="green"
-            height={40}
-          >
-            Thêm đề thi mới
-          </ButtonContained>
-        </div>
-      </div>
-      <TableCustom
-        className={styles['meeting-table']}
-        rowSelection={rowSelection}
-        onSearch={handleSearch}
-        loading={false} //{isFetching} //TODO
-        columns={columns}
-        hiddenFilterBtn={true}
-        dataSource={exams || []} //{meetingList?.data || []} // TODO
-        timeFilter={timeFilter}
-        setTimeFilter={setTimeFilter}
-        setCurrentPage={setCurrentPage}
-        paginate={{
-          curPage: currentPage,
-          totalPages: 5, //totalPage as number, //TODO
-          setPage: setCurrentPage
-        }}
-      />
-      <>
-        <AddExamModal
-          currentExam={currentExam}
-          form={form}
-          open={isAddEvent || isEditEvent}
-          onCancel={() => {
-            setIsAddEvent(false)
-            setIsEditEvent(false)
-            setCurrentExam(undefined)
-          }}
-          handleAddExam={handleSubmitQuestion}
-          course={props.course}
-        />
-        <NotiModal
-          open={notiModal.isOpen}
-          onCancel={() => setNotiModal({ isOpen: false, text: '', type: 'success' })}
-          type={notiModal.type}
-          text={notiModal.text}
-        />
-        <RemovedModal
-          open={isRemove}
-          onCancel={() => setIsRemove(false)}
-          centered
-          content="Are you sure you wanted to remove this exam?"
-          handleDeleteAdmin={handleRemoveEvent}
-        />
-      </>
+            handleAddExam={handleSubmitQuestion}
+            course={props.course}
+          />
+          <NotiModal
+            open={notiModal.isOpen}
+            onCancel={() => setNotiModal({ isOpen: false, text: '', type: 'success' })}
+            type={notiModal.type}
+            text={notiModal.text}
+          />
+          <RemovedModal
+            open={isRemove}
+            onCancel={() => setIsRemove(false)}
+            centered
+            content="Are you sure you wanted to remove this exam?"
+            handleDeleteAdmin={handleRemoveEvent}
+          />
+        </>
+      </div>{' '}
     </div>
   )
 }

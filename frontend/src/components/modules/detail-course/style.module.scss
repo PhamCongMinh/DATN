@@ -3,11 +3,19 @@
   //flex-direction: column;
   background-color: #ffffff;
   //padding-left: 130px;
-  padding-left: 100px;
-  padding-right: 100px;
-  padding-top: 15px;
-  margin-top: 5px;
+  //padding-left: 100px;
+  //padding-right: 100px;
+  //padding-top: 15px;
+  //margin-top: 5px;
   position: relative;
+  //max-width: 1430px !important;
+}
+
+.space {
+  max-width: 1390px !important;
+  min-height: 550px;
+  display: flex !important;
+  align-items: normal;
 }
 
 .title1 {

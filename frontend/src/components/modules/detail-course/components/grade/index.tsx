@@ -32,6 +32,20 @@ export default function Grade() {
 
   return (
     <div className={styles.content}>
+      <Breadcrumb>
+        <Breadcrumb.Item>
+          <HomeOutlined />
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <UserOutlined />
+          <span>Khóa học</span>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>Điểm số</Breadcrumb.Item>
+      </Breadcrumb>
+      <Text className={styles.title1}>
+        Điểm số
+        <br />
+      </Text>
       {/*<Divider style={{ width: 1300 }}></Divider>*/}
       <RentalNewsTable table={tableData} reload={handleReload} />
     </div>

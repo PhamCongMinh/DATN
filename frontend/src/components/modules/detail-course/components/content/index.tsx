@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { Button, Collapse, Modal, Typography } from 'antd'
+import { Button, Collapse, Modal, Typography, Breadcrumb } from 'antd'
 import type { CollapseProps } from 'antd'
 
 import styles from './style.module.scss'
-import { SettingOutlined } from '@ant-design/icons'
+import { HomeOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons'
 import AddResource from './components/modal'
 import Lesson from './components/lesson'
 
@@ -97,9 +97,23 @@ export default function CourseContent() {
   })
   return (
     <div className={styles.content}>
+      <Breadcrumb>
+        <Breadcrumb.Item>
+          <HomeOutlined />
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <UserOutlined />
+          <span>Khóa học</span>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>Thông tin chi tiết</Breadcrumb.Item>
+      </Breadcrumb>
+      <Text className={styles.title1}>
+        Thông tin chi tiết khóa học
+        <br />
+      </Text>
       {!isLessonOpen ? (
         <>
-          <Collapse items={items} defaultActiveKey={['0']} />
+          <Collapse items={items} defaultActiveKey={['0']} style={{ minWidth: 1150 }} />
           <Button className={styles.button} type="primary" onClick={showModal}>
             Thêm nội dung
           </Button>

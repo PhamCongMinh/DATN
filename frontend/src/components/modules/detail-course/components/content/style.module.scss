@@ -3,6 +3,7 @@
   top: 0;
   display: grid;
   //max-width: 1250px;
+  margin-left: 20px;
 }
 
 .section {
@@ -32,4 +33,9 @@
   cursor: pointer;
 }
 
+.title1 {
+  font-family: "Open Sans";
+  font-weight: 500;
+  font-size: 1.8rem !important;
+}
 

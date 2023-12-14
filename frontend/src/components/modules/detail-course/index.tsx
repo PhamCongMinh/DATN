@@ -1,5 +1,5 @@
 import styles from './style.module.scss'
-import { Breadcrumb, Button, Card, Col, Divider, Input, Menu, MenuProps, Rate, Row, Typography } from 'antd'
+import { Breadcrumb, Button, Card, Col, Divider, Input, Menu, MenuProps, Rate, Row, Space, Typography } from 'antd'
 import { AppstoreOutlined, HomeOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
 import React, { useCallback, useState } from 'react'
 import { NextPage } from 'next'
@@ -63,7 +63,8 @@ const items: MenuProps['items'] = [
   getItem('Ngân hàng câu hỏi', 'question_bank', <AppstoreOutlined />),
   getItem('Đề thi', 'exam_bank', <MailOutlined />),
   getItem('Điểm', 'grade', <MailOutlined />),
-  getItem('Thảo luận', 'discuss', <MailOutlined />)
+  getItem('Thảo luận', 'discuss', <MailOutlined />),
+  getItem('Quay lại', 'back', <AppstoreOutlined />)
 ]
 
 const DetailCourseContent: NextPage<IProps> = props => {
@@ -83,37 +84,25 @@ const DetailCourseContent: NextPage<IProps> = props => {
 
   return (
     <div className={styles.content}>
-      <Breadcrumb>
-        <Breadcrumb.Item onClick={props.handleClickBack}>
-          <HomeOutlined />
-        </Breadcrumb.Item>
-        <Breadcrumb.Item onClick={props.handleClickBack}>
-          <UserOutlined />
-          <span>Khóa học</span>
-        </Breadcrumb.Item>
-        <Breadcrumb.Item>Thông tin chi tiết</Breadcrumb.Item>
-      </Breadcrumb>
-      <Text className={styles.title1}>
-        Thông tin chi tiết khóa học
-        <br />
-      </Text>
-
       <div style={{ background: '#ffffff', minHeight: 1110 }}>
-        <Menu
-          onClick={({ key }) => handleClickMenuItem(key)}
-          // style={{ width: 230, height: 1165 }}
-          defaultSelectedKeys={['1']}
-          defaultOpenKeys={['sub1']}
-          mode="horizontal"
-          items={items}
-          className={styles.menu}
-        />
-        {selectedMenuItem === 'content' && <CourseContent />}
-        {selectedMenuItem === 'participant' && <Participant course={props.course} />}
-        {selectedMenuItem === 'question_bank' && <QuestionBank course={props.course} />}
-        {selectedMenuItem === 'exam_bank' && <ExamBank course={props.course} />}
-        {selectedMenuItem === 'grade' && <Grade />}
-        {selectedMenuItem === 'discuss' && <Discuss course={props.course} />}
+        <Space className={styles.space}>
+          <Menu
+            onClick={({ key }) => handleClickMenuItem(key)}
+            style={{ width: 215, height: 1165 }}
+            defaultSelectedKeys={['1']}
+            defaultOpenKeys={['sub1']}
+            // mode="horizontal"
+            items={items}
+            className={styles.menu}
+          />
+          {selectedMenuItem === 'content' && <CourseContent />}
+          {selectedMenuItem === 'participant' && <Participant course={props.course} />}
+          {selectedMenuItem === 'question_bank' && <QuestionBank course={props.course} />}
+          {selectedMenuItem === 'exam_bank' && <ExamBank course={props.course} />}
+          {selectedMenuItem === 'grade' && <Grade />}
+          {selectedMenuItem === 'discuss' && <Discuss course={props.course} />}
+          {selectedMenuItem === 'back' && props.handleClickBack()}
+        </Space>
       </div>
     </div>
   )
