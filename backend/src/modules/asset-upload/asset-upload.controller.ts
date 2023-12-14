@@ -5,6 +5,8 @@ import {
   UploadedFile,
   Req,
   Body,
+  Delete,
+  Param,
 } from '@nestjs/common';
 import { AssetUploadService } from './asset-upload.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -24,9 +26,9 @@ export class AssetUploadController {
   @UseInterceptors(
     FileInterceptor('file', {
       dest: './upload',
-      limits: {
-        fileSize: 20242880, // 20mb
-      },
+      // limits: {
+      //   fileSize: 20242880, // 20mb
+      // },
     }),
   )
   @ApiConsumes('multipart/form-data')
@@ -51,5 +53,15 @@ export class AssetUploadController {
     @Req() req,
   ) {
     return this.assetUploadService.create(data, req.user._id);
+  }
+
+  @Delete('/:id')
+  // @UseAuth([EUserRole.TEACHER, EUserRole.STUDENT, EUserRole.USER])
+  delete(@Param('id') id: string, @Req() req) {
+    return this.assetUploadService.delete(
+      id,
+
+      // req.user._id
+    );
   }
 }
