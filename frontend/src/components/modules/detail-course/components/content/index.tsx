@@ -1,11 +1,17 @@
 import React, { useState } from 'react'
-import { Button, Collapse, Modal, Typography, Breadcrumb } from 'antd'
+import { Button, Collapse, Modal, Typography, Breadcrumb, Space } from 'antd'
 import type { CollapseProps } from 'antd'
 
 import styles from './style.module.scss'
 import { HomeOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons'
-import AddResource from './components/modal'
 import Lesson from './components/lesson'
+import Image from 'next/image'
+import TrashIcon from '../../../../../assets/icons/trash.png'
+import EditIcon from '../../../../../assets/icons/edit.png'
+import AddIcon from '../../../../../assets/icons/plus.png'
+import { IQuestion } from '../../../../../types/types'
+import AddLesson from './components/add-lesson'
+import AddSection from './components/add-section'
 
 const { Text, Title } = Typography
 
@@ -49,6 +55,11 @@ export interface ISection {
 export default function CourseContent() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isLessonOpen, setIsLessonOpen] = useState(false)
+  const [isAddSection, setIsAddSection] = useState(false)
+  const [isAddLesson, setIsAddLesson] = useState(false)
+  const [isEditSection, setIsEditSection] = useState(false)
+  const [isEditLesson, setIsEditLesson] = useState(false)
+  const [isRemove, setIsRemove] = useState(false)
 
   const showModal = () => {
     setIsModalOpen(true)
@@ -60,6 +71,7 @@ export default function CourseContent() {
 
   const handleCancel = () => {
     setIsModalOpen(false)
+    setIsAddSection(false)
   }
 
   const handleClickLesson = () => {
@@ -67,11 +79,34 @@ export default function CourseContent() {
   }
 
   const genExtra = () => (
-    <SettingOutlined
-      onClick={event => {
-        console.log('event', event)
-      }}
-    />
+    <span style={{ position: 'absolute', right: 15 }}>
+      <Button
+        type="link"
+        onClick={() => {
+          setIsAddSection(true)
+          // setCurrentQuestion(record)
+          // setIsRemove(true)
+        }}
+        icon={<Image src={AddIcon} alt="House1" style={{ height: 19, width: 17 }} />}
+      />
+      <Button
+        type="link"
+        onClick={() => {
+          // setCurrentQuestion(record)
+          setIsRemove(true)
+        }}
+        icon={<Image src={TrashIcon} alt="House1" style={{ height: 19, width: 17 }} />}
+      />
+      <Button
+        onClick={() => {
+          // setCurrentQuestion(record)
+          setIsEditSection(true)
+          setIsAddSection(false)
+        }}
+        type="link"
+        icon={<Image src={EditIcon} alt="House1" style={{ height: 18, width: 18 }} />}
+      />
+    </span>
   )
 
   const items = dataExample.map((section, index) => {
@@ -79,7 +114,14 @@ export default function CourseContent() {
     return {
       key: index.toString(),
       label: section_title,
-      style: { fontSize: 18, lineHeight: 1.4, color: '#171717', fontWeight: 500 },
+      style: {
+        fontSize: 18,
+        lineHeight: 1.4,
+        color: '#171717',
+        fontWeight: 500,
+        position: 'relative',
+        alignItems: 'center'
+      },
       extra: genExtra(),
       children: (
         <div className={styles.section}>
@@ -89,6 +131,25 @@ export default function CourseContent() {
                 {lesson.title}
                 <br />
               </div>
+              <span className={styles.icon}>
+                <Button
+                  type="link"
+                  onClick={() => {
+                    // setCurrentQuestion(record)
+                    setIsRemove(true)
+                  }}
+                  icon={<Image src={TrashIcon} alt="House1" style={{ height: 19, width: 17 }} />}
+                />
+                <Button
+                  onClick={() => {
+                    // setCurrentQuestion(record)
+                    setIsEditLesson(true)
+                    // setIsAddEvent(false)
+                  }}
+                  type="link"
+                  icon={<Image src={EditIcon} alt="House1" style={{ height: 18, width: 18 }} />}
+                />
+              </span>
             </div>
           ))}
         </div>
@@ -117,7 +178,8 @@ export default function CourseContent() {
           <Button className={styles.button} type="primary" onClick={showModal}>
             Thêm nội dung
           </Button>
-          <AddResource open={isModalOpen} onOk={handleOk} onCancel={handleCancel} />
+          <AddSection open={isModalOpen} onOk={handleOk} onCancel={handleCancel} />
+          <AddLesson open={isAddSection} onOk={handleOk} onCancel={handleCancel} />
         </>
       ) : (
         <Lesson />

@@ -12,11 +12,14 @@
 
 .lesson {
   min-height: 50px !important;
-  display: flex;
-  align-items: center;
+  //display: flex;
+  //align-items: center;
   font-size: 17px;
   line-height: 1.4;
   color: #404040;
+  display: flex;
+  align-items: center;
+  position: relative;
 }
 
 .button {
@@ -39,3 +42,7 @@
   font-size: 1.8rem !important;
 }
 
+.icon {
+  position: absolute;
+  right: 0;
+}
