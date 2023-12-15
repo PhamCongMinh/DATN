@@ -28,6 +28,12 @@ export class Lesson {
   section_id: string;
 
   @Prop({
+    type: Number,
+    required: false,
+  })
+  order?: number;
+
+  @Prop({
     type: String,
     required: false,
   })

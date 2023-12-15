@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
 import { LoggerService } from '@shared/modules/loggers/logger.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CourseService } from '@modules/course/course.service';
@@ -7,6 +7,7 @@ import { CreateSectionDto } from '@modules/course/dto/create-section.dto';
 import { CreateLessonDto } from '@modules/course/dto/create-lesson.dto';
 import { UseAuth } from '@shared/decorators/auth.decorator';
 import { EUserRole } from '@models/entities';
+import { GetSectionInACourseDto } from '@modules/course/dto/get-section-in-a course.dto';
 
 @ApiTags('Course')
 @Controller('course')
@@ -36,11 +37,19 @@ export class CourseController {
   }
 
   @Post('/section')
+  @UseAuth(Object.values(EUserRole))
   async createSection(@Body() data: CreateSectionDto) {
     return this.courseService.createSection(data);
   }
 
+  @Get('/section')
+  @UseAuth(Object.values(EUserRole))
+  async getContentInACourse(@Query() data: GetSectionInACourseDto) {
+    return this.courseService.getContentInACourse(data.course_id);
+  }
+
   @Post('/lesson')
+  @UseAuth(Object.values(EUserRole))
   async createLesson(@Body() data: CreateLessonDto) {
     return this.courseService.createLesson(data);
   }

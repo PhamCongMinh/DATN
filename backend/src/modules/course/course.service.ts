@@ -65,4 +65,16 @@ export class CourseService {
 
     return course.save();
   }
+
+  async getContentInACourse(course_id: string) {
+    const sections = await this.sectionRepository.sectionDocument
+      .find({
+        course_id: course_id,
+      })
+      .populate('lessons')
+      .sort({ order: 1 })
+      .exec();
+
+    return sections;
+  }
 }

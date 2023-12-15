@@ -2,6 +2,7 @@ import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { Prop } from '@shared/swagger';
 import { User } from '@models/entities/User.entity';
+import { Section } from '@models/entities/Section.entity';
 
 export type CourseDocument = Course & Document;
 
@@ -69,17 +70,17 @@ export class Course {
   })
   files?: string;
 
-  @Prop({
-    type: String,
-    required: false,
-  })
-  assessments?: string;
-
-  @Prop({
-    type: String,
-    required: false,
-  })
-  lectures?: string;
+  // @Prop({
+  //   type: String,
+  //   required: false,
+  // })
+  // assessments?: string;
+  //
+  // @Prop({
+  //   type: String,
+  //   required: false,
+  // })
+  // lectures?: string;
 
   @Prop({
     type: String,
@@ -113,6 +114,13 @@ export class Course {
     required: false,
   })
   discusses?: string[];
+
+  @Prop({
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Section',
+    required: false,
+  })
+  sections?: string[];
 }
 
 export const CourseSchema = SchemaFactory.createForClass(Course);

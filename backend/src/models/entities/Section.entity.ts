@@ -28,6 +28,12 @@ export class Section {
   course_id: string;
 
   @Prop({
+    type: Number,
+    required: false,
+  })
+  order?: number;
+
+  @Prop({
     type: Boolean,
     required: false,
   })
