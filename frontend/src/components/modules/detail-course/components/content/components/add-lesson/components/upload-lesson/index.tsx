@@ -6,6 +6,10 @@ import { useSelector } from 'react-redux'
 import { InboxOutlined } from '@ant-design/icons'
 import AxiosService from '../../../../../../../../../utils/axios'
 import PdfView from '../../../../../../../../elements/pdf-view'
+import { IFile } from '../../../../../../../../../types/file'
+import { LessonType } from '../../../../../../../../../types/lesson'
+import Image from 'next/image'
+import ReactPlayer from 'react-player/lazy'
 
 const { Dragger } = Upload
 
@@ -26,11 +30,12 @@ const initialState: ICreateRentalNews = {}
 
 const UploadLesson: React.FC<IProps> = (props): JSX.Element => {
   const [state, setState] = useState<ICreateRentalNews>(initialState)
-  const [image, setImage] = useState<any>()
   const jwt = useSelector((state: any) => state.auth?.user?.jwt)
   const axiosService = new AxiosService('multipart/form-data', jwt)
 
   const [isPreview, setIsPreview] = useState(false)
+  const [file, setFile] = useState<IFile>()
+  const [embedFile, setEmbedFile] = useState<string>()
 
   const handleClickPreview = () => {
     setIsPreview(!isPreview)
@@ -66,27 +71,7 @@ const UploadLesson: React.FC<IProps> = (props): JSX.Element => {
   //   )
   // }
   //
-  // const props: UploadProps = {
-  //   name: 'file',
-  //   // action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-  //   // headers: {
-  //   //   authorization: 'authorization-text'
-  //   // },
-  //   multiple: false,
-  //   // showUploadList: false,
-  //   accept: 'image/png,image/gif,image/jpeg',
-  //   onChange(info) {
-  //     if (info.file.status !== 'uploading') {
-  //       console.log(info.file, info.fileList)
-  //     }
-  //     if (info.file.status === 'done') {
-  //       message.success(`${info.file.name} file uploaded successfully`)
-  //       setImage(info.file.originFileObj)
-  //     } else if (info.file.status === 'error') {
-  //       message.error(`${info.file.name} file upload failed.`)
-  //     }
-  //   }
-  // }
+
   //
   // const checkUpdatedInfo = async () => {
   //   const response = await axiosService.get('/auth/check-updated-information')
@@ -116,58 +101,50 @@ const UploadLesson: React.FC<IProps> = (props): JSX.Element => {
   //   }
   // }
 
-  const uploadProps1: UploadProps = {
-    name: 'file',
-    // action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    // headers: {
-    //   authorization: 'authorization-text'
-    // },
-    multiple: false,
-    // showUploadList: false,
-    accept: 'image/png,image/gif,image/jpeg',
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList)
-      }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`)
-        setImage(info.file.originFileObj)
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`)
-      }
-    }
+  const handleEmbedFile = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setEmbedFile(e.target.value)
+    setFile(undefined)
   }
 
   const uploadProps: UploadProps = {
     name: 'file',
-    multiple: true,
-    action: 'https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188',
-    onChange(info) {
-      const { status } = info.file
-      if (status !== 'uploading') {
-        console.log(info.file, info.fileList)
+    multiple: false,
+    customRequest: async options => {
+      try {
+        const formData = new FormData()
+        formData.append('file', options.file)
+
+        const response = await axiosService.post('/asset-upload', formData)
+        console.log(response)
+        setFile(response.data)
+        setEmbedFile(undefined)
+        message.success(`Tải file thành công`)
+
+        // @ts-ignore
+        options.onSuccess('oke')
+      } catch (error) {
+        message.error(` file upload failed.`)
+        // @ts-ignore
+        options.onError(new Error('Tải file thất bại, vui lòng kiểm tra lại file trước khi thử lại'))
       }
-      if (status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully.`)
-      } else if (status === 'error') {
-        message.error(`${info.file.name} file upload failed.`)
-      }
-    },
-    onDrop(e) {
-      console.log('Dropped files', e.dataTransfer.files)
     }
+  }
+
+  const onOk = () => {
+    props.onOk()
+    setIsPreview(false)
+    setFile(undefined)
+  }
+
+  const onCancel = () => {
+    props.onCancel()
+    setIsPreview(false)
+    setFile(undefined)
   }
 
   return (
     <>
-      <Modal
-        title="Tạo bài học mới"
-        open={props.open}
-        onOk={props.onOk}
-        onCancel={props.onCancel}
-        centered
-        width={1000}
-      >
+      <Modal title="Tạo bài học mới" open={props.open} onOk={onOk} onCancel={onCancel} centered width={1000}>
         {isPreview === false && (
           <>
             <Text className={styles.title3} style={{ marginTop: 20 }}>
@@ -182,10 +159,14 @@ const UploadLesson: React.FC<IProps> = (props): JSX.Element => {
               <br />
               Nhúng video vào bài giảng
             </Text>
+            <Button style={{ marginLeft: 20 }} onClick={handleClickPreview}>
+              Xem trước
+            </Button>
             <TextArea
               rows={4}
-              style={{ maxWidth: 1000, marginBottom: 30 }}
-              // onChange={e => handleChange('description', e)}
+              style={{ maxWidth: 1000, marginBottom: 30, marginTop: 10 }}
+              value={embedFile}
+              onChange={e => handleEmbedFile(e)}
             />
 
             <Text className={styles.title3}>Tài liệu khóa học</Text>
@@ -208,8 +189,16 @@ const UploadLesson: React.FC<IProps> = (props): JSX.Element => {
         {isPreview === true && (
           <div>
             <Button onClick={handleClickPreview}>Quay lại</Button>
-            <div style={{ maxHeight: 800, display: 'flex', justifyContent: 'center' }}>
-              <PdfView pdfUrl={'https://datn.blob.core.windows.net/datn/87e827d2-29d5-4b76-af16-bbc86b032661.pdf'} />
+            <div style={{ maxHeight: 800, display: 'flex', justifyContent: 'center', marginTop: 10, minHeight: 500 }}>
+              {file && file.asset_url && file.file_type === LessonType.pdf && <PdfView pdfUrl={file.asset_url} />}
+              {file && file.asset_url && (file.file_type === 'png' || file.file_type === 'jpg') && (
+                <img alt="example" src={file.asset_url} height={500} />
+              )}
+              {file && file.asset_url && file.file_type === 'mp4' && (
+                // <ReactPlayer controls height={500} src={file.asset_url} />
+                <video controls src={file.asset_url} height={500} />
+              )}
+              {embedFile && <div dangerouslySetInnerHTML={{ __html: embedFile }} style={{ height: 500 }} />}
             </div>
           </div>
         )}

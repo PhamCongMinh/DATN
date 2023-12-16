@@ -85,24 +85,27 @@ const DetailCourseContent: NextPage<IProps> = props => {
   return (
     <div className={styles.content}>
       <div style={{ background: '#ffffff', minHeight: 1110 }}>
-        <Space className={styles.space}>
-          <Menu
-            onClick={({ key }) => handleClickMenuItem(key)}
-            style={{ width: 215, height: 1165 }}
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
-            // mode="horizontal"
-            items={items}
-            className={styles.menu}
-          />
-          {selectedMenuItem === 'content' && <CourseContent />}
-          {selectedMenuItem === 'participant' && <Participant course={props.course} />}
-          {selectedMenuItem === 'question_bank' && <QuestionBank course={props.course} />}
-          {selectedMenuItem === 'exam_bank' && <ExamBank course={props.course} />}
-          {selectedMenuItem === 'grade' && <Grade />}
-          {selectedMenuItem === 'discuss' && <Discuss course={props.course} />}
-          {selectedMenuItem === 'back' && props.handleClickBack()}
-        </Space>
+        {
+          // @ts-ignore
+          <Space className={styles.space}>
+            <Menu
+              onClick={({ key }) => handleClickMenuItem(key)}
+              style={{ width: 215, height: 1165 }}
+              defaultSelectedKeys={['1']}
+              defaultOpenKeys={['sub1']}
+              // mode="horizontal"
+              items={items}
+              className={styles.menu}
+            />
+            {selectedMenuItem === 'content' && <CourseContent />}
+            {selectedMenuItem === 'participant' && <Participant course={props.course} />}
+            {selectedMenuItem === 'question_bank' && <QuestionBank course={props.course} />}
+            {selectedMenuItem === 'exam_bank' && <ExamBank course={props.course} />}
+            {selectedMenuItem === 'grade' && <Grade />}
+            {selectedMenuItem === 'discuss' && <Discuss course={props.course} />}
+            {selectedMenuItem === 'back' && props.handleClickBack()}
+          </Space>
+        }
       </div>
     </div>
   )
