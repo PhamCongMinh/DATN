@@ -1,19 +1,16 @@
 import styles from './style.module.scss'
 import { Breadcrumb, Button, Card, Col, Divider, Input, Menu, MenuProps, Rate, Row, Space, Typography } from 'antd'
 import { AppstoreOutlined, HomeOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { NextPage } from 'next'
 import { useDispatch, useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
-import Participant from './components/participant'
-import ExamBank from './components/exam-bank'
-import Grade from './components/grade'
 import Discuss from './components/discuss'
 import CourseContent from './components/content'
-import QuestionBank from './components/question-bank'
 import AxiosService from '../../../../../utils/axios'
 import { ICourse } from '../../index'
 import { authSliceActions } from '../../../../../store/auth/authSlice'
+import OverviewCourse from './components/overview'
 
 const { Text, Title } = Typography
 
@@ -54,12 +51,13 @@ function getItem(
   } as MenuItem
 }
 
-const items: MenuProps['items'] = [
+const itemsForNotJoined: MenuProps['items'] = [
+  getItem('Giới thiệu', 'overview', <AppstoreOutlined />),
+  getItem('Quay lại', 'back', <AppstoreOutlined />)
+]
+
+const itemsForJoined: MenuProps['items'] = [
   getItem('Khóa học', 'content', <AppstoreOutlined />),
-  getItem('Người tham gia', 'participant', <AppstoreOutlined />),
-  getItem('Ngân hàng câu hỏi', 'question_bank', <AppstoreOutlined />),
-  getItem('Đề thi', 'exam_bank', <MailOutlined />),
-  getItem('Điểm', 'grade', <MailOutlined />),
   getItem('Thảo luận', 'discuss', <MailOutlined />),
   getItem('Quay lại', 'back', <AppstoreOutlined />)
 ]
@@ -68,8 +66,23 @@ const DetailCourseContent: NextPage<IProps> = props => {
   const [selectedMenuItem, setSelectedMenuItem] = React.useState('content')
   const jwt = useSelector((state: any) => state.auth?.user?.jwt)
   const axiosService = new AxiosService('application/json', jwt)
+  const user = useSelector((state: any) => state.auth?.user)
   const router = useRouter()
   const dispatch = useDispatch()
+
+  const [isJoinedCourse, setIsJoinedCourse] = useState<boolean>(false)
+
+  useEffect(() => {
+    const axiosService = new AxiosService('application/json', jwt)
+    const fetchData = async () => {
+      const response = await axiosService.get(`/course/${props?.course?._id}/check-joined`)
+      const data: boolean = response.data.is_joined
+      setIsJoinedCourse(data)
+      if (!data) setSelectedMenuItem('overview')
+    }
+
+    fetchData()
+  }, [props?.course?._id])
 
   const handleClickMenuItem = async (key: string) => {
     if (key === 'logout') {
@@ -90,15 +103,11 @@ const DetailCourseContent: NextPage<IProps> = props => {
               style={{ width: 215, height: 1165 }}
               defaultSelectedKeys={['1']}
               defaultOpenKeys={['sub1']}
-              // mode="horizontal"
-              items={items}
+              items={isJoinedCourse ? itemsForJoined : itemsForNotJoined}
               className={styles.menu}
             />
+            {selectedMenuItem === 'overview' && <OverviewCourse course={props.course} />}
             {selectedMenuItem === 'content' && <CourseContent course={props.course} />}
-            {selectedMenuItem === 'participant' && <Participant course={props.course} />}
-            {selectedMenuItem === 'question_bank' && <QuestionBank course={props.course} />}
-            {selectedMenuItem === 'exam_bank' && <ExamBank course={props.course} />}
-            {selectedMenuItem === 'grade' && <Grade />}
             {selectedMenuItem === 'discuss' && <Discuss course={props.course} />}
             {selectedMenuItem === 'back' && props.handleClickBack()}
           </Space>

@@ -108,4 +108,16 @@ export class CourseController {
   async joinCourse(@Req() req, @Param('id') id: string) {
     return this.courseService.joinCourse(req.user._id, id);
   }
+
+  @UseAuth(Object.values(EUserRole))
+  @Get('/joined')
+  async getJoinedCourse(@Req() req) {
+    return this.courseService.getJoinedCourse(req.user._id);
+  }
+
+  @UseAuth(Object.values(EUserRole))
+  @Get('/:id/check-joined')
+  async checkJoinedCourse(@Req() req, @Param('id') id: string) {
+    return this.courseService.checkJoinedCourse(req.user._id, id);
+  }
 }

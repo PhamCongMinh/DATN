@@ -59,23 +59,23 @@ const CourseContent: NextPage = () => {
   const user = useSelector((state: any) => state.auth?.user)
 
   //TODO:
-  const initialUrl = '/manage-course'
+  const initialUrl = '/course'
   const [reload, setReload] = useState<boolean>(false)
   const [appliedFilter, setAppliedFilter] = useState<TSearchCourse>({})
   const [courses, setCourses] = useState<ICourse[]>()
+  const [joinedCourses, setJoinedCourses] = useState<ICourse[]>()
   const [currentCourse, setCurrentCourse] = useState<ICourse>()
-
-  const handleUserNotLogin = useCallback(() => {
-    window.location.href = '/signin'
-    // router.push('/signin')
-  }, [])
 
   useEffect(() => {
     const axiosService = new AxiosService('application/json', jwt)
     const fetchData = async () => {
-      const response = await axiosService.get('/course')
-      const data: ICourse[] = response.data
-      setCourses(data)
+      const response1 = await axiosService.get('/course')
+      const data1: ICourse[] = response1.data
+      const response2 = await axiosService.get('/course/joined')
+      const data2: ICourse[] = response2.data
+
+      setCourses(data1)
+      setJoinedCourses(data2)
       setReload(false)
     }
     fetchData()
@@ -144,9 +144,9 @@ const CourseContent: NextPage = () => {
                 openDetailCourse={handleClickCourseDetail}
               />
             )}
-            {selectedMenuItem === 'joinedCourse' && courses && (
+            {selectedMenuItem === 'joinedCourse' && joinedCourses && (
               <JoinedCourse
-                data={courses}
+                data={joinedCourses}
                 handleSearch={handleClickSearchButton}
                 appliedFilter={appliedFilter}
                 setReload={handleReload}

@@ -128,4 +128,29 @@ export class CourseService {
   async updateSection(section_id: string, data: CreateSectionDto) {
     return this.sectionRepository.update(section_id, data);
   }
+
+  async getJoinedCourse(student_id: string) {
+    const course = await this.courseRepository.courseDocument
+      .find({
+        students: { $in: [student_id] },
+      })
+      .exec();
+    console.log(course);
+
+    return course;
+  }
+
+  async checkJoinedCourse(student_id: string, course_id: string) {
+    const course = await this.courseRepository.courseDocument
+      .findOne({ _id: course_id })
+      .exec();
+
+    if (course?.students.includes(student_id))
+      return {
+        is_joined: true,
+      };
+    return {
+      is_joined: false,
+    };
+  }
 }
