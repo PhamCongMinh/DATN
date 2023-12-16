@@ -4,7 +4,7 @@ import type { CollapseProps } from 'antd'
 
 import styles from './style.module.scss'
 import { HomeOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons'
-import Lesson from './components/lesson'
+// import Lesson from './components/lesson'
 import Image from 'next/image'
 import TrashIcon from '../../../../../assets/icons/trash.png'
 import EditIcon from '../../../../../assets/icons/edit.png'
@@ -12,22 +12,18 @@ import AddIcon from '../../../../../assets/icons/plus.png'
 import { IQuestion } from '../../../../../types/types'
 import AddLesson from './components/add-lesson'
 import AddSection from './components/add-section'
-import { LessonType } from '../../../../../types/lesson'
+import { ILesson, LessonType } from '../../../../../types/lesson'
 import UploadLesson from './components/add-lesson/components/upload-lesson'
 import { ICourse } from '../../../course'
 import { NextPage } from 'next'
 import { useSelector } from 'react-redux'
 import AxiosService from '../../../../../utils/axios'
 import { ISection } from '../../../../../types/section'
+import ViewLesson from './components/view-lesson'
 
 const { Text, Title } = Typography
 
 const url = 'http://localhost:3000/course'
-
-export interface ILesson {
-  lesson_title: string
-  lesson_url: string
-}
 
 type IProps = {
   course: ICourse
@@ -52,9 +48,6 @@ const CourseContent: NextPage<IProps> = props => {
   const [lessonType, setLessonType] = useState<LessonType>()
   const [isOpenLessonType, setIsOpenLessonType] = useState<boolean>(false)
   const [isOpenUploadLesson, setIsOpenUploadLesson] = useState<boolean>(false)
-
-  console.log('course_id', props.course._id)
-  console.log('currentSection', currentSection)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -87,12 +80,14 @@ const CourseContent: NextPage<IProps> = props => {
 
     setIsOpenLessonType(false)
     setIsLessonOpen(false)
+    setCurrentLesson(undefined)
     setIsOpenUploadLesson(false)
 
     setLoading(true)
   }
 
-  const handleClickLesson = () => {
+  const handleClickLesson = (lesson: ILesson) => {
+    setCurrentLesson(lesson)
     setIsLessonOpen(true)
   }
 
@@ -179,7 +174,7 @@ const CourseContent: NextPage<IProps> = props => {
         <div className={styles.section}>
           {lessons?.map((lesson, index) => (
             <div key={lesson._id} className={styles.lesson}>
-              <div onClick={handleClickLesson}>
+              <div onClick={() => handleClickLesson(lesson)}>
                 {lesson.name}
                 <br />
               </div>
@@ -213,16 +208,17 @@ const CourseContent: NextPage<IProps> = props => {
         </Breadcrumb.Item>
         <Breadcrumb.Item>
           <UserOutlined />
-          <span>Khóa học</span>
+          <span onClick={handleCancel}>Khóa học</span>
         </Breadcrumb.Item>
         <Breadcrumb.Item>Thông tin chi tiết</Breadcrumb.Item>
       </Breadcrumb>
-      <Text className={styles.title1}>
-        Thông tin chi tiết khóa học
-        <br />
-      </Text>
       {!isLessonOpen ? (
         <>
+          <Text className={styles.title1}>
+            Thông tin chi tiết khóa học
+            <br />
+          </Text>
+
           <Collapse items={items} defaultActiveKey={['0']} style={{ minWidth: 1150 }} />
           <Button className={styles.button} type="primary" onClick={showModal}>
             Thêm nội dung
@@ -244,7 +240,7 @@ const CourseContent: NextPage<IProps> = props => {
           />
         </>
       ) : (
-        <Lesson />
+        <ViewLesson lesson={currentLesson} onBack={handleCancel} />
       )}
     </div>
   )

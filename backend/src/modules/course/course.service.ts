@@ -43,7 +43,7 @@ export class CourseService {
     const { documents, ...rest } = data;
     const lesson = await this.lessonRepository.create({
       ...rest,
-      documents: documents ? documents.id : null,
+      documents: documents ? documents._id : null,
     });
 
     await this.sectionRepository.update(data.section_id, {
@@ -59,6 +59,15 @@ export class CourseService {
     });
 
     return await this.lessonRepository.delete(lesson_id);
+  }
+
+  async getLessonById(lesson_id: string) {
+    return this.lessonRepository.lessonDocument
+      .find({
+        _id: lesson_id,
+      })
+      .populate('documents')
+      .exec();
   }
 
   async getListStudentInCourse(author_id: string, course_id: string) {
@@ -89,7 +98,12 @@ export class CourseService {
       .find({
         course_id: course_id,
       })
-      .populate('lessons')
+      .populate({
+        path: 'lessons',
+        populate: {
+          path: 'documents',
+        },
+      })
       .sort({ order: 1 })
       .exec();
 

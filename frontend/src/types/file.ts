@@ -1,5 +1,5 @@
 export interface IFile {
-  id: string
+  _id: string
   asset_url: string
   file_type: string
   user_id: string

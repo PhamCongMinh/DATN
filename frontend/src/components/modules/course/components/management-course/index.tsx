@@ -62,7 +62,7 @@ const ManagementCourse: React.FC<IProps> = (props): JSX.Element => {
               grid={{ gutter: 30 }}
               dataSource={props.data}
               renderItem={(course: ICourse) => (
-                <List.Item>
+                <List.Item key={course._id}>
                   <Course
                     key={course._id}
                     name={course.name}

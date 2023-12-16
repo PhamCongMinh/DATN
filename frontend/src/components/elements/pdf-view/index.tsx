@@ -8,9 +8,10 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.j
 
 interface Props {
   pdfUrl: string
+  height: number
 }
 
-const PdfView = ({ pdfUrl }: Props) => {
+const PdfView = ({ pdfUrl, height }: Props) => {
   const [numPages, setNumPages] = useState<number>(1)
   const [pageNumber, setPageNumber] = useState(1)
   const [pdfHeight, setPdfHeight] = useState<number | undefined>(undefined)
@@ -44,7 +45,7 @@ const PdfView = ({ pdfUrl }: Props) => {
   return (
     <div style={{ maxHeight: 500 }}>
       <Document file={pdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
-        <Page pageNumber={pageNumber} renderTextLayer={false} renderAnnotationLayer={false} height={500} />
+        <Page pageNumber={pageNumber} renderTextLayer={false} renderAnnotationLayer={false} height={height} />
       </Document>
       <div style={{ height: `${pageNumberWrapperHeight}` }}>
         <PageNumberCustom totalPage={numPages || 0} page={pageNumber} onBack={handleBack} onNext={handleNextPage} />

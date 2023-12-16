@@ -37,7 +37,6 @@ const UploadLesson: React.FC<IProps> = (props): JSX.Element => {
   const axiosService = new AxiosService('multipart/form-data', jwt)
 
   const [isPreview, setIsPreview] = useState(false)
-  console.log('state', state)
 
   useEffect(() => {
     setState({
@@ -195,7 +194,9 @@ const UploadLesson: React.FC<IProps> = (props): JSX.Element => {
               {state &&
                 state?.documents &&
                 state?.documents?.asset_url &&
-                state?.documents?.file_type === LessonType.pdf && <PdfView pdfUrl={state?.documents?.asset_url} />}
+                state?.documents?.file_type === LessonType.pdf && (
+                  <PdfView pdfUrl={state?.documents?.asset_url} height={500} />
+                )}
               {state &&
                 state?.documents &&
                 state?.documents?.asset_url &&

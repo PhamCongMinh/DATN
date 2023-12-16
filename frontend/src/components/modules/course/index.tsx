@@ -177,7 +177,7 @@ const CourseContent: NextPage = () => {
           </Space>
         </div>
       )}
-      {isOpenDetailCourse === true && (
+      {isOpenDetailCourse === true && currentCourse && (
         <DetailCourseContent course={currentCourse} handleClickBack={handleClickBack} setReload={handleReload} />
       )}
     </div>
