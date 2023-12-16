@@ -12,6 +12,8 @@ import AddIcon from '../../../../../assets/icons/plus.png'
 import { IQuestion } from '../../../../../types/types'
 import AddLesson from './components/add-lesson'
 import AddSection from './components/add-section'
+import { LessonType } from '../../../../../types/lesson'
+import UploadLesson from './components/add-lesson/components/upload-lesson'
 
 const { Text, Title } = Typography
 
@@ -61,21 +63,41 @@ export default function CourseContent() {
   const [isEditLesson, setIsEditLesson] = useState(false)
   const [isRemove, setIsRemove] = useState(false)
 
+  const [lessonType, setLessonType] = useState<LessonType>()
+  const [isOpenLessonType, setIsOpenLessonType] = useState<boolean>(false)
+  const [isOpenUploadLesson, setIsOpenUploadLesson] = useState<boolean>(false)
+
+  console.log('lessonType', lessonType)
+  console.log('isOpenLessonType', isOpenLessonType)
+
   const showModal = () => {
-    setIsModalOpen(true)
+    setIsAddSection(true)
   }
 
   const handleOk = () => {
-    setIsModalOpen(false)
+    setIsAddSection(false)
+    setIsLessonOpen(false)
   }
 
   const handleCancel = () => {
-    setIsModalOpen(false)
     setIsAddSection(false)
+    setIsLessonOpen(false)
+    setIsOpenUploadLesson(false)
   }
 
   const handleClickLesson = () => {
     setIsLessonOpen(true)
+  }
+
+  const handleChoseLessonType = (type: LessonType) => {
+    setIsOpenLessonType(false)
+    setIsOpenUploadLesson(true)
+    setLessonType(type)
+  }
+
+  const handleUploadLesson = () => {
+    setIsOpenUploadLesson(false)
+    setLessonType(undefined)
   }
 
   const genExtra = () => (
@@ -83,7 +105,7 @@ export default function CourseContent() {
       <Button
         type="link"
         onClick={() => {
-          setIsAddSection(true)
+          setIsOpenLessonType(true)
           // setCurrentQuestion(record)
           // setIsRemove(true)
         }}
@@ -178,8 +200,9 @@ export default function CourseContent() {
           <Button className={styles.button} type="primary" onClick={showModal}>
             Thêm nội dung
           </Button>
-          <AddSection open={isModalOpen} onOk={handleOk} onCancel={handleCancel} />
-          <AddLesson open={isAddSection} onOk={handleOk} onCancel={handleCancel} />
+          <AddSection open={isAddSection} onOk={handleOk} onCancel={handleCancel} />
+          <AddLesson open={isOpenLessonType} onOk={handleChoseLessonType} onCancel={handleCancel} />
+          <UploadLesson open={isOpenUploadLesson} onOk={handleUploadLesson} onCancel={handleCancel} />
         </>
       ) : (
         <Lesson />

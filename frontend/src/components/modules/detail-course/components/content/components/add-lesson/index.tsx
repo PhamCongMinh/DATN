@@ -44,7 +44,7 @@ const { Text } = Typography
 
 interface IProps {
   open: boolean
-  onOk: () => void
+  onOk: (type: LessonType) => void
   onCancel: () => void
   // setReload: () => void
   // openDetailCourse: (course: any) => void
@@ -60,18 +60,21 @@ const AddLesson: React.FC<IProps> = (props): JSX.Element => {
   const jwt = useSelector((state: any) => state.auth?.user?.jwt)
   const axiosService = new AxiosService('multipart/form-data', jwt)
 
-  const [lessonType, setLessonType] = useState<string>('video')
+  const [lessonType, setLessonType] = useState<LessonType>(LessonType.pdf)
+  const [isOpenLessonType, setIsOpenLessonType] = useState<boolean>(false)
+  const [isOpenUploadLesson, setIsOpenUploadLesson] = useState<boolean>(false)
 
-  const handleChooseLessonType = (type: string) => {
+  const handleChooseLessonType = (type: LessonType) => {
     setLessonType(type)
+    props.onOk(type)
   }
 
   return (
     <>
       <Modal
         title="Tạo bài học mới"
+        style={{ fontSize: 30 }}
         open={props.open}
-        onOk={props.onOk}
         onCancel={props.onCancel}
         centered
         width={1100}
