@@ -1,3 +1,8 @@
+.course {
+  border-radius: 29px !important;
+  border: 1px solid !important;
+}
+
 .space {
   position: relative;
   background-color: #FFFFFF;
@@ -17,8 +22,8 @@
 }
 
 .title {
-  color: #DD4148 !important;
-  font-weight: 500 !important;
+  color: #000000 !important;
+  font-weight: 600 !important;
   font-family: 'Open sans' !important;
   font-size: 15px !important;
   line-height: 1.625em !important;
@@ -26,15 +31,15 @@
 }
 
 .text {
-  color: #512B1A;
+  color: #636363;
   font-weight: 400;
   font-family: 'Open sans';
   font-size: 15px;
   line-height: 1.625em;
 }
 
-.price {
-  color: #06B200;
+.tag {
+  color: #636363;
   font-weight: 400;
   font-family: 'Open sans';
   font-size: 15px;
@@ -42,10 +47,10 @@
 }
 
 .button {
-  color: #FFFFFF;
+  background: #FFFFFF;
   border-radius: 2px;
   text-align: center;
-  background: #2B95CA;
+  color: #2B95CA;
   font-family: Open sans;
   font-weight: 400;
   min-height: 42px;

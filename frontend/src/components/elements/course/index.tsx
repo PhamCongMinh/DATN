@@ -20,14 +20,14 @@ const Course: React.FC<IProps> = (props): JSX.Element => {
   const { name, tag, status, author } = props
 
   return (
-    <div style={{ textAlign: 'center' }} onClick={props.onClick}>
+    <div className={styles.course} style={{ textAlign: 'center' }} onClick={props.onClick}>
       <div className={styles.space}>
-        <Image src={CourseImage} alt="CourseImage" style={{ width: 280, height: 180 }} />
+        <Image src={CourseImage} alt="CourseImage" style={{ width: 280, height: 160 }} />
         <div className={styles.container}>
           <Title ellipsis={{ rows: 1 }} className={styles.title}>
             {name}
           </Title>
-          <Text className={styles.price}>
+          <Text className={styles.tag}>
             {tag}
             <br />
           </Text>

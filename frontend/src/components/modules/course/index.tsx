@@ -2,17 +2,15 @@ import { Alert, Button, Layout, Menu, MenuProps, Space, Typography } from 'antd'
 import styles from './style.module.scss'
 import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons'
 import React, { useCallback, useEffect, useState } from 'react'
-import CreateRentalnews from './components/create-course'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
-import ManagementRentalNews from './components/management-news'
 import { authSliceActions } from '../../../store/auth/authSlice'
-import Contact from './components/management-news/components/contact'
-import ManagementCourse, { TSearchCourse } from './components/management-course'
+import JoinedCourse, { TSearchCourse } from './components/joined-course'
 import AxiosService from '../../../utils/axios'
 import { NextPage } from 'next'
-import CreateCourse from './components/create-course'
 import DetailCourseContent from './components/detail-course'
+import Contact from '../manage-account/components/contact'
+import AllCourse from './components/all-course'
 
 type MenuItem = Required<MenuProps>['items'][number]
 const { Text } = Typography
@@ -33,9 +31,8 @@ function getItem(
 }
 
 const items: MenuProps['items'] = [
-  getItem('Quản lý khóa học', 'managementCourse', <AppstoreOutlined />),
-  getItem('Tạo khóa học mới', 'createCourse', <AppstoreOutlined />),
-  getItem('Quản lí tin đăng', 'managementNews', <AppstoreOutlined />),
+  getItem('Tất cả khóa học', 'course', <AppstoreOutlined />),
+  getItem('Khóa học tham gia', 'joinedCourse', <AppstoreOutlined />),
   getItem('Liên hệ', 'contact', <MailOutlined />)
 ]
 
@@ -56,7 +53,7 @@ export interface ICourse {
 const CourseContent: NextPage = () => {
   const router = useRouter()
   const dispatch = useDispatch()
-  const [selectedMenuItem, setSelectedMenuItem] = React.useState('managementCourse')
+  const [selectedMenuItem, setSelectedMenuItem] = React.useState('course')
   const [isOpenDetailCourse, setIsOpenDetailCourse] = useState<boolean>(false)
   const jwt = useSelector((state: any) => state.auth?.user?.jwt)
   const user = useSelector((state: any) => state.auth?.user)
@@ -76,7 +73,7 @@ const CourseContent: NextPage = () => {
   useEffect(() => {
     const axiosService = new AxiosService('application/json', jwt)
     const fetchData = async () => {
-      const response = await axiosService.get('/course/my-course')
+      const response = await axiosService.get('/course')
       const data: ICourse[] = response.data
       setCourses(data)
       setReload(false)
@@ -138,8 +135,8 @@ const CourseContent: NextPage = () => {
                 className={styles.menu}
               />
             </div>
-            {selectedMenuItem === 'managementCourse' && courses && (
-              <ManagementCourse
+            {selectedMenuItem === 'course' && courses && (
+              <AllCourse
                 data={courses}
                 handleSearch={handleClickSearchButton}
                 appliedFilter={appliedFilter}
@@ -147,8 +144,15 @@ const CourseContent: NextPage = () => {
                 openDetailCourse={handleClickCourseDetail}
               />
             )}
-            {selectedMenuItem === 'createCourse' && <CreateCourse />}
-            {selectedMenuItem === 'managementNews' && <ManagementRentalNews />}
+            {selectedMenuItem === 'joinedCourse' && courses && (
+              <JoinedCourse
+                data={courses}
+                handleSearch={handleClickSearchButton}
+                appliedFilter={appliedFilter}
+                setReload={handleReload}
+                openDetailCourse={handleClickCourseDetail}
+              />
+            )}
             {selectedMenuItem === 'contact' && (
               <div className={styles.contact}>
                 <Contact />

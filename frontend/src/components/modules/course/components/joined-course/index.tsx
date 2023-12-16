@@ -27,7 +27,7 @@ export type TSearchCourse = {
 
 const initialState: TSearchCourse = {}
 
-const ManagementCourse: React.FC<IProps> = (props): JSX.Element => {
+const JoinedCourse: React.FC<IProps> = (props): JSX.Element => {
   const [extendedFilter, setExtendedFilter] = useState<boolean>(false)
   const [state, setState] = useState<TSearchCourse>(initialState)
   // const [isOpenDetailCourse, setIsOpenDetailCourse] = useState<boolean>(false)
@@ -59,7 +59,7 @@ const ManagementCourse: React.FC<IProps> = (props): JSX.Element => {
         <Space className={styles.sub_content}>
           {props.data.length !== 0 ? (
             <List
-              grid={{ gutter: 30 }}
+              grid={{ gutter: 25 }}
               dataSource={props.data}
               renderItem={(course: ICourse) => (
                 <List.Item key={course._id}>
@@ -84,4 +84,4 @@ const ManagementCourse: React.FC<IProps> = (props): JSX.Element => {
   )
 }
 
-export default ManagementCourse
+export default JoinedCourse
