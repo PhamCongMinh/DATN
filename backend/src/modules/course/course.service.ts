@@ -6,6 +6,7 @@ import SectionRepository from '@models/repositories/Section.repository';
 import { CreateSectionDto } from '@modules/course/dto/create-section.dto';
 import { CreateLessonDto } from '@modules/course/dto/create-lesson.dto';
 import LessonRepository from '@models/repositories/Lesson.repository';
+import { string } from 'joi';
 
 @Injectable()
 export class CourseService {
@@ -49,6 +50,16 @@ export class CourseService {
     await this.sectionRepository.update(data.section_id, {
       $push: { lessons: lesson.id },
     });
+    return lesson;
+  }
+
+  async editLesson(lesson_id: string, data: CreateLessonDto) {
+    const { documents, ...rest } = data;
+    const lesson = await this.lessonRepository.update(lesson_id, {
+      ...rest,
+      documents: documents ? documents._id : null,
+    });
+
     return lesson;
   }
 

@@ -63,7 +63,7 @@ const ViewLesson: React.FC<IProps> = (props): JSX.Element => {
         )}
       {state && state?.documents && state?.documents?.asset_url && state?.documents?.file_type === 'mp4' && (
         // <ReactPlayer controls height={500} src={file.asset_url} />
-        <video controls src={state?.documents?.asset_url} />
+        <video controls src={state?.documents?.asset_url} width={1000} />
       )}
       {!state?.documents && !state?.embed_file && !state?.description && (
         <Text className={styles.title3}>

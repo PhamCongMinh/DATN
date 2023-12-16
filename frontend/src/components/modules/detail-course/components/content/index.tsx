@@ -68,9 +68,13 @@ const CourseContent: NextPage<IProps> = props => {
   const handleOk = () => {
     setIsAddSection(false)
     setIsEditSection(false)
-    setIsLessonOpen(false)
-    setLoading(true)
     setCurrentSection(undefined)
+
+    setIsLessonOpen(false)
+    setIsEditLesson(false)
+    setCurrentLesson(undefined)
+
+    setLoading(true)
   }
 
   const handleCancel = () => {
@@ -80,7 +84,9 @@ const CourseContent: NextPage<IProps> = props => {
 
     setIsOpenLessonType(false)
     setIsLessonOpen(false)
+    setIsEditLesson(false)
     setCurrentLesson(undefined)
+
     setIsOpenUploadLesson(false)
 
     setLoading(true)
@@ -99,6 +105,8 @@ const CourseContent: NextPage<IProps> = props => {
 
   const handleUploadLesson = () => {
     setIsOpenUploadLesson(false)
+    setIsEditLesson(false)
+    setCurrentLesson(undefined)
     setLessonType(undefined)
     setLoading(true)
   }
@@ -131,6 +139,11 @@ const CourseContent: NextPage<IProps> = props => {
       alert('Xóa bài học thất bại, vui lòng kiểm tra lại thông tin trước khi thử lại')
       console.log(error)
     }
+  }
+
+  const handleEditLesson = (lesson: ILesson) => {
+    setIsEditLesson(true)
+    setCurrentLesson(lesson)
   }
 
   const genExtra = (section: ISection) => (
@@ -185,11 +198,7 @@ const CourseContent: NextPage<IProps> = props => {
                   icon={<Image src={TrashIcon} alt="House1" style={{ height: 19, width: 17 }} />}
                 />
                 <Button
-                  onClick={() => {
-                    // setCurrentQuestion(record)
-                    setIsEditLesson(true)
-                    // setIsAddEvent(false)
-                  }}
+                  onClick={() => handleEditLesson(lesson)}
                   type="link"
                   icon={<Image src={EditIcon} alt="House1" style={{ height: 18, width: 18 }} />}
                 />
@@ -232,9 +241,10 @@ const CourseContent: NextPage<IProps> = props => {
           />
           <AddLesson open={isOpenLessonType} onOk={handleChoseLessonType} onCancel={handleCancel} />
           <UploadLesson
+            lesson={currentLesson}
             course={props.course}
             section={currentSection}
-            open={isOpenUploadLesson}
+            open={isOpenUploadLesson || isEditLesson}
             onOk={handleUploadLesson}
             onCancel={handleCancel}
           />

@@ -79,6 +79,12 @@ export class CourseController {
     return this.courseService.createLesson(data);
   }
 
+  @Put('/lesson/:id')
+  @UseAuth(Object.values(EUserRole))
+  async editLesson(@Param('id') id: string, @Body() data: CreateLessonDto) {
+    return this.courseService.editLesson(id, data);
+  }
+
   @Get('/lesson/:id')
   @UseAuth(Object.values(EUserRole))
   async getLessonById(@Param('id') lesson_id: string) {

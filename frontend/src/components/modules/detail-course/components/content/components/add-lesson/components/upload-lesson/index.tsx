@@ -20,6 +20,7 @@ const { TextArea } = Input
 const { Text } = Typography
 
 interface IProps {
+  lesson?: ILesson
   section?: ISection
   course: ICourse
   open: boolean
@@ -38,12 +39,18 @@ const UploadLesson: React.FC<IProps> = (props): JSX.Element => {
 
   const [isPreview, setIsPreview] = useState(false)
 
+  console.log('state', state)
+
   useEffect(() => {
     setState({
       course_id: props.course._id,
       section_id: props.section?._id
     })
   }, [props?.section])
+
+  useEffect(() => {
+    if (props?.lesson) setState(props?.lesson)
+  }, [props?.lesson])
 
   const handleClickPreview = () => {
     setIsPreview(!isPreview)
@@ -70,16 +77,31 @@ const UploadLesson: React.FC<IProps> = (props): JSX.Element => {
   }
 
   const handleSubmit = async () => {
-    try {
-      const axiosService2 = new AxiosService('application/json', jwt)
-      const response = await axiosService2.post('/course/lesson', state)
-      console.log(response)
-      message.success(`Thêm bài học thành công`)
-      props.onOk()
-      setState(initialState)
-    } catch (error) {
-      alert('Thêm  bài học thất bại, vui lòng kiểm tra lại thông tin trước khi thử lại')
-      console.log(error)
+    if (!props?.lesson) {
+      try {
+        const axiosService2 = new AxiosService('application/json', jwt)
+        const response = await axiosService2.post('/course/lesson', state)
+        console.log(response)
+        message.success(`Thêm bài học thành công`)
+        props.onOk()
+        setState(initialState)
+      } catch (error) {
+        alert('Thêm  bài học thất bại, vui lòng kiểm tra lại thông tin trước khi thử lại')
+        console.log(error)
+      }
+    } else {
+      try {
+        const axiosService2 = new AxiosService('application/json', jwt)
+        const { _id, ...rest } = state
+        const response = await axiosService2.put(`/course/lesson/${state._id}`, rest)
+        console.log(response)
+        message.success(`Sửa bài học thành công`)
+        props.onOk()
+        setState(initialState)
+      } catch (error) {
+        alert('Sửa bài học thất bại, vui lòng kiểm tra lại thông tin trước khi thử lại')
+        console.log(error)
+      }
     }
   }
 
