@@ -25,8 +25,8 @@ export default class LessonRepository {
     return this.lessonDocument.updateOne({ _id: id }, data).exec();
   }
 
-  async findById(id: string): Promise<LessonDocument[]> {
-    return this.lessonDocument.find({ _id: id }).exec();
+  async findById(id: string): Promise<LessonDocument> {
+    return this.lessonDocument.findOne({ _id: id }).exec();
   }
 
   async getAll(): Promise<LessonDocument[]> {

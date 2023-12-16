@@ -79,6 +79,12 @@ export class CourseController {
     return this.courseService.createLesson(data);
   }
 
+  @Delete('/lesson/:id')
+  @UseAuth(Object.values(EUserRole))
+  async deleteLesson(@Param('id') lesson_id: string) {
+    return this.courseService.deleteLesson(lesson_id);
+  }
+
   @UseAuth(Object.values(EUserRole))
   @Get('/:id/participants')
   async getListStudentInCourse(@Req() req, @Param('id') id: string) {

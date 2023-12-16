@@ -46,6 +46,7 @@ const CourseContent: NextPage<IProps> = props => {
   const [isLessonOpen, setIsLessonOpen] = useState(false)
   const [isAddLesson, setIsAddLesson] = useState(false)
   const [isEditLesson, setIsEditLesson] = useState(false)
+  const [currentLesson, setCurrentLesson] = useState<ILesson>()
   const [isRemove, setIsRemove] = useState(false)
 
   const [lessonType, setLessonType] = useState<LessonType>()
@@ -125,6 +126,18 @@ const CourseContent: NextPage<IProps> = props => {
     setIsAddSection(false)
   }
 
+  const handleDeleteLesson = async (lesson_id: string) => {
+    try {
+      const response = await axiosService.delete(`/course/lesson/${lesson_id}`)
+      console.log(response)
+      message.success(`Xóa bài học thành công`)
+      setLoading(true)
+    } catch (error) {
+      alert('Xóa bài học thất bại, vui lòng kiểm tra lại thông tin trước khi thử lại')
+      console.log(error)
+    }
+  }
+
   const genExtra = (section: ISection) => (
     <span style={{ position: 'absolute', right: 15 }}>
       <Button
@@ -173,10 +186,7 @@ const CourseContent: NextPage<IProps> = props => {
               <span className={styles.icon}>
                 <Button
                   type="link"
-                  onClick={() => {
-                    // setCurrentQuestion(record)
-                    setIsRemove(true)
-                  }}
+                  onClick={() => lesson && lesson?._id && handleDeleteLesson(lesson?._id)}
                   icon={<Image src={TrashIcon} alt="House1" style={{ height: 19, width: 17 }} />}
                 />
                 <Button

@@ -12,7 +12,7 @@ export enum LessonType {
 }
 
 export interface ILesson {
-  _id?: number
+  _id?: string
   course_id?: string
   section_id?: string
   order?: number

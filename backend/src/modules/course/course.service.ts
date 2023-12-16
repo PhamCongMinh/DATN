@@ -52,6 +52,15 @@ export class CourseService {
     return lesson;
   }
 
+  async deleteLesson(lesson_id: string) {
+    const lesson = await this.lessonRepository.findById(lesson_id);
+    await this.sectionRepository.update(lesson.section_id, {
+      $pull: { lessons: lesson_id },
+    });
+
+    return await this.lessonRepository.delete(lesson_id);
+  }
+
   async getListStudentInCourse(author_id: string, course_id: string) {
     const course = await this.courseRepository.courseDocument
       .findOne({ _id: course_id })
