@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  Req,
+} from '@nestjs/common';
 import { LoggerService } from '@shared/modules/loggers/logger.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CourseService } from '@modules/course/course.service';
@@ -46,6 +56,21 @@ export class CourseController {
   @UseAuth(Object.values(EUserRole))
   async getContentInACourse(@Query() data: GetSectionInACourseDto) {
     return this.courseService.getContentInACourse(data.course_id);
+  }
+
+  @Delete('section/:id')
+  @UseAuth(Object.values(EUserRole))
+  async deleteSection(@Param('id') section_id: string) {
+    return this.courseService.deleteSection(section_id);
+  }
+
+  @Put('section/:id')
+  @UseAuth(Object.values(EUserRole))
+  async updateSection(
+    @Param('id') section_id: string,
+    @Body() data: CreateSectionDto,
+  ) {
+    return this.courseService.updateSection(section_id, data);
   }
 
   @Post('/lesson')

@@ -77,4 +77,12 @@ export class CourseService {
 
     return sections;
   }
+
+  async deleteSection(section_id: string) {
+    return this.sectionRepository.delete(section_id);
+  }
+
+  async updateSection(section_id: string, data: CreateSectionDto) {
+    return this.sectionRepository.update(section_id, data);
+  }
 }

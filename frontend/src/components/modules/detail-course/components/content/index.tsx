@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Button, Collapse, Modal, Typography, Breadcrumb, Space } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { Button, Collapse, Modal, Typography, Breadcrumb, Space, message } from 'antd'
 import type { CollapseProps } from 'antd'
 
 import styles from './style.module.scss'
@@ -14,52 +14,37 @@ import AddLesson from './components/add-lesson'
 import AddSection from './components/add-section'
 import { LessonType } from '../../../../../types/lesson'
 import UploadLesson from './components/add-lesson/components/upload-lesson'
+import { ICourse } from '../../../course'
+import { NextPage } from 'next'
+import { useSelector } from 'react-redux'
+import AxiosService from '../../../../../utils/axios'
+import { ISection } from '../../../../../types/section'
 
 const { Text, Title } = Typography
 
 const url = 'http://localhost:3000/course'
 
-const dataExample = [
-  {
-    section_title: 'Giới thiệu',
-    lessons: [
-      { id: 1, title: 'Bài học số 1' },
-      { id: 2, title: 'Bài học số 2' },
-      { id: 3, title: 'Bài học số 3' }
-    ]
-  },
-  {
-    section_title: 'Nội dung số 1',
-    lessons: [
-      { id: 4, title: 'Bài học số 1' },
-      { id: 5, title: 'Bài học số 2' },
-      { id: 6, title: 'Bài học số 3' }
-    ]
-  },
-  {
-    section_title: 'Nội dung số 2',
-    lessons: [
-      { id: 7, title: 'Bài học số 4' },
-      { id: 8, title: 'Bài học số 5' },
-      { id: 9, title: 'Bài học số 6' }
-    ]
-  }
-]
 export interface ILesson {
   lesson_title: string
   lesson_url: string
 }
-export interface ISection {
-  section_title: string
-  lessons: ILesson[]
+
+type IProps = {
+  course: ICourse
 }
 
-export default function CourseContent() {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isLessonOpen, setIsLessonOpen] = useState(false)
+const CourseContent: NextPage<IProps> = props => {
+  const jwt = useSelector((state: any) => state.auth?.user?.jwt)
+  const axiosService = new AxiosService('application/json', jwt)
+  const [isLoading, setLoading] = useState(true)
+  const [content, setContent] = useState<ISection[]>()
+
   const [isAddSection, setIsAddSection] = useState(false)
-  const [isAddLesson, setIsAddLesson] = useState(false)
   const [isEditSection, setIsEditSection] = useState(false)
+  const [currentSection, setCurrentSection] = useState<ISection>()
+
+  const [isLessonOpen, setIsLessonOpen] = useState(false)
+  const [isAddLesson, setIsAddLesson] = useState(false)
   const [isEditLesson, setIsEditLesson] = useState(false)
   const [isRemove, setIsRemove] = useState(false)
 
@@ -67,8 +52,19 @@ export default function CourseContent() {
   const [isOpenLessonType, setIsOpenLessonType] = useState<boolean>(false)
   const [isOpenUploadLesson, setIsOpenUploadLesson] = useState<boolean>(false)
 
-  console.log('lessonType', lessonType)
-  console.log('isOpenLessonType', isOpenLessonType)
+  console.log('course_id', props.course._id)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const query = {
+        course_id: props.course._id
+      }
+      const response = await axiosService.get('/course/section', { params: query })
+      setContent(response.data)
+    }
+    fetchData().catch(console.error)
+    setLoading(false)
+  }, [isLoading])
 
   const showModal = () => {
     setIsAddSection(true)
@@ -76,13 +72,19 @@ export default function CourseContent() {
 
   const handleOk = () => {
     setIsAddSection(false)
+    setIsEditSection(false)
     setIsLessonOpen(false)
+    setLoading(true)
+    setCurrentSection(undefined)
   }
 
   const handleCancel = () => {
+    setIsOpenLessonType(false)
     setIsAddSection(false)
     setIsLessonOpen(false)
     setIsOpenUploadLesson(false)
+    setLoading(true)
+    setCurrentSection(undefined)
   }
 
   const handleClickLesson = () => {
@@ -100,42 +102,51 @@ export default function CourseContent() {
     setLessonType(undefined)
   }
 
-  const genExtra = () => (
+  const handleDeleteSection = async (section_id: string) => {
+    try {
+      const response = await axiosService.delete(`/course/section/${section_id}`)
+      console.log(response)
+      message.success(`Xóa chương thành công`)
+      setLoading(true)
+    } catch (error) {
+      alert('Xóa chương thất bại, vui lòng kiểm tra lại thông tin trước khi thử lại')
+      console.log(error)
+    }
+  }
+
+  const handleEditSection = async (section: ISection) => {
+    setCurrentSection(section)
+    setIsEditSection(true)
+    setIsAddSection(false)
+  }
+
+  const genExtra = (section: ISection) => (
     <span style={{ position: 'absolute', right: 15 }}>
       <Button
         type="link"
         onClick={() => {
           setIsOpenLessonType(true)
-          // setCurrentQuestion(record)
-          // setIsRemove(true)
         }}
         icon={<Image src={AddIcon} alt="House1" style={{ height: 19, width: 17 }} />}
       />
       <Button
         type="link"
-        onClick={() => {
-          // setCurrentQuestion(record)
-          setIsRemove(true)
-        }}
+        onClick={() => section && section?._id && handleDeleteSection(section?._id)}
         icon={<Image src={TrashIcon} alt="House1" style={{ height: 19, width: 17 }} />}
       />
       <Button
-        onClick={() => {
-          // setCurrentQuestion(record)
-          setIsEditSection(true)
-          setIsAddSection(false)
-        }}
+        onClick={() => section && handleEditSection(section)}
         type="link"
         icon={<Image src={EditIcon} alt="House1" style={{ height: 18, width: 18 }} />}
       />
     </span>
   )
 
-  const items = dataExample.map((section, index) => {
-    const { section_title, lessons } = section
+  const items = content?.map((section: ISection, index) => {
+    const { name, lessons } = section
     return {
       key: index.toString(),
-      label: section_title,
+      label: name,
       style: {
         fontSize: 18,
         lineHeight: 1.4,
@@ -144,13 +155,13 @@ export default function CourseContent() {
         position: 'relative',
         alignItems: 'center'
       },
-      extra: genExtra(),
+      extra: genExtra(section),
       children: (
         <div className={styles.section}>
-          {lessons.map((lesson, index) => (
-            <div key={lesson.id} className={styles.lesson}>
+          {lessons?.map((lesson, index) => (
+            <div key={lesson._id} className={styles.lesson}>
               <div onClick={handleClickLesson}>
-                {lesson.title}
+                {lesson.name}
                 <br />
               </div>
               <span className={styles.icon}>
@@ -200,7 +211,13 @@ export default function CourseContent() {
           <Button className={styles.button} type="primary" onClick={showModal}>
             Thêm nội dung
           </Button>
-          <AddSection open={isAddSection} onOk={handleOk} onCancel={handleCancel} />
+          <AddSection
+            section={currentSection}
+            course={props.course}
+            open={isAddSection || isEditSection}
+            onOk={handleOk}
+            onCancel={handleCancel}
+          />
           <AddLesson open={isOpenLessonType} onOk={handleChoseLessonType} onCancel={handleCancel} />
           <UploadLesson open={isOpenUploadLesson} onOk={handleUploadLesson} onCancel={handleCancel} />
         </>
@@ -210,3 +227,5 @@ export default function CourseContent() {
     </div>
   )
 }
+
+export default CourseContent

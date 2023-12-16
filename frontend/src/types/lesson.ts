@@ -8,3 +8,13 @@ export enum LessonType {
   assignment = 'assignment',
   exam = 'exam'
 }
+
+export interface ILesson {
+  _id?: number
+  course_id?: string
+  section_id?: string
+  order?: number
+  name?: string
+  description?: string
+  documents?: string[]
+}

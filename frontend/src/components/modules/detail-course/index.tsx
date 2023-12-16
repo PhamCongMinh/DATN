@@ -97,7 +97,7 @@ const DetailCourseContent: NextPage<IProps> = props => {
               items={items}
               className={styles.menu}
             />
-            {selectedMenuItem === 'content' && <CourseContent />}
+            {selectedMenuItem === 'content' && <CourseContent course={props.course} />}
             {selectedMenuItem === 'participant' && <Participant course={props.course} />}
             {selectedMenuItem === 'question_bank' && <QuestionBank course={props.course} />}
             {selectedMenuItem === 'exam_bank' && <ExamBank course={props.course} />}
