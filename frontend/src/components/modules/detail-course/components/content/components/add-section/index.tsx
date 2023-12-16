@@ -51,7 +51,6 @@ const AddSection: React.FC<IProps> = (props): JSX.Element => {
   const [image, setImage] = useState<any>()
   const jwt = useSelector((state: any) => state.auth?.user?.jwt)
   const axiosService = new AxiosService('application/json', jwt)
-  console.log('state', state)
 
   useEffect(() => {
     setState({

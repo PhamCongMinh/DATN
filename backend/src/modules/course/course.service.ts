@@ -40,7 +40,11 @@ export class CourseService {
   }
 
   async createLesson(data: CreateLessonDto) {
-    return this.lessonRepository.create(data);
+    const { documents, ...rest } = data;
+    return this.lessonRepository.create({
+      ...rest,
+      documents: documents ? documents.id : null,
+    });
   }
 
   async getListStudentInCourse(author_id: string, course_id: string) {

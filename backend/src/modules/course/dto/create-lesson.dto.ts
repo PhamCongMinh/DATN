@@ -1,5 +1,6 @@
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { UploadedAsset } from '@models/entities/UploadedAsset.entity';
 
 export class CreateLessonDto {
   @ApiPropertyOptional()
@@ -29,5 +30,10 @@ export class CreateLessonDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  documents?: string[];
+  documents?: any;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  embed_file?: string;
 }

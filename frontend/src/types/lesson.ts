@@ -1,3 +1,5 @@
+import { IFile } from './file'
+
 export enum LessonType {
   video = 'video',
   pdf = 'pdf',
@@ -15,6 +17,7 @@ export interface ILesson {
   section_id?: string
   order?: number
   name?: string
+  embed_file?: string
   description?: string
-  documents?: string[]
+  documents?: IFile
 }

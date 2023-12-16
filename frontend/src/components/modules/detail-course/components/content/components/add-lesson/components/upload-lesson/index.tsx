@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Input, message, Modal, Typography, Upload, UploadProps } from 'antd'
 
 import styles from './style.module.scss'
@@ -7,9 +7,12 @@ import { InboxOutlined } from '@ant-design/icons'
 import AxiosService from '../../../../../../../../../utils/axios'
 import PdfView from '../../../../../../../../elements/pdf-view'
 import { IFile } from '../../../../../../../../../types/file'
-import { LessonType } from '../../../../../../../../../types/lesson'
+import { ILesson, LessonType } from '../../../../../../../../../types/lesson'
 import Image from 'next/image'
 import ReactPlayer from 'react-player/lazy'
+import { ISection } from '../../../../../../../../../types/section'
+import { ICourse } from '../../../../../../../course'
+import produce from 'immer'
 
 const { Dragger } = Upload
 
@@ -17,6 +20,8 @@ const { TextArea } = Input
 const { Text } = Typography
 
 interface IProps {
+  section?: ISection
+  course: ICourse
   open: boolean
   onOk: () => void
   onCancel: () => void
@@ -24,86 +29,61 @@ interface IProps {
   // openDetailCourse: (course: any) => void
 }
 
-interface ICreateRentalNews {}
-
-const initialState: ICreateRentalNews = {}
+const initialState: ILesson = {}
 
 const UploadLesson: React.FC<IProps> = (props): JSX.Element => {
-  const [state, setState] = useState<ICreateRentalNews>(initialState)
+  const [state, setState] = useState<ILesson>(initialState)
   const jwt = useSelector((state: any) => state.auth?.user?.jwt)
   const axiosService = new AxiosService('multipart/form-data', jwt)
 
   const [isPreview, setIsPreview] = useState(false)
-  const [file, setFile] = useState<IFile>()
   const [embedFile, setEmbedFile] = useState<string>()
+
+  console.log('state', state)
+
+  useEffect(() => {
+    setState({
+      course_id: props.course._id,
+      section_id: props.section?._id
+    })
+  }, [props?.section])
 
   const handleClickPreview = () => {
     setIsPreview(!isPreview)
   }
 
-  // const handleChange = (
-  //   key: string,
-  //   e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>
-  // ) => {
-  //   setState((prev: ICreateRentalNews) =>
-  //     produce(prev, draft => {
-  //       // @ts-ignore
-  //       draft[key] = (key === 'pricePerMonth') | (key === 'area') ? Number(e.target.value) : e.target.value
-  //     })
-  //   )
-  // }
-  //
-  // const handleChangeDate = (date: Dayjs | null, dateString: string, key: string) => {
-  //   setState((prev: ICreateRentalNews) =>
-  //     produce(prev, draft => {
-  //       // @ts-ignore
-  //       draft[key] = dateString
-  //     })
-  //   )
-  // }
-  //
-  // const handleSelectRentNewsType = (value: string) => {
-  //   setState((prev: ICreateRentalNews) =>
-  //     produce(prev, draft => {
-  //       // @ts-ignore
-  //       draft['rentNewsType'] = value
-  //     })
-  //   )
-  // }
-  //
+  const handleChange = (
+    key: string,
+    e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    if (key === 'embed_file')
+      setState((prev: ILesson) =>
+        produce(prev, draft => {
+          // @ts-ignore
+          draft['documents'] = undefined
+        })
+      )
 
-  //
-  // const checkUpdatedInfo = async () => {
-  //   const response = await axiosService.get('/auth/check-updated-information')
-  //   console.log(response)
-  //   return response.data.isUpdatedInfo
-  // }
-  //
-  // const handleSubmit = async () => {
-  //   const isUpdatedInfo = await checkUpdatedInfo()
-  //   if (!isUpdatedInfo) {
-  //     alert(
-  //       'Bạn chưa cập nhật thêm thông tin cá nhân cần thiết, vui lòng truy cập mục Quản lý tài khoản -> Cập nhật thông tin cá nhân để cập nhật thêm thông tin'
-  //     )
-  //     return
-  //   }
-  //
-  //   try {
-  //     const formData = serialize(state)
-  //     formData.append('image', image)
-  //     console.log(formData)
-  //     const response = await axiosService.post('/rent-out', formData)
-  //     console.log(response)
-  //     message.success(`Tạo tin thành công`)
-  //   } catch (error) {
-  //     alert('Tạo tin thất bại, vui lòng kiểm tra lại thông tin trước khi thử lại')
-  //     console.log(error)
-  //   }
-  // }
+    setState((prev: ILesson) =>
+      produce(prev, draft => {
+        // @ts-ignore
+        draft[key] = e.target.value
+      })
+    )
+  }
 
-  const handleEmbedFile = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setEmbedFile(e.target.value)
-    setFile(undefined)
+  const handleSubmit = async () => {
+    try {
+      const axiosService2 = new AxiosService('application/json', jwt)
+      const response = await axiosService2.post('/course/lesson', state)
+      console.log(response)
+      message.success(`Thêm bài học thành công`)
+      props.onOk()
+      setState(initialState)
+    } catch (error) {
+      alert('Thêm  bài học thất bại, vui lòng kiểm tra lại thông tin trước khi thử lại')
+      console.log(error)
+    }
   }
 
   const uploadProps: UploadProps = {
@@ -116,8 +96,13 @@ const UploadLesson: React.FC<IProps> = (props): JSX.Element => {
 
         const response = await axiosService.post('/asset-upload', formData)
         console.log(response)
-        setFile(response.data)
-        setEmbedFile(undefined)
+        setState((prev: ILesson) =>
+          produce(prev, draft => {
+            // @ts-ignore
+            draft['embed_file'] = undefined
+            draft['documents'] = response.data
+          })
+        )
         message.success(`Tải file thành công`)
 
         // @ts-ignore
@@ -133,26 +118,45 @@ const UploadLesson: React.FC<IProps> = (props): JSX.Element => {
   const onOk = () => {
     props.onOk()
     setIsPreview(false)
-    setFile(undefined)
+    setState((prev: ILesson) =>
+      produce(prev, draft => {
+        // @ts-ignore
+        draft['documents'] = undefined
+      })
+    )
   }
 
   const onCancel = () => {
     props.onCancel()
     setIsPreview(false)
-    setFile(undefined)
+    setState((prev: ILesson) =>
+      produce(prev, draft => {
+        // @ts-ignore
+        draft['documents'] = undefined
+      })
+    )
   }
 
   return (
     <>
-      <Modal title="Tạo bài học mới" open={props.open} onOk={onOk} onCancel={onCancel} centered width={1000}>
+      <Modal title="Tạo bài học mới" open={props.open} onOk={handleSubmit} onCancel={onCancel} centered width={1000}>
         {isPreview === false && (
           <>
             <Text className={styles.title3} style={{ marginTop: 20 }}>
               Tên bài học
               <br />
             </Text>
-            <Input
-            // onChange={e => handleChange('name', e)}
+            <Input onChange={e => handleChange('name', e)} />
+
+            <Text className={styles.title3}>
+              Nội dung
+              <br />
+            </Text>
+            <TextArea
+              rows={4}
+              style={{ maxWidth: 1000, marginTop: 10, height: 50 }}
+              value={embedFile}
+              onChange={e => handleChange('description', e)}
             />
 
             <Text className={styles.title3}>
@@ -165,8 +169,8 @@ const UploadLesson: React.FC<IProps> = (props): JSX.Element => {
             <TextArea
               rows={4}
               style={{ maxWidth: 1000, marginBottom: 30, marginTop: 10 }}
-              value={embedFile}
-              onChange={e => handleEmbedFile(e)}
+              value={state?.embed_file}
+              onChange={e => handleChange('embed_file', e)}
             />
 
             <Text className={styles.title3}>Tài liệu khóa học</Text>
@@ -190,13 +194,19 @@ const UploadLesson: React.FC<IProps> = (props): JSX.Element => {
           <div>
             <Button onClick={handleClickPreview}>Quay lại</Button>
             <div style={{ maxHeight: 800, display: 'flex', justifyContent: 'center', marginTop: 10, minHeight: 500 }}>
-              {file && file.asset_url && file.file_type === LessonType.pdf && <PdfView pdfUrl={file.asset_url} />}
-              {file && file.asset_url && (file.file_type === 'png' || file.file_type === 'jpg') && (
-                <img alt="example" src={file.asset_url} height={500} />
-              )}
-              {file && file.asset_url && file.file_type === 'mp4' && (
+              {state &&
+                state?.documents &&
+                state?.documents?.asset_url &&
+                state?.documents?.file_type === LessonType.pdf && <PdfView pdfUrl={state?.documents?.asset_url} />}
+              {state &&
+                state?.documents &&
+                state?.documents?.asset_url &&
+                (state?.documents?.file_type === 'png' || state?.documents?.file_type === 'jpg') && (
+                  <img alt="example" src={state?.documents?.asset_url} height={500} />
+                )}
+              {state && state?.documents && state?.documents?.asset_url && state?.documents?.file_type === 'mp4' && (
                 // <ReactPlayer controls height={500} src={file.asset_url} />
-                <video controls src={file.asset_url} height={500} />
+                <video controls src={state?.documents?.asset_url} height={500} />
               )}
               {embedFile && <div dangerouslySetInnerHTML={{ __html: embedFile }} style={{ height: 500 }} />}
             </div>

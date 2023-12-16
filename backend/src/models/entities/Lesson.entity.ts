@@ -46,11 +46,17 @@ export class Lesson {
   description?: string;
 
   @Prop({
-    type: [mongoose.Schema.Types.ObjectId],
+    type: String,
+    required: false,
+  })
+  embed_file?: string;
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'UploadedAsset',
     required: false,
   })
-  documents?: string[];
+  documents?: string;
 }
 
 export const LessonSchema = SchemaFactory.createForClass(Lesson);

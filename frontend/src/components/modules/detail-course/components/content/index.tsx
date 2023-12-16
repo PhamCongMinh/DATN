@@ -53,6 +53,7 @@ const CourseContent: NextPage<IProps> = props => {
   const [isOpenUploadLesson, setIsOpenUploadLesson] = useState<boolean>(false)
 
   console.log('course_id', props.course._id)
+  console.log('currentSection', currentSection)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -100,6 +101,7 @@ const CourseContent: NextPage<IProps> = props => {
   const handleUploadLesson = () => {
     setIsOpenUploadLesson(false)
     setLessonType(undefined)
+    setLoading(true)
   }
 
   const handleDeleteSection = async (section_id: string) => {
@@ -125,6 +127,7 @@ const CourseContent: NextPage<IProps> = props => {
       <Button
         type="link"
         onClick={() => {
+          setCurrentSection(section)
           setIsOpenLessonType(true)
         }}
         icon={<Image src={AddIcon} alt="House1" style={{ height: 19, width: 17 }} />}
@@ -219,7 +222,13 @@ const CourseContent: NextPage<IProps> = props => {
             onCancel={handleCancel}
           />
           <AddLesson open={isOpenLessonType} onOk={handleChoseLessonType} onCancel={handleCancel} />
-          <UploadLesson open={isOpenUploadLesson} onOk={handleUploadLesson} onCancel={handleCancel} />
+          <UploadLesson
+            course={props.course}
+            section={currentSection}
+            open={isOpenUploadLesson}
+            onOk={handleUploadLesson}
+            onCancel={handleCancel}
+          />
         </>
       ) : (
         <Lesson />
