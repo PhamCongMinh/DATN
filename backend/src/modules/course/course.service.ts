@@ -41,10 +41,15 @@ export class CourseService {
 
   async createLesson(data: CreateLessonDto) {
     const { documents, ...rest } = data;
-    return this.lessonRepository.create({
+    const lesson = await this.lessonRepository.create({
       ...rest,
       documents: documents ? documents.id : null,
     });
+
+    await this.sectionRepository.update(data.section_id, {
+      $push: { lessons: lesson.id },
+    });
+    return lesson;
   }
 
   async getListStudentInCourse(author_id: string, course_id: string) {

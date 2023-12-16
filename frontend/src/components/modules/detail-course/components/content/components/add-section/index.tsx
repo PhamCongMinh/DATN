@@ -118,12 +118,12 @@ const AddSection: React.FC<IProps> = (props): JSX.Element => {
           Tên nội dung
           <br />
         </Text>
-        <Input onChange={e => handleChange('name', e)} />
+        <Input value={state?.name} onChange={e => handleChange('name', e)} />
         <Text className={styles.title3} style={{ marginTop: 20 }}>
           Thứ tự
           <br />
         </Text>
-        <InputNumber onChange={e => handleChange('order', e)} />
+        <InputNumber value={state?.order} onChange={e => handleChange('order', e)} />
       </Modal>
     </>
   )

@@ -37,8 +37,6 @@ const UploadLesson: React.FC<IProps> = (props): JSX.Element => {
   const axiosService = new AxiosService('multipart/form-data', jwt)
 
   const [isPreview, setIsPreview] = useState(false)
-  const [embedFile, setEmbedFile] = useState<string>()
-
   console.log('state', state)
 
   useEffect(() => {
@@ -146,7 +144,7 @@ const UploadLesson: React.FC<IProps> = (props): JSX.Element => {
               Tên bài học
               <br />
             </Text>
-            <Input onChange={e => handleChange('name', e)} />
+            <Input value={state?.name} onChange={e => handleChange('name', e)} />
 
             <Text className={styles.title3}>
               Nội dung
@@ -155,7 +153,7 @@ const UploadLesson: React.FC<IProps> = (props): JSX.Element => {
             <TextArea
               rows={4}
               style={{ maxWidth: 1000, marginTop: 10, height: 50 }}
-              value={embedFile}
+              value={state?.description}
               onChange={e => handleChange('description', e)}
             />
 
@@ -208,7 +206,9 @@ const UploadLesson: React.FC<IProps> = (props): JSX.Element => {
                 // <ReactPlayer controls height={500} src={file.asset_url} />
                 <video controls src={state?.documents?.asset_url} height={500} />
               )}
-              {embedFile && <div dangerouslySetInnerHTML={{ __html: embedFile }} style={{ height: 500 }} />}
+              {state && state?.embed_file && (
+                <div dangerouslySetInnerHTML={{ __html: state?.embed_file }} style={{ height: 500 }} />
+              )}
             </div>
           </div>
         )}

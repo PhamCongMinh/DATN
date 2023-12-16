@@ -80,12 +80,15 @@ const CourseContent: NextPage<IProps> = props => {
   }
 
   const handleCancel = () => {
-    setIsOpenLessonType(false)
     setIsAddSection(false)
+    setIsEditSection(false)
+    setCurrentSection(undefined)
+
+    setIsOpenLessonType(false)
     setIsLessonOpen(false)
     setIsOpenUploadLesson(false)
+
     setLoading(true)
-    setCurrentSection(undefined)
   }
 
   const handleClickLesson = () => {
