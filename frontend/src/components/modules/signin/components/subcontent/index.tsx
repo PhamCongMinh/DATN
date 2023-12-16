@@ -59,9 +59,11 @@ export default function SignInForm() {
       // @ts-ignore
       if (response.status_code === 200) {
         dispatch(authSliceActions.logIn(userData))
+        console.log(userData)
       }
 
-      router.push('/course')
+      if (userData.role === 'student') router.push('/course')
+      else if (userData.role === 'teacher') router.push('/manage-course')
     } catch (error) {
       alert('Đăng nhập thất bại, vui lòng kiểm tra lại thông tin trước khi thử lại')
       console.log(error)

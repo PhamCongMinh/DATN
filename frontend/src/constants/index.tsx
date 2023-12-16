@@ -27,7 +27,30 @@ export const menuItemsBeforeLogin: MenuProps['items'] = [
   }
 ]
 
-export const menuItemsAfterLogin: MenuProps['items'] = [
+export const menuItemsForTeacher: MenuProps['items'] = [
+  {
+    label: <a>Trang chủ</a>,
+    key: 'home'
+  },
+  {
+    label: <a>Quản lý khóa học</a>,
+    key: 'manage-course'
+  },
+  {
+    label: <a>Cuộc thi</a>,
+    key: 'rentout'
+  },
+  {
+    label: <a>Blog</a>,
+    key: 'blog'
+  },
+  {
+    label: <a>Quản lí tài khoản</a>,
+    key: 'manage-account'
+  }
+]
+
+export const menuItemsForStudent: MenuProps['items'] = [
   {
     label: <a>Trang chủ</a>,
     key: 'home'
