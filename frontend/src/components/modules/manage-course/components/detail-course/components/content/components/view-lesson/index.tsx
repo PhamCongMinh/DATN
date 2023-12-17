@@ -44,7 +44,7 @@ const ViewLesson: React.FC<IProps> = (props): JSX.Element => {
         <div dangerouslySetInnerHTML={{ __html: state?.embed_file }} style={{ height: 500 }} />
       )}
       {state && state?.documents && state?.documents?.asset_url && state?.documents?.file_type === LessonType.pdf && (
-        <PdfView pdfUrl={state?.documents?.asset_url} height={800} />
+        <PdfView pdfUrl={state?.documents?.asset_url} height={500} />
       )}
       {state &&
         state?.documents &&
