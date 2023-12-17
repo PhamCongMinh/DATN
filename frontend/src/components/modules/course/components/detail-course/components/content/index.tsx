@@ -11,9 +11,9 @@ import { NextPage } from 'next'
 import { useSelector } from 'react-redux'
 import ViewLesson from './components/view-lesson'
 import AxiosService from '../../../../../../../utils/axios'
-import { ICourse } from '../../../../index'
 import { ISection } from '../../../../../../../types/section'
 import { ILesson, LessonType } from '../../../../../../../types/lesson'
+import { ICourse } from '../../../../../../../types/course'
 
 const { Text, Title } = Typography
 

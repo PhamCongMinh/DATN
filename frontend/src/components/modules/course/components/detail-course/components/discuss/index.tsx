@@ -6,10 +6,10 @@ import { HomeOutlined, UserOutlined } from '@ant-design/icons'
 import DetailDiscussContent from './components/detail-discuss'
 import { useSelector } from 'react-redux'
 import AddDiscussModal from './components/add-discuss-modal'
-import { ICourse } from '../../../../index'
 import AxiosService from '../../../../../../../utils/axios'
 import ButtonContained from '../../../../../../elements/button-custom/ButtonContainer'
 import DiscussElement from '../../../../../../elements/discuss'
+import { ICourse } from '../../../../../../../types/course'
 
 const { Text } = Typography
 

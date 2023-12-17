@@ -16,9 +16,9 @@ import { useRouter } from 'next/router'
 import Discuss from './components/discuss'
 import CourseContent from './components/content'
 import AxiosService from '../../../../../utils/axios'
-import { ICourse } from '../../index'
 import { authSliceActions } from '../../../../../store/auth/authSlice'
 import OverviewCourse from './components/overview'
+import { ICourse } from '../../../../../types/course'
 
 const { Text, Title } = Typography
 
@@ -107,7 +107,7 @@ const DetailCourseContent: NextPage<IProps> = props => {
         {
           // @ts-ignore
           <Space className={styles.space}>
-            {props?.isJoinedCourse && (
+            {isJoinedCourse && (
               <div>
                 <Menu
                   onClick={({ key }) => handleClickMenuItem(key)}
@@ -120,7 +120,9 @@ const DetailCourseContent: NextPage<IProps> = props => {
                 />
               </div>
             )}
-            {selectedMenuItem === 'overview' && <OverviewCourse course={props.course} />}
+            {selectedMenuItem === 'overview' && (
+              <OverviewCourse course={props.course} back={props.handleClickBack} reload={props.setReload} />
+            )}
             {selectedMenuItem === 'content' && <CourseContent course={props.course} />}
             {selectedMenuItem === 'discuss' && <Discuss course={props.course} />}
             {selectedMenuItem === 'back' && props.handleClickBack()}

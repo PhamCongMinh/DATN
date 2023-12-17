@@ -11,6 +11,7 @@ import { NextPage } from 'next'
 import DetailCourseContent from './components/detail-course'
 import Contact from '../manage-account/components/contact'
 import AllCourse from './components/all-course'
+import { ICourse } from '../../../types/course'
 
 type MenuItem = Required<MenuProps>['items'][number]
 const { Text } = Typography
@@ -35,20 +36,6 @@ const items: MenuProps['items'] = [
   getItem('Khóa học tham gia', 'joinedCourse', <AppstoreOutlined />),
   getItem('Liên hệ', 'contact', <MailOutlined />)
 ]
-
-export interface ICourse {
-  _id: string
-  name?: string
-  tags?: string
-  description?: string
-  img?: string
-  start_time?: Date
-  end_time?: Date
-  status?: string
-  author?: string
-  created_at: Date
-  updated_at: Date
-}
 
 const CourseContent: NextPage = () => {
   const router = useRouter()

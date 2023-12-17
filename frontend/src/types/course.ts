@@ -14,4 +14,6 @@ export interface ICourse {
   introduction?: string
   content_introduction?: string
   teacher_introduction?: string
+  author_id?: string
+  description?: string
 }
