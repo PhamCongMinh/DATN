@@ -1,6 +1,14 @@
 import styles from './style.module.scss'
 import { Breadcrumb, Button, Card, Col, Divider, Input, Menu, MenuProps, Rate, Row, Space, Typography } from 'antd'
-import { AppstoreOutlined, HomeOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
+import {
+  AppstoreOutlined,
+  ContainerOutlined,
+  HomeOutlined,
+  MailOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  UserOutlined
+} from '@ant-design/icons'
 import React, { useCallback, useEffect, useState } from 'react'
 import { NextPage } from 'next'
 import { useDispatch, useSelector } from 'react-redux'
@@ -20,6 +28,7 @@ type IProps = {
   course: ICourse
   handleClickBack: () => void
   setReload: () => void
+  isJoinedCourse?: boolean
 }
 
 const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful']
@@ -52,7 +61,7 @@ function getItem(
 }
 
 const itemsForNotJoined: MenuProps['items'] = [
-  getItem('Giới thiệu', 'overview', <AppstoreOutlined />),
+  getItem('Giới thiệu', 'overview', <ContainerOutlined />),
   getItem('Quay lại', 'back', <AppstoreOutlined />)
 ]
 
@@ -98,14 +107,19 @@ const DetailCourseContent: NextPage<IProps> = props => {
         {
           // @ts-ignore
           <Space className={styles.space}>
-            <Menu
-              onClick={({ key }) => handleClickMenuItem(key)}
-              style={{ width: 215, height: 1165 }}
-              defaultSelectedKeys={['1']}
-              defaultOpenKeys={['sub1']}
-              items={isJoinedCourse ? itemsForJoined : itemsForNotJoined}
-              className={styles.menu}
-            />
+            {props?.isJoinedCourse && (
+              <div>
+                <Menu
+                  onClick={({ key }) => handleClickMenuItem(key)}
+                  style={{ width: 215, height: 1165 }}
+                  defaultSelectedKeys={['1']}
+                  defaultOpenKeys={['sub1']}
+                  items={isJoinedCourse ? itemsForJoined : itemsForNotJoined}
+                  className={styles.menu}
+                  mode="inline"
+                />
+              </div>
+            )}
             {selectedMenuItem === 'overview' && <OverviewCourse course={props.course} />}
             {selectedMenuItem === 'content' && <CourseContent course={props.course} />}
             {selectedMenuItem === 'discuss' && <Discuss course={props.course} />}

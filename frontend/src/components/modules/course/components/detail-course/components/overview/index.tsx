@@ -29,18 +29,8 @@ const OverviewCourse: NextPage<IProps> = props => {
 
   return (
     <div className={styles.content}>
-      <Breadcrumb>
-        <Breadcrumb.Item>
-          <HomeOutlined />
-        </Breadcrumb.Item>
-        <Breadcrumb.Item>
-          <UserOutlined />
-          <span onClick={handleCancel}>Khóa học</span>
-        </Breadcrumb.Item>
-        <Breadcrumb.Item>Thông tin chi tiết</Breadcrumb.Item>
-      </Breadcrumb>
       <div className={styles.space}>
-        <Image src={BackgroundImage} alt="House1" className={styles.image} />
+        <Image src={BackgroundImage} alt="House1" style={{ height: 400, width: 1480 }} />
         <div className={styles.header}>
           <Title className={styles.title}>{props.course?.name}</Title>
           <Text className={styles.title1}>{props.course?.tags}</Text>

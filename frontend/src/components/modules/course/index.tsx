@@ -162,7 +162,12 @@ const CourseContent: NextPage = () => {
         </div>
       )}
       {isOpenDetailCourse === true && currentCourse && (
-        <DetailCourseContent course={currentCourse} handleClickBack={handleClickBack} setReload={handleReload} />
+        <DetailCourseContent
+          isJoinedCourse={selectedMenuItem === 'joinedCourse' ? true : false}
+          course={currentCourse}
+          handleClickBack={handleClickBack}
+          setReload={handleReload}
+        />
       )}
     </div>
   )
