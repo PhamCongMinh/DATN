@@ -20,9 +20,11 @@ export class CourseService {
   }
 
   async createCourse(author_id: string, data: CreateCourseDto) {
+    const { course_image, ...rest } = data;
     return this.courseRepository.create({
-      ...data,
+      ...rest,
       author_id: author_id,
+      course_image: course_image ? course_image._id : null,
     });
   }
 

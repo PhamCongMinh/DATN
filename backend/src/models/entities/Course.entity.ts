@@ -34,10 +34,11 @@ export class Course {
   description?: string;
 
   @Prop({
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'UploadedAsset',
     required: false,
   })
-  img?: string;
+  course_image?: string;
 
   @Prop({
     type: Date,
@@ -69,18 +70,6 @@ export class Course {
     required: false,
   })
   files?: string;
-
-  // @Prop({
-  //   type: String,
-  //   required: false,
-  // })
-  // assessments?: string;
-  //
-  // @Prop({
-  //   type: String,
-  //   required: false,
-  // })
-  // lectures?: string;
 
   @Prop({
     type: String,
@@ -121,6 +110,42 @@ export class Course {
     required: false,
   })
   sections?: string[];
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  summary?: string;
+
+  @Prop({
+    type: Date,
+    required: false,
+  })
+  start_registration?: Date;
+
+  @Prop({
+    type: Date,
+    required: false,
+  })
+  end_registration?: Date;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  introduction?: string;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  content_introduction?: string;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  teacher_introduction?: string;
 }
 
 export const CourseSchema = SchemaFactory.createForClass(Course);

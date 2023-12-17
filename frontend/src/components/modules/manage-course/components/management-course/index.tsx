@@ -59,7 +59,7 @@ const ManagementCourse: React.FC<IProps> = (props): JSX.Element => {
         <Space className={styles.sub_content}>
           {props.data.length !== 0 ? (
             <List
-              grid={{ gutter: 30 }}
+              grid={{ gutter: 27 }}
               dataSource={props.data}
               renderItem={(course: ICourse) => (
                 <List.Item key={course._id}>

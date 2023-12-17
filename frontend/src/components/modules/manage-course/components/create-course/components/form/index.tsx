@@ -1,54 +1,31 @@
 import React, { useState } from 'react'
 import produce from 'immer'
 import { InboxOutlined, UploadOutlined } from '@ant-design/icons'
-import { serialize } from 'object-to-formdata'
-import { Button, Col, DatePicker, DatePickerProps, Input, message, Row, Select, Typography, Upload } from 'antd'
+import { Button, Col, DatePicker, Input, message, Row, Select, Typography, Upload } from 'antd'
 import type { UploadProps } from 'antd'
 
 import { AxiosService } from '../../../../../../../utils/axios'
 import styles from './style.module.scss'
 import { useSelector } from 'react-redux'
 import dayjs, { Dayjs } from 'dayjs'
-import { RentNewsType } from '../../../../../../../types'
-import CustomDrag from '../../../../../../elements/Drag'
-import { toast } from 'react-toastify'
 import Dragger from 'antd/es/upload/Dragger'
+import { ICourse } from '../../../../../../../types/course'
 
 const { TextArea } = Input
 const { Text } = Typography
 
-interface ICreateCourse {
-  name: string
-  tags: string
-  description: string
-  status: string
-  start_time?: Date
-  end_time?: Date
-}
-
-const initialState: ICreateCourse = {
-  name: '',
-  tags: '',
-  description: '',
-  status: ''
-}
+const initialState: ICourse = {}
 
 export default function CreateCourseForm() {
-  const [state, setState] = useState<ICreateCourse>(initialState)
-  const [image, setImage] = useState<any>()
+  const [state, setState] = useState<ICourse>(initialState)
   const jwt = useSelector((state: any) => state.auth?.user?.jwt)
   const axiosService = new AxiosService('application/json', jwt)
-  const [avatarUrl, setAvatarUrl] = useState('')
-  const [avatarFileUpload, setAvatarFileUpload] = useState<FormData>()
-  const [isDisable, setIsDisable] = useState(true)
-
-  console.log('uploaded image', image ? image : 'no image')
 
   const handleChange = (
     key: string,
     e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>
   ) => {
-    setState((prev: ICreateCourse) =>
+    setState((prev: ICourse) =>
       produce(prev, draft => {
         // @ts-ignore
         draft[key] = e.target.value
@@ -57,7 +34,7 @@ export default function CreateCourseForm() {
   }
 
   const handleChangeDate = (date: Dayjs | null, dateString: string, key: string) => {
-    setState((prev: ICreateCourse) =>
+    setState((prev: ICourse) =>
       produce(prev, draft => {
         // @ts-ignore
         draft[key] = dateString
@@ -65,32 +42,31 @@ export default function CreateCourseForm() {
     )
   }
 
-  const props: UploadProps = {
+  const uploadProps: UploadProps = {
     name: 'file',
     multiple: false,
-    action: 'https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188',
-    accept: 'image/png,image/gif,image/jpeg',
-    onChange(info) {
-      const { status } = info.file
-      if (status !== 'uploading') {
-        console.log(info.file, info.fileList)
-      }
-      if (status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully.`)
-        setImage(info.file.originFileObj)
-      } else if (status === 'error') {
-        message.error(`${info.file.name} file upload failed.`)
-      }
-    },
-    onDrop(e) {
-      console.log('Dropped files', e.dataTransfer.files)
-    }
-  }
+    customRequest: async options => {
+      try {
+        const formData = new FormData()
+        formData.append('file', options.file)
 
-  const checkUpdatedInfo = async () => {
-    const response = await axiosService.get('/auth/check-updated-information')
-    console.log(response)
-    return response.data.isUpdatedInfo
+        const response = await axiosService.post('/asset-upload', formData)
+        console.log(response)
+        setState((prev: ICourse) =>
+          produce(prev, draft => {
+            draft['course_image'] = response.data
+          })
+        )
+        message.success(`Tải file thành công`)
+
+        // @ts-ignore
+        options.onSuccess('oke')
+      } catch (error) {
+        message.error(` file upload failed.`)
+        // @ts-ignore
+        options.onError(new Error('Tải file thất bại, vui lòng kiểm tra lại file trước khi thử lại'))
+      }
+    }
   }
 
   const handleSubmit = async () => {
@@ -103,9 +79,6 @@ export default function CreateCourseForm() {
     // }
 
     try {
-      // const formData = serialize(state)
-      // formData.append('image', image)
-      // console.log(formData)
       console.log(state)
       const response = await axiosService.post('/course', state)
       console.log(response)
@@ -131,45 +104,91 @@ export default function CreateCourseForm() {
         <br />
         Danh mục khóa học
       </Text>
-      <Input style={{ maxWidth: 800, marginBottom: 30 }} onChange={e => handleChange('tags', e)} />
-
-      <Text className={styles.title3}>
-        Ngày bắt đầu
-        <br />
-      </Text>
-      <DatePicker
-        style={{ marginBottom: 30 }}
-        defaultValue={dayjs()}
-        onChange={(date, dateString) => handleChangeDate(date, dateString, 'start_time')}
-      />
-
-      <Text className={styles.title3}>
-        <br />
-        Ngày kết thúc
-        <br />
-      </Text>
-      <DatePicker
-        style={{ marginBottom: 30 }}
-        defaultValue={dayjs()}
-        onChange={(date, dateString) => handleChangeDate(date, dateString, 'end_time')}
-      />
-
-      <Text className={styles.title2}>
-        <br />
-        Mô tả khóa học
-        <br />
-      </Text>
+      <Input style={{ maxWidth: 800, marginBottom: 0 }} onChange={e => handleChange('tags', e)} />
 
       <Text className={styles.title3}>
         <br />
         Tóm tắt khóa học
       </Text>
-      <TextArea rows={4} style={{ maxWidth: 1000, marginBottom: 30 }} onChange={e => handleChange('description', e)} />
+      <TextArea rows={4} style={{ maxWidth: 1000, marginBottom: 30 }} onChange={e => handleChange('summary', e)} />
 
-      <Text className={styles.title3}>Ảnh đại diện khóa học</Text>
-      <div />
+      <Text className={styles.title3}>
+        <br />
+        Giới thiệu khóa học
+      </Text>
+      <TextArea rows={4} style={{ maxWidth: 1000, marginBottom: 30 }} onChange={e => handleChange('introduction', e)} />
 
-      <Dragger {...props}>
+      <Text className={styles.title3}>
+        <br />
+        Giới thiệu nội dung khóa học
+      </Text>
+      <TextArea
+        rows={4}
+        style={{ maxWidth: 1000, marginBottom: 30 }}
+        onChange={e => handleChange('content_introduction', e)}
+      />
+
+      <Text className={styles.title3}>
+        <br />
+        Giới thiệu giáo viên
+      </Text>
+      <TextArea
+        rows={4}
+        style={{ maxWidth: 1000, marginBottom: 0 }}
+        onChange={e => handleChange('teacher_introduction', e)}
+      />
+
+      <Text className={styles.title2}>
+        <br />
+        Thời gian khóa học
+        <br />
+      </Text>
+
+      <Text className={styles.title3}>
+        Ngày bắt đầu đăng kí
+        <br />
+      </Text>
+      <DatePicker
+        style={{ marginBottom: 30 }}
+        onChange={(date, dateString) => handleChangeDate(date, dateString, 'start_registration')}
+      />
+
+      <Text className={styles.title3}>
+        <br />
+        Ngày kết thúc đăng kí
+        <br />
+      </Text>
+      <DatePicker
+        style={{ marginBottom: 30 }}
+        onChange={(date, dateString) => handleChangeDate(date, dateString, 'end_registration')}
+      />
+
+      <Text className={styles.title3}>
+        <br />
+        Ngày bắt đầu khóa học
+        <br />
+      </Text>
+      <DatePicker
+        style={{ marginBottom: 30 }}
+        onChange={(date, dateString) => handleChangeDate(date, dateString, 'start_time')}
+      />
+
+      <Text className={styles.title3}>
+        <br />
+        Ngày kết thúc khóa học
+        <br />
+      </Text>
+      <DatePicker
+        style={{ marginBottom: 30 }}
+        onChange={(date, dateString) => handleChangeDate(date, dateString, 'end_time')}
+      />
+
+      <Text className={styles.title3}>
+        <br />
+        Ảnh đại diện khóa học
+      </Text>
+
+      <Dragger {...uploadProps} style={{ marginTop: 10 }}>
         <p className="ant-upload-drag-icon">
           <InboxOutlined />
         </p>
