@@ -72,8 +72,9 @@ export class QuestionService {
     ) {
       listQuestionChoiceId = await Promise.all(
         createQuizDto.question_choice.map(async (question_choice) => {
+          const { _id, ...rest } = question_choice;
           const newQuestionChoice = await this.questionChoiceRepository.create({
-            ...question_choice,
+            ...rest,
             author_id: author_id,
           });
           return newQuestionChoice._id;
@@ -137,6 +138,8 @@ export class QuestionService {
       for (const question_choice_id of question.question_choice) {
         await this.questionChoiceRepository.delete(question_choice_id);
       }
+
+    await this.questionRepository.delete(question_id);
 
     return this.createQuestionQuiz(author_id, createQuizDto);
   }

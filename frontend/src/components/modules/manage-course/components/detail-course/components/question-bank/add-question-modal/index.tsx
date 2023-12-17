@@ -74,10 +74,9 @@ const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, currentQu
     //   )
     //   return
     // }
-    handleAddQuestion()
 
     // Create new question
-    if (!currentQuestion)
+    if (!currentQuestion) {
       try {
         console.log(state)
         const response = await axiosService.post('/question/quiz', state)
@@ -87,17 +86,19 @@ const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, currentQu
         alert('Tạo câu hỏi thất bại, vui lòng kiểm tra lại thông tin trước khi thử lại')
         console.log(error)
       }
-
-    // Edit question
-    try {
-      console.log(state)
-      const response = await axiosService.put(`/question/quiz/${currentQuestion?._id}`, state)
-      console.log(response)
-      message.success(`Sửa câu hỏi thành công`)
-    } catch (error) {
-      alert('Sửa câu hỏi thất bại, vui lòng kiểm tra lại thông tin trước khi thử lại')
-      console.log(error)
+    } else {
+      // Edit question
+      try {
+        console.log(state)
+        const response = await axiosService.put(`/question/quiz/${currentQuestion?._id}`, state)
+        console.log(response)
+        message.success(`Sửa câu hỏi thành công`)
+      } catch (error) {
+        alert('Sửa câu hỏi thất bại, vui lòng kiểm tra lại thông tin trước khi thử lại')
+        console.log(error)
+      }
     }
+    handleAddQuestion()
   }
 
   const handleGeneralQuestion = (value: any) => {

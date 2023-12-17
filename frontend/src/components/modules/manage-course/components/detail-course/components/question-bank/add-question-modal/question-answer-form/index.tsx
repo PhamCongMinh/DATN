@@ -12,12 +12,21 @@ interface IProps {
 const QuestionAnswerForm: NextPage<IProps> = props => {
   const [form] = Form.useForm<IQuestionChoice[]>()
 
-  useEffect(() => {}, [props?.currentQuestion])
+  useEffect(() => {
+    if (!props?.currentQuestion) {
+      form.setFieldsValue([])
+    }
+  }, [props?.currentQuestion])
+
+  const onFinish = (value: IQuestionChoice[]) => {
+    props.onFinish(value)
+    // form.resetFields()
+  }
 
   return (
     <Form
       name="dynamic_form_nest_item"
-      onFinish={props.onFinish}
+      onFinish={onFinish}
       style={{ maxWidth: 1000 }}
       autoComplete="off"
       initialValues={{ items: props?.currentQuestion?.question_choice }}

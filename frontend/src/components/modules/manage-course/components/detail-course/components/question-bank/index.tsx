@@ -101,6 +101,8 @@ const QuestionBank: NextPage<IProps> = props => {
     setReload(true)
     setQuestionType(undefined)
     setIsAddEvent(false)
+    setIsEditEvent(false)
+    setCurrentQuestion(undefined)
   }
 
   const handleSearch = debounce(setSearchString, 500)

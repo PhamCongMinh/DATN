@@ -13,12 +13,21 @@ const GeneralQuestionForm: NextPage<IProps> = props => {
   const [form] = Form.useForm<IQuestion>()
 
   useEffect(() => {
-    if (props?.currentQuestion) form.setFieldsValue(props?.currentQuestion)
+    if (props?.currentQuestion) {
+      form.setFieldsValue(props?.currentQuestion)
+    } else {
+      form.setFieldsValue({})
+    }
   }, [props?.currentQuestion])
+
+  const onFinish = (value: IQuestion) => {
+    props.onFinish(value)
+    // form.resetFields()
+  }
 
   return (
     <>
-      <Form form={form} onFinish={props.onFinish} layout="vertical" autoComplete="off">
+      <Form form={form} onFinish={onFinish} layout="vertical" autoComplete="off">
         <Form.Item name="title" label="Tiêu đề câu hỏi:">
           <Input />
         </Form.Item>

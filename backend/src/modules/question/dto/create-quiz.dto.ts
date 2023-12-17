@@ -18,6 +18,11 @@ export class CreateQuestionChoiceDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
+  _id?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   content?: string;
 
   @ApiPropertyOptional()
