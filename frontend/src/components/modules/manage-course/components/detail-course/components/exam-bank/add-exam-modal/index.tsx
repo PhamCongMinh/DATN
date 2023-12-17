@@ -38,6 +38,7 @@ interface IProps extends ModalCustomProps {
   form: FormInstance<any>
   handleAddExam: () => void
   currentExam?: IExam
+  questions?: IQuestion[]
 }
 
 const AddExamModal: NextPage<IProps> = ({ form, handleAddExam, currentExam, ...props }) => {
@@ -136,7 +137,7 @@ const AddExamModal: NextPage<IProps> = ({ form, handleAddExam, currentExam, ...p
       label: 'Danh sách câu hỏi',
       children: (
         <>
-          <QuestionPointForm currentExam={currentExam} onFinish={handleAddQuestionPoint} />
+          <QuestionPointForm currentExam={currentExam} onFinish={handleAddQuestionPoint} questions={props?.questions} />
         </>
       )
     },

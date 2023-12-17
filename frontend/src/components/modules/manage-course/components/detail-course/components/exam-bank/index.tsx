@@ -48,6 +48,8 @@ const ExamBank: NextPage<IProps> = props => {
   const [searchString, setSearchString] = useState<string>()
   const [currentPage, setCurrentPage] = useState(1)
 
+  const [questions, setQuestions] = useState<IQuestion[]>()
+
   const [form] = useForm()
   const [notiModal, setNotiModal] = useState({
     isOpen: false,
@@ -62,10 +64,15 @@ const ExamBank: NextPage<IProps> = props => {
       course_id: props.course._id
     }
     const fetchData = async () => {
-      const response = await axiosService.get('/exam', { params: query })
-      const data: IQuestion[] = response.data
-      console.log('data', data)
-      setExams(data)
+      const response1 = await axiosService.get('/exam', { params: query })
+      const data1: IExam[] = response1.data
+      const response2 = await axiosService.get('/question/quiz', { params: query })
+      const data2: IQuestion[] = response2.data
+      console.log('examData', data1)
+      console.log('questionData', data2)
+      setExams(data1)
+      setQuestions(data2)
+
       setReload(false)
     }
     fetchData()
@@ -290,6 +297,7 @@ const ExamBank: NextPage<IProps> = props => {
             }}
             handleAddExam={handleSubmitQuestion}
             course={props.course}
+            questions={questions}
           />
           <NotiModal
             open={notiModal.isOpen}

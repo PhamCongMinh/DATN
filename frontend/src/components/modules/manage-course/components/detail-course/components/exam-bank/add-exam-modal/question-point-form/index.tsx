@@ -3,10 +3,12 @@ import { CloseOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/ic
 import { Button, Card, Form, Input, Select, Space, Typography } from 'antd'
 import { NextPage } from 'next'
 import { IExam, IQuestionPoint } from '../../../../../../../../../types/exam'
+import { IQuestion } from '../../../../../../../../../types/types'
 
 interface IProps {
   onFinish: (value: IQuestionPoint[]) => void
   currentExam?: IExam
+  questions?: IQuestion[]
 }
 
 const QuestionPointForm: NextPage<IProps> = props => {
@@ -47,7 +49,19 @@ const QuestionPointForm: NextPage<IProps> = props => {
                 </Form.Item>
 
                 <Form.Item label="ID câu hỏi:" name={[field.name, 'question_id']} rules={[{ required: true }]}>
-                  <Input />
+                  <Select
+                    showSearch
+                    placeholder="Search to Select"
+                    optionFilterProp="children"
+                    filterOption={(input, option) => (option?.label ?? '').includes(input)}
+                    filterSort={(optionA, optionB) =>
+                      (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                    }
+                    options={props.questions?.map(question => ({
+                      value: question?._id,
+                      label: `Mã câu hỏi: "${question?.custom_question_id}". Tiêu đề: "${question?.title}"`
+                    }))}
+                  />
                 </Form.Item>
 
                 <Form.Item label="Điểm câu hỏi:" name={[field.name, 'point']} rules={[{ required: false }]}>
