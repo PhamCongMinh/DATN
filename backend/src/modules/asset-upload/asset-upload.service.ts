@@ -3,64 +3,52 @@ import { readFile, rm } from 'fs/promises';
 import { ConfigService } from '@nestjs/config';
 import { User } from '@models/entities';
 import UploadedAssetRepository from '@models/repositories/UploadAsset.repository';
+import { AzureService } from '@modules/asset-upload/azure.service';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class AssetUploadService {
-  private s3_prefix: string;
-
   constructor(
     private configService: ConfigService,
     private uploadedAssetRepository: UploadedAssetRepository,
-  ) {
-    // this.s3_prefix = this.configService.get<string>(EEnvKey.S3_PREFIX);
-  }
+    private azureService: AzureService,
+  ) {}
   async create(file: Express.Multer.File, user_id: string) {
     const filePath = `${file.destination}/${file.filename}`;
 
-    return await this.uploadedAssetRepository.create({
-      asset_url: filePath,
-      file_type: 'pdf',
-      user_id: user_id,
-    });
+    try {
+      const extension = file.originalname.split('.').pop();
+      const file_name = uuidv4() + '.' + extension;
 
-    // await rm(filePath);
+      const fileUrl = await this.azureService.uploadFile(
+        await readFile(filePath),
+        file_name,
+      );
 
-    // const queryRunner = this.dataSource.createQueryRunner();
-    // await queryRunner.connect();
-    // await queryRunner.startTransaction();
-    // try {
-    //   console.log('FilePath', filePath);
-    //   console.log('Prepare upload file to s3');
-    //   console.log('Start ReadFile');
-    //   await readFile(filePath);
-    //   console.log('ReadFile successfully');
-    //
-    //   const uploadedFile = await this.awsService.uploadS3(
-    //     await readFile(filePath),
-    //     file.filename,
-    //   );
-    //   console.log('UploadedFile successfully');
-    //
-    //   // Replace domain to prefix
-    //   const newAssetUrl = `${this.s3_prefix}/${uploadedFile.key}`;
-    //   console.log('NewAssetUrl', newAssetUrl);
-    //   const saveFiled = await queryRunner.manager.save(UploadedAsset, {
-    //     asset_url: newAssetUrl,
-    //     file_type: file.mimetype,
-    //     is_used: false,
-    //     s3_key: uploadedFile.key,
-    //     user,
-    //   } as DeepPartial<UploadedAsset>);
-    //   console.log('SaveFiled', saveFiled);
-    //   await queryRunner.commitTransaction();
-    //   return saveFiled;
-    // } catch (error) {
-    //   console.log(error);
-    //   await queryRunner.rollbackTransaction();
-    //   throw error;
-    // } finally {
-    //   await queryRunner.release();
-    //   await rm(filePath);
-    // }
+      return await this.uploadedAssetRepository.create({
+        asset_url: fileUrl,
+        file_type: extension,
+        user_id: user_id,
+      });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    } finally {
+      await rm(filePath);
+    }
+  }
+
+  async delete(
+    id: string,
+    // user_id: string
+  ) {
+    const asset = await this.uploadedAssetRepository.findById(id);
+
+    // if (!asset || asset.length === 0 || asset[0].user_id !== user_id)
+    //   throw new Error('Asset not found');
+
+    await this.azureService.deleteFile(asset[0].asset_url, 'datn');
+
+    return await this.uploadedAssetRepository.delete(id);
   }
 }

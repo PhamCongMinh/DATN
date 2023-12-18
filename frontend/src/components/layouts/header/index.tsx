@@ -1,6 +1,6 @@
 import { Col, Menu, Row, Typography } from 'antd'
 import { Header } from 'antd/lib/layout/layout'
-import { menuItemsBeforeLogin, menuItemsAfterLogin, menuItemsForAdmin } from '../../../constants'
+import { menuItemsBeforeLogin, menuItemsForAdmin, menuItemsForTeacher, menuItemsForStudent } from '../../../constants'
 
 import styles from './style.module.scss'
 import { useRouter } from 'next/router'
@@ -30,12 +30,20 @@ function CustomHeader() {
             </a>
           </Typography>
         </Col>
-        <Col span={!jwt ? 12 : 9} offset={7}>
+        <Col span={!jwt ? 12 : 10} offset={!jwt ? 7 : 6}>
           <Menu
             theme="light"
             mode="horizontal"
             defaultSelectedKeys={['home']}
-            items={jwt && user.role === 'admin' ? menuItemsForAdmin : !jwt ? menuItemsBeforeLogin : menuItemsAfterLogin}
+            items={
+              jwt && user.role === 'admin'
+                ? menuItemsForAdmin
+                : jwt && user.role === 'teacher'
+                ? menuItemsForTeacher
+                : jwt && user.role === 'student'
+                ? menuItemsForStudent
+                : menuItemsBeforeLogin
+            }
             className={styles.menu}
             onClick={({ key }) => handleClickMenuItem(key)}
           />

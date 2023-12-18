@@ -10,6 +10,7 @@ import {
 import UploadedAssetRepository from '@models/repositories/UploadAsset.repository';
 import { User, UserSchema } from '@models/entities';
 import UserRepository from '@models/repositories/User.repository';
+import { AzureService } from '@modules/asset-upload/azure.service';
 
 @Module({
   imports: [
@@ -26,6 +27,11 @@ import UserRepository from '@models/repositories/User.repository';
     LoggingModule,
   ],
   controllers: [AssetUploadController],
-  providers: [AssetUploadService, UploadedAssetRepository, UserRepository],
+  providers: [
+    AssetUploadService,
+    UploadedAssetRepository,
+    UserRepository,
+    AzureService,
+  ],
 })
 export class AssetUploadModule {}

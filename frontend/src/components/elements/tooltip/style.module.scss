@@ -1,0 +1,20 @@
+@import 'styles/colors.scss';
+@import 'styles/variables.scss';
+
+.default-tooltip {
+  .ant-tooltip-arrow {
+    &::before {
+      background: $color-white-0;
+    }
+  }
+
+  .ant-tooltip-inner {
+    border-radius: 4px;
+    border: 1px solid #f6f6f6;
+    background-color: $color-white-0;
+
+    color: #adadad;
+    font-family: "Open Sans";
+    font-weight: $font-weight-4;
+  }
+}

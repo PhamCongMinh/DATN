@@ -22,15 +22,15 @@ export class Comment {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    required: false,
   })
-  ownerId: string;
+  author_id: string;
 
   @Prop({
     type: Number,
-    required: true,
+    required: false,
   })
-  rate: number;
+  rate?: number;
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);

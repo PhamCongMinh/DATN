@@ -1,6 +1,8 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { Prop } from '@shared/swagger';
+import { User } from '@models/entities/User.entity';
+import { Section } from '@models/entities/Section.entity';
 
 export type CourseDocument = Course & Document;
 
@@ -32,10 +34,11 @@ export class Course {
   description?: string;
 
   @Prop({
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'UploadedAsset',
     required: false,
   })
-  img?: string;
+  course_image?: string;
 
   @Prop({
     type: Date,
@@ -56,28 +59,17 @@ export class Course {
   status?: string;
 
   @Prop({
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: false,
   })
-  author?: string;
+  author_id: string;
 
   @Prop({
     type: String,
     required: false,
   })
   files?: string;
-
-  @Prop({
-    type: String,
-    required: false,
-  })
-  assessments?: string;
-
-  @Prop({
-    type: String,
-    required: false,
-  })
-  lectures?: string;
 
   @Prop({
     type: String,
@@ -92,16 +84,68 @@ export class Course {
   reviews?: string;
 
   @Prop({
-    type: String,
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'User',
     required: false,
   })
-  students?: string;
+  students?: string[];
+
+  @Prop({
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'User',
+    required: false,
+  })
+  teachers?: string[];
+
+  @Prop({
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Discuss',
+    required: false,
+  })
+  discusses?: string[];
+
+  @Prop({
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Section',
+    required: false,
+  })
+  sections?: string[];
 
   @Prop({
     type: String,
     required: false,
   })
-  teachers?: string;
+  summary?: string;
+
+  @Prop({
+    type: Date,
+    required: false,
+  })
+  start_registration?: Date;
+
+  @Prop({
+    type: Date,
+    required: false,
+  })
+  end_registration?: Date;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  introduction?: string;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  content_introduction?: string;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  teacher_introduction?: string;
 }
 
 export const CourseSchema = SchemaFactory.createForClass(Course);

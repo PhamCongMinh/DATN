@@ -1,0 +1,45 @@
+@import 'styles/colors.scss';
+@import 'styles/variables.scss';
+
+.input-box {
+  margin-bottom: 0;
+  width: 100%;
+  .ant-typograp hy {
+    margin-bottom: 4px;
+    font-family: "Open Sans";
+  }
+  .input-default {
+    height: 44px;
+    // border: 1px solid #e6e8ec;
+    border-radius: 4px;
+    width: 100%;
+    background: transparent;
+    input {
+      font-family: "Open Sans";
+      background: transparent;
+      font-size: 16px;
+      margin-top: 2px;
+    }
+    &:focus-within {
+      border: 1px solid $color-primary !important ;
+      box-shadow: none;
+    }
+    &:hover {
+      border: 1px solid $color-primary !important ;
+      background: rgba(234, 234, 234, 0.1);
+    }
+
+    .ant-input-prefix {
+      margin-inline-end: 8px;
+    }
+  }
+  .ant-form-item-required {
+    &::before {
+      display: none !important;
+    }
+  }
+
+  .w-full {
+    width: 100% !important;
+  }
+}

@@ -6,6 +6,7 @@ import SectionRepository from '@models/repositories/Section.repository';
 import { CreateSectionDto } from '@modules/course/dto/create-section.dto';
 import { CreateLessonDto } from '@modules/course/dto/create-lesson.dto';
 import LessonRepository from '@models/repositories/Lesson.repository';
+import { string } from 'joi';
 
 @Injectable()
 export class CourseService {
@@ -18,12 +19,23 @@ export class CourseService {
     this.loggerService.getLogger('CourseService');
   }
 
-  async createCourse(data: CreateCourseDto) {
-    return this.courseRepository.create(data);
+  async createCourse(author_id: string, data: CreateCourseDto) {
+    const { course_image, ...rest } = data;
+    return this.courseRepository.create({
+      ...rest,
+      author_id: author_id,
+      course_image: course_image ? course_image._id : null,
+    });
   }
 
   async getCourse() {
     return this.courseRepository.getAll();
+  }
+
+  async getCourseByAuthor(author_id: string) {
+    return this.courseRepository.courseDocument.find({
+      author_id: author_id,
+    });
   }
 
   async createSection(data: CreateSectionDto) {
@@ -31,6 +43,118 @@ export class CourseService {
   }
 
   async createLesson(data: CreateLessonDto) {
-    return this.lessonRepository.create(data);
+    const { documents, exam, ...rest } = data;
+    const lesson = await this.lessonRepository.create({
+      ...rest,
+      exam: exam ? exam : null,
+      documents: documents ? documents._id : null,
+    });
+
+    await this.sectionRepository.update(data.section_id, {
+      $push: { lessons: lesson.id },
+    });
+    return lesson;
+  }
+
+  async editLesson(lesson_id: string, data: CreateLessonDto) {
+    const { documents, exam, ...rest } = data;
+    const lesson = await this.lessonRepository.update(lesson_id, {
+      ...rest,
+      exam: exam ? exam : null,
+      documents: documents ? documents._id : null,
+    });
+
+    return lesson;
+  }
+
+  async deleteLesson(lesson_id: string) {
+    const lesson = await this.lessonRepository.findById(lesson_id);
+    await this.sectionRepository.update(lesson.section_id, {
+      $pull: { lessons: lesson_id },
+    });
+
+    return await this.lessonRepository.delete(lesson_id);
+  }
+
+  async getLessonById(lesson_id: string) {
+    return this.lessonRepository.lessonDocument
+      .find({
+        _id: lesson_id,
+      })
+      .populate('documents')
+      .exec();
+  }
+
+  async getListStudentInCourse(author_id: string, course_id: string) {
+    const course = await this.courseRepository.courseDocument
+      .findOne({ _id: course_id })
+      .populate('students')
+      .exec();
+
+    return course?.students ? course?.students : null;
+  }
+
+  async joinCourse(student_id: string, course_id: string) {
+    const course = await this.courseRepository.courseDocument
+      .findOne({ _id: course_id })
+      .exec();
+
+    if (!course?.students) {
+      course.students = [student_id];
+    } else {
+      course.students.push(student_id);
+    }
+
+    return course.save();
+  }
+
+  async getContentInACourse(course_id: string) {
+    const sections = await this.sectionRepository.sectionDocument
+      .find({
+        course_id: course_id,
+      })
+      .populate({
+        path: 'lessons',
+        populate: {
+          path: 'documents',
+        },
+      })
+      .sort({ order: 1 })
+      .exec();
+
+    return sections;
+  }
+
+  async deleteSection(section_id: string) {
+    return this.sectionRepository.delete(section_id);
+  }
+
+  async updateSection(section_id: string, data: CreateSectionDto) {
+    return this.sectionRepository.update(section_id, data);
+  }
+
+  async getJoinedCourse(student_id: string) {
+    const course = await this.courseRepository.courseDocument
+      .find({
+        students: { $in: [student_id] },
+      })
+      .exec();
+    console.log(course);
+
+    return course;
+  }
+
+  async checkJoinedCourse(student_id: string, course_id: string) {
+    const course = await this.courseRepository.courseDocument
+      .findOne({ _id: course_id })
+      .exec();
+
+    if (course?.students.includes(student_id))
+      return {
+        is_joined: true,
+      };
+    return {
+      is_joined: false,
+    };
   }
 }

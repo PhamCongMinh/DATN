@@ -58,4 +58,9 @@ export class CreateQuestionAboutProgramingDto {
   @IsOptional()
   @IsNumber()
   memory_limit?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  course_id?: string;
 }

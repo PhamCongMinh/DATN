@@ -1,0 +1,22 @@
+@import 'styles/colors.scss';
+@import 'styles/variables.scss';
+
+.noti-modal {
+  text-align: center;
+  font-family: "Open Sans";
+
+  &-title {
+    color: #101828;
+    font-size: $font-size-4;
+    font-weight: $font-weight-6;
+    line-height: 28px;
+    margin: $margin-md 0 0;
+  }
+
+  &-text {
+    color: #475467;
+    font-size: $font-size-2;
+    font-weight: $font-weight-4;
+    line-height: 20px;
+  }
+}

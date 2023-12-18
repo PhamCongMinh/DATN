@@ -2,17 +2,16 @@ import { Alert, Button, Layout, Menu, MenuProps, Space, Typography } from 'antd'
 import styles from './style.module.scss'
 import { AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons'
 import React, { useCallback, useEffect, useState } from 'react'
-import CreateRentalnews from './components/create-course'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
-import ManagementRentalNews from './components/management-news'
 import { authSliceActions } from '../../../store/auth/authSlice'
-import Contact from './components/management-news/components/contact'
-import ManagementCourse, { TSearchCourse } from './components/management-course'
-import DetailCourseContent from '../detail-course'
+import JoinedCourse, { TSearchCourse } from './components/joined-course'
 import AxiosService from '../../../utils/axios'
 import { NextPage } from 'next'
-import CreateCourse from './components/create-course'
+import DetailCourseContent from './components/detail-course'
+import Contact from '../manage-account/components/contact'
+import AllCourse from './components/all-course'
+import { ICourse } from '../../../types/course'
 
 type MenuItem = Required<MenuProps>['items'][number]
 const { Text } = Typography
@@ -33,30 +32,15 @@ function getItem(
 }
 
 const items: MenuProps['items'] = [
-  getItem('Quản lý khóa học', 'managementCourse', <AppstoreOutlined />),
-  getItem('Tạo khóa học mới', 'createCourse', <AppstoreOutlined />),
-  getItem('Quản lí tin đăng', 'managementNews', <AppstoreOutlined />),
+  getItem('Tất cả khóa học', 'course', <AppstoreOutlined />),
+  getItem('Khóa học tham gia', 'joinedCourse', <AppstoreOutlined />),
   getItem('Liên hệ', 'contact', <MailOutlined />)
 ]
-
-export interface ICourse {
-  _id: string
-  name?: string
-  tags?: string
-  description?: string
-  img?: string
-  start_time?: Date
-  end_time?: Date
-  status?: string
-  author?: string
-  created_at: Date
-  updated_at: Date
-}
 
 const CourseContent: NextPage = () => {
   const router = useRouter()
   const dispatch = useDispatch()
-  const [selectedMenuItem, setSelectedMenuItem] = React.useState('managementCourse')
+  const [selectedMenuItem, setSelectedMenuItem] = React.useState('course')
   const [isOpenDetailCourse, setIsOpenDetailCourse] = useState<boolean>(false)
   const jwt = useSelector((state: any) => state.auth?.user?.jwt)
   const user = useSelector((state: any) => state.auth?.user)
@@ -66,39 +50,19 @@ const CourseContent: NextPage = () => {
   const [reload, setReload] = useState<boolean>(false)
   const [appliedFilter, setAppliedFilter] = useState<TSearchCourse>({})
   const [courses, setCourses] = useState<ICourse[]>()
-  console.log('reload', reload)
-
-  const handleUserNotLogin = useCallback(() => {
-    window.location.href = '/signin'
-    // router.push('/signin')
-  }, [])
-
-  if (!jwt || user.role !== 'teacher') {
-    return (
-      <div>
-        <Alert
-          message="Không có quyền truy cập"
-          showIcon
-          description="Bạn phải đăng nhập với tài khoản giáo viên để sử dụng chức năng này"
-          type="error"
-          action={
-            <Button size="small" danger>
-              Detail
-            </Button>
-          }
-          closable
-          onClose={handleUserNotLogin}
-        />
-      </div>
-    )
-  }
+  const [joinedCourses, setJoinedCourses] = useState<ICourse[]>()
+  const [currentCourse, setCurrentCourse] = useState<ICourse>()
 
   useEffect(() => {
-    const axiosService = new AxiosService('application/json')
+    const axiosService = new AxiosService('application/json', jwt)
     const fetchData = async () => {
-      const response = await axiosService.get('/course')
-      const data: ICourse[] = response.data
-      setCourses(data)
+      const response1 = await axiosService.get('/course')
+      const data1: ICourse[] = response1.data
+      const response2 = await axiosService.get('/course/joined')
+      const data2: ICourse[] = response2.data
+
+      setCourses(data1)
+      setJoinedCourses(data2)
       setReload(false)
     }
     fetchData()
@@ -133,7 +97,8 @@ const CourseContent: NextPage = () => {
     setReload(true)
   }
 
-  const handleClickCourseDetail = (course: any) => {
+  const handleClickCourseDetail = (course: ICourse) => {
+    setCurrentCourse(course)
     setIsOpenDetailCourse(true)
   }
 
@@ -157,8 +122,8 @@ const CourseContent: NextPage = () => {
                 className={styles.menu}
               />
             </div>
-            {selectedMenuItem === 'managementCourse' && courses && (
-              <ManagementCourse
+            {selectedMenuItem === 'course' && courses && (
+              <AllCourse
                 data={courses}
                 handleSearch={handleClickSearchButton}
                 appliedFilter={appliedFilter}
@@ -166,8 +131,15 @@ const CourseContent: NextPage = () => {
                 openDetailCourse={handleClickCourseDetail}
               />
             )}
-            {selectedMenuItem === 'createCourse' && <CreateCourse />}
-            {selectedMenuItem === 'managementNews' && <ManagementRentalNews />}
+            {selectedMenuItem === 'joinedCourse' && joinedCourses && (
+              <JoinedCourse
+                data={joinedCourses}
+                handleSearch={handleClickSearchButton}
+                appliedFilter={appliedFilter}
+                setReload={handleReload}
+                openDetailCourse={handleClickCourseDetail}
+              />
+            )}
             {selectedMenuItem === 'contact' && (
               <div className={styles.contact}>
                 <Contact />
@@ -176,8 +148,13 @@ const CourseContent: NextPage = () => {
           </Space>
         </div>
       )}
-      {isOpenDetailCourse === true && (
-        <DetailCourseContent rentNews={{}} handleClickBack={handleClickBack} setReload={handleReload} />
+      {isOpenDetailCourse === true && currentCourse && (
+        <DetailCourseContent
+          isJoinedCourse={selectedMenuItem === 'joinedCourse' ? true : false}
+          course={currentCourse}
+          handleClickBack={handleClickBack}
+          setReload={handleReload}
+        />
       )}
     </div>
   )
