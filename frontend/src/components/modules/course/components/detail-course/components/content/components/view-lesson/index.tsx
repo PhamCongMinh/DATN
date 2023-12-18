@@ -5,6 +5,8 @@ import styles from './style.module.scss'
 import { useSelector } from 'react-redux'
 import { ILesson, LessonType } from '../../../../../../../../../types/lesson'
 import PdfView from '../../../../../../../../elements/pdf-view'
+import AttendExam from './before-exam'
+import BeforeExam from './before-exam'
 
 const { Dragger } = Upload
 
@@ -30,38 +32,46 @@ const ViewLesson: React.FC<IProps> = (props): JSX.Element => {
 
   return (
     <>
-      <Title className={styles.title3} style={{ marginTop: 10 }}>
-        {state?.name}
-        <br />
-      </Title>
+      {props?.lesson?.type !== LessonType.exam && (
+        <>
+          <Title className={styles.title3} style={{ marginTop: 10 }}>
+            {state?.name}
+            <br />
+          </Title>
 
-      <Text className={styles.title3}>
-        {state?.description}
-        <br />
-      </Text>
+          <Text className={styles.title3}>
+            {state?.description}
+            <br />
+          </Text>
 
-      {state && state?.embed_file && (
-        <div dangerouslySetInnerHTML={{ __html: state?.embed_file }} style={{ height: 500 }} />
+          {state && state?.embed_file && (
+            <div dangerouslySetInnerHTML={{ __html: state?.embed_file }} style={{ height: 500 }} />
+          )}
+          {state &&
+            state?.documents &&
+            state?.documents?.asset_url &&
+            state?.documents?.file_type === LessonType.pdf && (
+              <PdfView pdfUrl={state?.documents?.asset_url} height={500} />
+            )}
+          {state &&
+            state?.documents &&
+            state?.documents?.asset_url &&
+            (state?.documents?.file_type === 'png' || state?.documents?.file_type === 'jpg') && (
+              <img alt="example" src={state?.documents?.asset_url} />
+            )}
+          {state && state?.documents && state?.documents?.asset_url && state?.documents?.file_type === 'mp4' && (
+            // <ReactPlayer controls height={500} src={file.asset_url} />
+            <video controls src={state?.documents?.asset_url} width={1000} />
+          )}
+          {!state?.documents && !state?.embed_file && !state?.description && (
+            <Text className={styles.title3}>
+              Không có dữ liệu bài giảng
+              <br />
+            </Text>
+          )}
+        </>
       )}
-      {state && state?.documents && state?.documents?.asset_url && state?.documents?.file_type === LessonType.pdf && (
-        <PdfView pdfUrl={state?.documents?.asset_url} height={800} />
-      )}
-      {state &&
-        state?.documents &&
-        state?.documents?.asset_url &&
-        (state?.documents?.file_type === 'png' || state?.documents?.file_type === 'jpg') && (
-          <img alt="example" src={state?.documents?.asset_url} />
-        )}
-      {state && state?.documents && state?.documents?.asset_url && state?.documents?.file_type === 'mp4' && (
-        // <ReactPlayer controls height={500} src={file.asset_url} />
-        <video controls src={state?.documents?.asset_url} width={1000} />
-      )}
-      {!state?.documents && !state?.embed_file && !state?.description && (
-        <Text className={styles.title3}>
-          Không có dữ liệu bài giảng
-          <br />
-        </Text>
-      )}
+      {props?.lesson?.type === LessonType.exam && <BeforeExam exam_id={props?.lesson?.exam} onBack={props.onBack} />}
     </>
   )
 }

@@ -77,6 +77,23 @@ export class ExamService {
     return this.examRepository.delete(exam_id);
   }
 
+  async getExamById(user_id: string, exam_id: string) {
+    return this.examRepository.examDocumentModel
+      .findOne({
+        _id: exam_id,
+      })
+      .populate({
+        path: 'question_point',
+        populate: {
+          path: 'question_id',
+          populate: {
+            path: 'question_choice',
+          },
+        },
+      })
+      .exec();
+  }
+
   async updateExam(
     author_id: string,
     exam_id: string,

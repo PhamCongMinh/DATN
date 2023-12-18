@@ -1,0 +1,59 @@
+.course {
+  border-radius: 29px !important;
+  border: 1px solid !important;
+}
+
+.space {
+  position: relative;
+  background-color: #FFFFFF;
+  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.15);
+  border-radius: 30px;
+  overflow: hidden;
+  //width: fit-content;
+  min-width: 280px !important;
+  min-height: 240px !important;
+}
+
+.container {
+  //width: 500px;
+  //height: 250px;
+  //padding: 30px;
+  //display: grid;
+}
+
+.title {
+  color: #000000 !important;
+  font-weight: 600 !important;
+  font-family: 'Open sans' !important;
+  font-size: 15px !important;
+  line-height: 1.625em !important;
+  margin-top: 0px !important;
+}
+
+.text {
+  color: #636363;
+  font-weight: 400;
+  font-family: 'Open sans';
+  font-size: 15px;
+  line-height: 1.625em;
+}
+
+.tag {
+  color: #636363;
+  font-weight: 400;
+  font-family: 'Open sans';
+  font-size: 15px;
+  line-height: 1.625em;
+}
+
+.button {
+  background: #FFFFFF;
+  border-radius: 2px;
+  text-align: center;
+  color: #2B95CA;
+  font-family: Open sans;
+  font-weight: 400;
+  min-height: 42px;
+  min-width: 280px;
+  margin-top: 10px;
+}
