@@ -20,4 +20,6 @@ export interface ILesson {
   embed_file?: string
   description?: string
   documents?: IFile
+  exam?: string
+  type?: LessonType
 }

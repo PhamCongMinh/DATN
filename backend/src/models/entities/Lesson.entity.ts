@@ -1,8 +1,20 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { Prop } from '@shared/swagger';
+import { Exam } from '@models/entities/Exam.entity';
 
 export type LessonDocument = Lesson & Document;
+
+export enum ELessonType {
+  video = 'video',
+  pdf = 'pdf',
+  text = 'text',
+  audio = 'audio',
+  quiz = 'quiz',
+  survey = 'survey',
+  assignment = 'assignment',
+  exam = 'exam',
+}
 
 @Schema({
   timestamps: {
@@ -57,6 +69,19 @@ export class Lesson {
     required: false,
   })
   documents?: string;
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Exam',
+    required: false,
+  })
+  exam?: string;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  type?: ELessonType;
 }
 
 export const LessonSchema = SchemaFactory.createForClass(Lesson);

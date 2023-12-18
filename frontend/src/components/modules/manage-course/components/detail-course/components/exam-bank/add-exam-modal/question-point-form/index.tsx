@@ -14,7 +14,13 @@ interface IProps {
 const QuestionPointForm: NextPage<IProps> = props => {
   const [form] = Form.useForm<IQuestionPoint[]>()
 
-  useEffect(() => {}, [props?.currentExam])
+  useEffect(() => {
+    if (props?.currentExam?.question_point) {
+      form.setFieldsValue(props?.currentExam?.question_point)
+    }
+  }, [props?.currentExam])
+  console.log('QuestionPointForm', props?.currentExam?.question_point)
+  console.log('form', form['items'])
 
   return (
     <Form

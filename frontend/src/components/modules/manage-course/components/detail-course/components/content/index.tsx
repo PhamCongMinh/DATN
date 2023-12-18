@@ -77,6 +77,7 @@ const CourseContent: NextPage<IProps> = props => {
   }
 
   const handleCancel = () => {
+    setLessonType(undefined)
     setIsAddSection(false)
     setIsEditSection(false)
     setCurrentSection(undefined)
@@ -240,6 +241,7 @@ const CourseContent: NextPage<IProps> = props => {
           />
           <AddLesson open={isOpenLessonType} onOk={handleChoseLessonType} onCancel={handleCancel} />
           <UploadLesson
+            lessonType={lessonType}
             lesson={currentLesson}
             course={props.course}
             section={currentSection}

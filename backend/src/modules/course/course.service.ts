@@ -43,9 +43,10 @@ export class CourseService {
   }
 
   async createLesson(data: CreateLessonDto) {
-    const { documents, ...rest } = data;
+    const { documents, exam, ...rest } = data;
     const lesson = await this.lessonRepository.create({
       ...rest,
+      exam: exam ? exam : null,
       documents: documents ? documents._id : null,
     });
 
@@ -56,9 +57,10 @@ export class CourseService {
   }
 
   async editLesson(lesson_id: string, data: CreateLessonDto) {
-    const { documents, ...rest } = data;
+    const { documents, exam, ...rest } = data;
     const lesson = await this.lessonRepository.update(lesson_id, {
       ...rest,
+      exam: exam ? exam : null,
       documents: documents ? documents._id : null,
     });
 
