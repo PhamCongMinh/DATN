@@ -33,7 +33,7 @@ export class ExamSubmitService {
     const exam = await this.examRepository.findById(startExamDto.exam_id);
 
     if (!exam) throw new Error('Exam not found');
-    if (exam.password !== startExamDto.password)
+    if (exam?.password !== startExamDto.password)
       throw new Error('Wrong password');
 
     if (exam.start_time > new Date()) throw new Error('Exam not started');

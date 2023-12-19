@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Breadcrumb, Button, Input, message, Modal, Space, Typography, Upload, UploadProps } from 'antd'
 
 import styles from './style.module.scss'
@@ -28,8 +28,8 @@ const BeforeExam: React.FC<IProps> = (props): JSX.Element => {
   const axiosService = new AxiosService('application/json', jwt)
   const [isLoading, setLoading] = useState(true)
   const [isStartExam, setStartExam] = useState(false)
-
-  console.log('state', state)
+  const [password, setPassword] = useState<string>('')
+  console.log('before-exam-password', password)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,13 +42,31 @@ const BeforeExam: React.FC<IProps> = (props): JSX.Element => {
     fetchData()
   }, [props?.exam_id])
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value)
+  }
+
+  const handleStartExam = async () => {
+    console.log('props.password', password)
+    const res = await axiosService.post(`exam-submit`, {
+      exam_id: props?.exam_id,
+      password: password
+    })
+    console.log('res', res)
+  }
+
   const handleClickButton = () => {
     Modal.confirm({
       title: 'Bạn sẽ bắt đầu bài thi tính giờ ngay bây giờ?',
+      content: (
+        <div>
+          <Text>Nhập mật khẩu bài thi</Text>
+          <Input onChange={e => handleChange(e)} placeholder="Nhập mật khẩu bài thi" />
+        </div>
+      ),
       onOk: async () => {
         try {
-          // TODO: call api start exam
-          // const res = await axiosService.post(`course/${props.course._id}/join`, {})
+          await handleStartExam()
           message.success('Bắt đầu bài thi')
         } catch (e) {
           message.error('Bắt đầu bài thi thất bại, vui lòng thử lại sau')
