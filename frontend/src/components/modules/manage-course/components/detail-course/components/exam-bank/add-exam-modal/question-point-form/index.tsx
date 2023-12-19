@@ -73,6 +73,19 @@ const QuestionPointForm: NextPage<IProps> = props => {
                 <Form.Item label="Điểm câu hỏi:" name={[field.name, 'point']} rules={[{ required: false }]}>
                   <Input />
                 </Form.Item>
+
+                <Form.Item
+                  label="Chấm tự động"
+                  name={[field.name, 'automatically_graded']}
+                  rules={[{ required: true }]}
+                >
+                  <Select
+                    options={[
+                      { key: 1, value: false, label: 'Không' },
+                      { key: 2, value: true, label: 'Có' }
+                    ]}
+                  />
+                </Form.Item>
               </Card>
             ))}
 

@@ -28,8 +28,8 @@ export default class QuestionPointRepository {
     return this.questionPointDocumentModel.updateOne({ _id: id }, data).exec();
   }
 
-  async findById(id: string): Promise<QuestionPointDocument[]> {
-    return this.questionPointDocumentModel.find({ _id: id }).exec();
+  async findById(id: string): Promise<QuestionPointDocument> {
+    return this.questionPointDocumentModel.findOne({ _id: id }).exec();
   }
 
   async getAll(): Promise<QuestionPointDocument[]> {

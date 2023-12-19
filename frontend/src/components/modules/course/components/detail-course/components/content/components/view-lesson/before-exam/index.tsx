@@ -79,12 +79,12 @@ const BeforeExam: React.FC<IProps> = (props): JSX.Element => {
                       <br />
                     </Text>
                     <Space>
-                      <Text className={styles.date}>{state?.start_time?.toString().split('T')[0]}</Text>
+                      <Text className={styles.date}>{state?.start_time?.toString().split('.')[0]}</Text>
                     </Space>
                   </div>
                 </Space>
               </div>
-              <div style={{ marginLeft: 50 }}>
+              <div style={{ marginLeft: 10 }}>
                 <Space>
                   <Image src={DateIcon} alt="icon" className={styles.icon} />
                   <div>
@@ -93,7 +93,7 @@ const BeforeExam: React.FC<IProps> = (props): JSX.Element => {
                       <br />
                     </Text>
                     <Space>
-                      <Text className={styles.date}>{state?.end_time?.toString().split('T')[0]}</Text>
+                      <Text className={styles.date}>{state?.end_time?.toString().split('.')[0]}</Text>
                     </Space>
                   </div>
                 </Space>

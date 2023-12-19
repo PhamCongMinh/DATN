@@ -105,6 +105,7 @@ const AddExamModal: NextPage<IProps> = ({ form, handleAddExam, currentExam, ...p
         draft['point_ladder'] = value.point_ladder
         draft['pass_point'] = value.pass_point
         draft['retry_times_number'] = value.retry_times_number
+        draft['password'] = value.password
         draft['exam_time'] = value.exam_time
         draft['start_time'] = value.start_time
         draft['end_time'] = value.end_time

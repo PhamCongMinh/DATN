@@ -44,6 +44,11 @@ export class CreateExamDto {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsString()
+  password?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsNumber()
   exam_time?: number;
 

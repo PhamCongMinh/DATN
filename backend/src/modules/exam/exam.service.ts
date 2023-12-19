@@ -106,6 +106,8 @@ export class ExamService {
         await this.questionPointRepository.delete(question_point_id);
       }
 
+    await this.examRepository.delete(exam_id);
+
     return this.createExam(author_id, createExamDto);
   }
 }

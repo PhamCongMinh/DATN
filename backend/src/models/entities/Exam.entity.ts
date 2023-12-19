@@ -33,6 +33,12 @@ export class Exam {
   exam_id?: string;
 
   @Prop({
+    type: String,
+    required: false,
+  })
+  password?: string;
+
+  @Prop({
     type: Number,
     required: false,
   })

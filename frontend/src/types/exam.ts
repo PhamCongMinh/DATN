@@ -2,6 +2,7 @@ export interface IExam {
   _id?: number
   name?: string
   exam_id?: string
+  password?: string
   exam_time?: number
   created_at?: string
   updated_at?: string
@@ -24,4 +25,5 @@ export interface IQuestionPoint {
   order?: number
   question_id?: boolean
   author_id?: string
+  automatically_graded?: boolean
 }

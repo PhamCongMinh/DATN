@@ -15,7 +15,7 @@ export default class ExamSubmitRepository {
     public examSubmitDocumentModel: Model<ExamSubmitDocument>,
   ) {}
 
-  async create(data: Comment): Promise<ExamSubmitDocument> {
+  async create(data: ExamSubmit): Promise<ExamSubmitDocument> {
     return this.examSubmitDocumentModel.create(data);
   }
 

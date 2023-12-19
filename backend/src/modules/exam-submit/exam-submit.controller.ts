@@ -25,6 +25,8 @@ import { ExamService } from '@modules/exam/exam.service';
 import { GetExamDto } from '@modules/exam/dto/get-exam.dto';
 import { CreateExamDto } from '@modules/exam/dto/create-exam.dto';
 import { ExamSubmitService } from '@modules/exam-submit/exam-submit.service';
+import { StartExamDto } from '@modules/exam-submit/dto/start-exam.dto';
+import { AnswerQuestionDto } from '@modules/exam-submit/dto/answer-question.dto';
 
 @ApiTags('ExamSubmit')
 @Controller('exam-submit')
@@ -36,12 +38,24 @@ export class ExamSubmitController {
     this.loggerService.getLogger('ExamSubmitController');
   }
 
-  // @UseAuth(Object.values(EUserRole))
-  // @Post('/')
-  // async createExam(@Body() createExamDto: CreateExamDto, @Req() req) {
-  //   return this.examSubmitService.createExam(req.user._id, createExamDto);
-  // }
-  //
+  @UseAuth(Object.values(EUserRole))
+  @Post('/')
+  async startExam(@Body() startExamDto: StartExamDto, @Req() req) {
+    return this.examSubmitService.startExam(req.user._id, startExamDto);
+  }
+
+  @UseAuth(Object.values(EUserRole))
+  @Post('/answer')
+  async answerQuestion(
+    @Body() answerQuestionDto: AnswerQuestionDto,
+    @Req() req,
+  ) {
+    return this.examSubmitService.answerQuestion(
+      req.user._id,
+      answerQuestionDto,
+    );
+  }
+
   // @UseAuth(Object.values(EUserRole))
   // @Get('/')
   // async getExamInACourse(@Query() getExamDto: GetExamDto, @Req() req) {
