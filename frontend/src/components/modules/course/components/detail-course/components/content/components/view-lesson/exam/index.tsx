@@ -8,7 +8,11 @@ import BackgroundImage3 from '../../../../../../../../../../assets/images/backgr
 import DateIcon from '../../../../../../../../../../assets/icons/date.png'
 import { IExam } from '../../../../../../../../../../types/exam'
 import AxiosService from '../../../../../../../../../../utils/axios'
-import { IExamSubmit } from '../../../../../../../../../../types/exam-submit'
+import { IDetailExam, IExamSubmit } from '../../../../../../../../../../types/exam-submit'
+import QuestionOneChoice from './components/one-choice'
+import QuestionMultipleChoice from './components/multiple-choice'
+import QuestionShortAnswer from './components/short-answer'
+import QuestionEssay from './components/essay'
 
 const { Dragger } = Upload
 
@@ -20,10 +24,10 @@ interface IProps {
   onSubmit: () => void
 }
 
-const initialState: IExam = {}
+const initialState: IDetailExam = {}
 
 const Exam: React.FC<IProps> = (props): JSX.Element => {
-  const [state, setState] = useState<IExam>(initialState)
+  const [exam, setExam] = useState<IDetailExam>(initialState)
   const jwt = useSelector((state: any) => state.auth?.user?.jwt)
   const axiosService = new AxiosService('application/json', jwt)
   const [isLoading, setLoading] = useState(true)
@@ -35,7 +39,7 @@ const Exam: React.FC<IProps> = (props): JSX.Element => {
     const fetchData = async () => {
       const response = await axiosService.get(`/exam/${props?.exam_submit?.exam}`)
       const data = response.data
-      setState(data)
+      setExam(data)
       setLoading(false)
     }
 
@@ -53,9 +57,37 @@ const Exam: React.FC<IProps> = (props): JSX.Element => {
   return (
     <div>
       <div className={styles.space}>
-        <div className={styles.header}>
-          <Title className={styles.name}>{state?.name}</Title>
-        </div>
+        <Title className={styles.name}>Thời gian kết thúc bài thi: .Đếm ngược: </Title>
+        {exam?.question_point?.map((question_point, index) => {
+          return (
+            // <QuestionOneChoice
+            //   index={index + 1}
+            //   key={question_point._id}
+            //   exam_submit={props?.exam_submit}
+            //   question_point={question_point}
+            // />
+
+            // <QuestionMultipleChoice
+            //   index={index + 1}
+            //   key={question_point._id}
+            //   exam_submit={props?.exam_submit}
+            //   question_point={question_point}
+            // />
+
+            // <QuestionShortAnswer
+            //   index={index + 1}
+            //   key={question_point._id}
+            //   exam_submit={props?.exam_submit}
+            //   question_point={question_point}
+            // />
+            <QuestionEssay
+              index={index + 1}
+              key={question_point._id}
+              exam_submit={props?.exam_submit}
+              question_point={question_point}
+            />
+          )
+        })}
         <Button onClick={handleSubmitExam}>Kết thúc bài thi</Button>
       </div>
     </div>

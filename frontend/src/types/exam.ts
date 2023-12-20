@@ -1,3 +1,5 @@
+import { IQuestion } from './types'
+
 export interface IExam {
   _id?: number
   name?: string
@@ -23,7 +25,7 @@ export interface IQuestionPoint {
   _id?: number
   point?: number
   order?: number
-  question_id?: boolean
+  question_id?: string
   author_id?: string
   automatically_graded?: boolean
   created_at?: string

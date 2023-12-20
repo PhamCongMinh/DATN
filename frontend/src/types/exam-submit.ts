@@ -1,3 +1,5 @@
+import { IQuestion } from './types'
+
 export interface IExamSubmit {
   _id?: number
   author_id?: string
@@ -25,6 +27,38 @@ export interface IAnswer {
   submitted_time?: Date
   question_choice?: string[]
   answer?: string
+  created_at?: string
+  updated_at?: string
+}
+
+export interface IDetailExam {
+  _id?: string
+  name?: string
+  exam_id?: string
+  password?: string
+  exam_time?: number
+  created_at?: string
+  updated_at?: string
+  point_ladder?: number
+  pass_point?: number
+  description?: string
+  evaluation_criteria?: string
+  retry_times_number?: number
+  start_time?: string
+  end_time?: string
+  question_point?: IDetailQuestionPoint[]
+  author_id?: string
+  comment?: string
+  course_id?: string
+}
+
+export interface IDetailQuestionPoint {
+  _id?: string
+  point?: number
+  order?: number
+  question_id?: IQuestion
+  author_id?: string
+  automatically_graded?: boolean
   created_at?: string
   updated_at?: string
 }
