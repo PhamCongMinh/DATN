@@ -60,6 +60,7 @@ export interface IQuestion {
   description?: string
   points?: number
   question_choice?: IQuestionChoice[]
+  answer?: string
 
   memory_limit?: number
   time_limit?: number

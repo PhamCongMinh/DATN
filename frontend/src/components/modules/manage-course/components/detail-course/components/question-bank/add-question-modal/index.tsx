@@ -126,6 +126,15 @@ const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, currentQu
     )
   }
 
+  const handleChange = (key: string, value: any) => {
+    setState((prev: IQuestion) =>
+      produce(prev, draft => {
+        // @ts-ignore
+        draft[key] = value
+      })
+    )
+  }
+
   const items: CollapseProps['items'] = [
     {
       key: '1',
@@ -141,7 +150,30 @@ const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, currentQu
       label: 'Đáp án',
       children: (
         <>
-          <QuestionAnswerForm currentQuestion={currentQuestion} onFinish={handleAddQuestionAnswers} />
+          {props?.questionType !== EQuestionType.ESSAY &&
+            props?.questionType !== EQuestionType.SHORT_ANSWER &&
+            currentQuestion?.type !== EQuestionType.ESSAY &&
+            currentQuestion?.type !== EQuestionType.SHORT_ANSWER && (
+              <QuestionAnswerForm currentQuestion={currentQuestion} onFinish={handleAddQuestionAnswers} />
+            )}
+          {
+            // @ts-ignore
+            props?.questionType === EQuestionType.SHORT_ANSWER ||
+            currentQuestion?.type === EQuestionType.SHORT_ANSWER ? (
+              <p>
+                <Text className={styles.title3}>
+                  <br />
+                  Đáp án đúng:
+                </Text>
+                <TextArea
+                  rows={4}
+                  value={state?.answer}
+                  style={{ maxWidth: 1000, marginBottom: 30 }}
+                  onChange={e => handleChange('answer', e.target.value)}
+                />
+              </p>
+            ) : null
+          }
         </>
       )
     },
