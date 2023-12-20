@@ -9,6 +9,7 @@ import AxiosService from '../../../../../../../../../../utils/axios'
 import Image from 'next/image'
 import BackgroundImage3 from '../../../../../../../../../../assets/images/background-course3.png'
 import DateIcon from '../../../../../../../../../../assets/icons/date.png'
+import ModalStartExam from '../modal-start-exam'
 
 const { Dragger } = Upload
 
@@ -28,8 +29,7 @@ const BeforeExam: React.FC<IProps> = (props): JSX.Element => {
   const axiosService = new AxiosService('application/json', jwt)
   const [isLoading, setLoading] = useState(true)
   const [isStartExam, setStartExam] = useState(false)
-  const [password, setPassword] = useState<string>('')
-  console.log('before-exam-password', password)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,44 +42,22 @@ const BeforeExam: React.FC<IProps> = (props): JSX.Element => {
     fetchData()
   }, [props?.exam_id])
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value)
-  }
-
-  const handleStartExam = async () => {
-    console.log('props.password', password)
-    const res = await axiosService.post(`exam-submit`, {
-      exam_id: props?.exam_id,
-      password: password
-    })
-    console.log('res', res)
+  const handleStartExam = () => {
+    setIsModalOpen(false)
   }
 
   const handleClickButton = () => {
-    Modal.confirm({
-      title: 'Bạn sẽ bắt đầu bài thi tính giờ ngay bây giờ?',
-      content: (
-        <div>
-          <Text>Nhập mật khẩu bài thi</Text>
-          <Input onChange={e => handleChange(e)} placeholder="Nhập mật khẩu bài thi" />
-        </div>
-      ),
-      onOk: async () => {
-        try {
-          await handleStartExam()
-          message.success('Bắt đầu bài thi')
-        } catch (e) {
-          message.error('Bắt đầu bài thi thất bại, vui lòng thử lại sau')
-        }
-      },
-      onCancel: () => {}
-    })
+    setIsModalOpen(true)
+  }
+
+  const handleCancel = () => {
+    setIsModalOpen(false)
   }
 
   return (
     <div>
       <div className={styles.space}>
-        <Image src={BackgroundImage3} alt="House1" style={{ height: 450, width: 1100 }} />
+        <Image src={BackgroundImage3} alt="House1" style={{ height: 450, width: 1200 }} />
         <div className={styles.header}>
           <Title className={styles.name}>{state?.name}</Title>
           <div className={styles.subheader}>
@@ -123,6 +101,7 @@ const BeforeExam: React.FC<IProps> = (props): JSX.Element => {
           </div>
         </div>
       </div>
+      <ModalStartExam exam_id={props?.exam_id} onOk={handleStartExam} onCancel={handleCancel} is_open={isModalOpen} />
     </div>
   )
 }
