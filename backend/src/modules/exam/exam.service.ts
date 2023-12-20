@@ -30,8 +30,9 @@ export class ExamService {
     ) {
       listQuestionPointId = await Promise.all(
         createExamDto.question_point.map(async (question_point) => {
+          const { _id, ...rest } = question_point;
           const newQuestionPoint = await this.questionPointRepository.create({
-            ...question_point,
+            ...rest,
             author_id: author_id,
           });
           return newQuestionPoint._id;

@@ -17,6 +17,11 @@ import { Type } from 'class-transformer';
 export class CreateQuestionPointDto {
   @ApiPropertyOptional()
   @IsOptional()
+  @IsString()
+  _id?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsNumber()
   point?: number;
 

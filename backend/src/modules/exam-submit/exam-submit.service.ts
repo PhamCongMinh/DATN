@@ -42,7 +42,6 @@ export class ExamSubmitService {
     return this.examSubmitRepository.create({
       author_id: user_id,
       exam: exam._id,
-      answers: [],
       status: EExamSubmitStatus.DOING,
       start_time: new Date(),
       end_time: new Date(new Date().getTime() + exam.exam_time * 60 * 1000),

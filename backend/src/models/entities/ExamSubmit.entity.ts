@@ -40,9 +40,9 @@ export class ExamSubmit {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Answer',
-    required: true,
+    required: false,
   })
-  answers: string[];
+  answers?: string[];
 
   @Prop({
     type: String,

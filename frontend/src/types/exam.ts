@@ -26,4 +26,6 @@ export interface IQuestionPoint {
   question_id?: boolean
   author_id?: string
   automatically_graded?: boolean
+  created_at?: string
+  updated_at?: string
 }
