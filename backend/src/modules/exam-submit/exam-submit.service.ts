@@ -39,6 +39,19 @@ export class ExamSubmitService {
     if (exam.start_time > new Date()) throw new Error('Exam not started');
     if (exam.end_time < new Date()) throw new Error('Exam ended');
 
+    const exam_submit = await this.examSubmitRepository.examSubmitDocumentModel
+      .findOne({
+        author_id: user_id,
+        exam: exam._id,
+      })
+      .exec();
+
+    if (exam_submit) {
+      if (exam_submit.status === EExamSubmitStatus.DONE)
+        throw new Error('Exam is done');
+      else return exam_submit;
+    }
+
     return this.examSubmitRepository.create({
       author_id: user_id,
       exam: exam._id,

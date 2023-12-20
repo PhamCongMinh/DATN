@@ -3,13 +3,14 @@ import { Input, message, Modal, Space, Typography, Upload, UploadProps } from 'a
 
 import { useSelector } from 'react-redux'
 import AxiosService from '../../../../../../../../../../utils/axios'
+import { IExamSubmit } from '../../../../../../../../../../types/exam-submit'
 
 const { Text } = Typography
 
 interface IProps {
   exam_id?: string
   is_open?: boolean
-  onOk: () => void
+  onOk: (examSubmit: IExamSubmit) => void
   onCancel: () => void
 }
 
@@ -32,7 +33,7 @@ const ModalStartExam: React.FC<IProps> = props => {
         exam_id: props?.exam_id,
         password: password
       })
-      props.onOk()
+      props.onOk(res.data)
       message.success('Bắt đầu bài thi')
     } catch (e) {
       message.error('Bắt đầu bài thi thất bại, vui lòng thử lại sau')
