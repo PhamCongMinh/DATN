@@ -34,6 +34,10 @@ export class CreateQuestionPointDto {
   @IsOptional()
   @IsNumber()
   order?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  automatically_graded?: boolean;
 }
 
 export class CreateExamDto {

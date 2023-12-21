@@ -111,16 +111,25 @@ export class ExamSubmitService {
       .populate('question_choice')
       .exec();
 
+    const isExistAnswer = await this.answerRepository.answerDocumentModel
+      .findOne({
+        author_id: user_id,
+        question_point: question_point._id,
+      })
+      .exec();
+
     // TODO: check answer is correct
     const questionType = question?.type;
     const is_auto_check = question_point?.automatically_graded;
     console.log('is_auto_check', is_auto_check);
     console.log('questionType', questionType);
     let is_correct_answer = false;
+    console.log('test', questionType === EQuestionType.SHORT_ANSWER);
 
     if (is_auto_check) {
       switch (questionType) {
         case EQuestionType.ONE_CHOICE:
+        case EQuestionType.TRUE_FALSE: {
           const correctAnswer = question?.question_choice?.filter(
             (choice) => choice['is_correct'] === true,
           );
@@ -133,18 +142,69 @@ export class ExamSubmitService {
               score: exam_submit.score + question_point?.point,
               correct_answer: exam_submit.correct_answer + 1,
             });
+          } else if (
+            isExistAnswer &&
+            isExistAnswer?.is_correct_answer === true
+          ) {
+            await this.examSubmitRepository.update(exam_submit._id, {
+              score: exam_submit.score - question_point?.point,
+              correct_answer: exam_submit.correct_answer - 1,
+            });
           }
           break;
+        }
+        case EQuestionType.SHORT_ANSWER: {
+          if (
+            answerQuestionDto?.answer.toLowerCase() ==
+            question?.answer.toLowerCase()
+          ) {
+            is_correct_answer = true;
+            await this.examSubmitRepository.update(exam_submit._id, {
+              score: exam_submit.score + question_point?.point,
+              correct_answer: exam_submit.correct_answer + 1,
+            });
+          } else if (
+            isExistAnswer &&
+            isExistAnswer?.is_correct_answer === true
+          ) {
+            await this.examSubmitRepository.update(exam_submit._id, {
+              score: exam_submit.score - question_point?.point,
+              correct_answer: exam_submit.correct_answer - 1,
+            });
+          }
+          break;
+        }
+        case EQuestionType.MULTIPLE_CHOICE: {
+          const correctAnswer = question?.question_choice?.filter(
+            (choice) => choice['is_correct'] === true,
+          );
+
+          if (
+            answerQuestionDto?.question_choice.length ===
+              correctAnswer.length &&
+            answerQuestionDto?.question_choice.every((choice: string) =>
+              correctAnswer.some((answer) => answer['_id'] == choice),
+            )
+          ) {
+            is_correct_answer = true;
+            await this.examSubmitRepository.update(exam_submit._id, {
+              score: exam_submit.score + question_point?.point,
+              correct_answer: exam_submit.correct_answer + 1,
+            });
+          } else if (
+            isExistAnswer &&
+            isExistAnswer?.is_correct_answer === true
+          ) {
+            await this.examSubmitRepository.update(exam_submit._id, {
+              score: exam_submit.score - question_point?.point,
+              correct_answer: exam_submit.correct_answer - 1,
+            });
+          }
+          break;
+        }
       }
     }
     console.log('is_correct_answer', is_correct_answer);
-
-    const isExistAnswer = await this.answerRepository.answerDocumentModel
-      .findOne({
-        author_id: user_id,
-        question_point: question_point._id,
-      })
-      .exec();
 
     if (isExistAnswer) {
       const updatedAnswer = await this.answerRepository.update(
