@@ -10,6 +10,8 @@ import SubmissionModule from '@modules/submission/submission.module';
 import CourseModule from '@modules/course/course.module';
 import DiscussModule from '@modules/discuss/discuss.module';
 import ExamModule from '@modules/exam/exam.module';
+import ExamSubmitModule from '@modules/exam-submit/exam-submit.module';
+import ExamScoreModule from '@modules/exam-score/exam-score.module';
 
 export const MODULES = [
   AuthModule,
@@ -23,4 +25,6 @@ export const MODULES = [
   CourseModule,
   DiscussModule,
   ExamModule,
+  ExamSubmitModule,
+  ExamScoreModule,
 ];

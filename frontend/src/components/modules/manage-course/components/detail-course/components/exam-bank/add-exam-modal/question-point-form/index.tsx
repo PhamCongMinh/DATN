@@ -12,18 +12,17 @@ interface IProps {
 }
 
 const QuestionPointForm: NextPage<IProps> = props => {
-  const [form] = Form.useForm<IQuestionPoint[]>()
+  const [form] = Form.useForm()
 
   useEffect(() => {
     if (props?.currentExam?.question_point) {
-      form.setFieldsValue(props?.currentExam?.question_point)
+      form.setFieldsValue({ items: props?.currentExam?.question_point })
     }
-  }, [props?.currentExam])
-  console.log('QuestionPointForm', props?.currentExam?.question_point)
-  console.log('form', form['items'])
+  }, [form, props?.currentExam])
 
   return (
     <Form
+      form={form}
       name="dynamic_form_nest_item"
       onFinish={props.onFinish}
       style={{ maxWidth: 1000 }}
@@ -72,6 +71,19 @@ const QuestionPointForm: NextPage<IProps> = props => {
 
                 <Form.Item label="Điểm câu hỏi:" name={[field.name, 'point']} rules={[{ required: false }]}>
                   <Input />
+                </Form.Item>
+
+                <Form.Item
+                  label="Chấm tự động"
+                  name={[field.name, 'automatically_graded']}
+                  rules={[{ required: true }]}
+                >
+                  <Select
+                    options={[
+                      { key: 1, value: false, label: 'Không' },
+                      { key: 2, value: true, label: 'Có' }
+                    ]}
+                  />
                 </Form.Item>
               </Card>
             ))}

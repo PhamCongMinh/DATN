@@ -33,6 +33,12 @@ export class Exam {
   exam_id?: string;
 
   @Prop({
+    type: String,
+    required: false,
+  })
+  password?: string;
+
+  @Prop({
     type: Number,
     required: false,
   })
@@ -111,6 +117,18 @@ export class Exam {
     required: true,
   })
   course_id?: string;
+
+  @Prop({
+    type: Number,
+    required: false,
+  })
+  total_point?: number;
+
+  @Prop({
+    type: Number,
+    required: false,
+  })
+  question_number?: number;
 }
 
 export const ExamSchema = SchemaFactory.createForClass(Exam);

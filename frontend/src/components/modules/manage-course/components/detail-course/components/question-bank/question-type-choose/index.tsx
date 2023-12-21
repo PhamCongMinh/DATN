@@ -19,69 +19,55 @@ interface IQuestionType {
 
 const listQuestionType: IQuestionType[] = [
   {
-    key: EQuestionType.QUIZ,
-    title: 'Quiz',
-    description: EQuestionType.QUIZ
-  },
-  {
-    key: EQuestionType.CODE_SNIPPET,
-    title: 'Code snippet',
-    description: EQuestionType.CODE_SNIPPET
-  },
-  {
-    key: EQuestionType.EQUATION,
-    title: 'Equation',
-    description: EQuestionType.EQUATION
-  },
-  {
-    key: EQuestionType.HOTSPOT,
-    title: 'Hot spot',
-    description: EQuestionType.HOTSPOT
-  },
-  {
-    key: EQuestionType.TRUE_FALSE,
-    title: 'True or false',
-    description: EQuestionType.TRUE_FALSE
+    key: EQuestionType.ONE_CHOICE,
+    title: 'One choice',
+    description: 'Cho phép lựa chọn một đáp án từ danh sách được xác định trước.'
   },
   {
     key: EQuestionType.MULTIPLE_CHOICE,
     title: 'Multiple choice',
-    description: EQuestionType.MULTIPLE_CHOICE
+    description: 'Cho phép lựa chọn nhiều đáp án từ danh sách được xác định trước.'
+  },
+  {
+    key: EQuestionType.TRUE_FALSE,
+    title: 'True or false',
+    description: "Một dạng câu hỏi trắc nghiệm đơn giản chỉ có hai lựa chọn 'Đúng' và 'Sai'."
   },
   {
     key: EQuestionType.SHORT_ANSWER,
     title: 'Short answer',
-    description: EQuestionType.SHORT_ANSWER
-  },
-  {
-    key: EQuestionType.MULTIPLE_ANSWER,
-    title: 'Multi-answer',
-    description: EQuestionType.MULTIPLE_ANSWER
-  },
-  {
-    key: EQuestionType.ORDERING,
-    title: 'Ordering',
-    description: EQuestionType.ORDERING
-  },
-  {
-    key: EQuestionType.PROGRAMMING,
-    title: 'Programming',
-    description: EQuestionType.PROGRAMMING
-  },
-  {
-    key: EQuestionType.MATCHING,
-    title: 'Matching',
-    description: EQuestionType.MATCHING
+    description:
+      'Cho phép phản hồi gồm một hoặc một vài từ được xếp loại bằng cách so sánh với các câu trả lời mẫu khác nhau, có thể chứa ký tự đại diện.'
   },
   {
     key: EQuestionType.ESSAY,
     title: 'Essay',
-    description: EQuestionType.ESSAY
+    description: 'Cho phép phản hồi văn bản trực tuyến. Điều này sau đó phải được chấm điểm bằng tay.'
   },
   {
-    key: EQuestionType.FILL_IN_THE_BLANK,
-    title: 'Fill in the black',
-    description: EQuestionType.FILL_IN_THE_BLANK
+    key: EQuestionType.PROGRAMMING,
+    title: 'Programming',
+    description: 'Các câu hỏi lập trình'
+  },
+  {
+    key: EQuestionType.SELECT_MISSING_WORD,
+    title: 'Select missing word',
+    description: 'Các từ còn thiếu trong nội dung câu hỏi sẽ được điền bằng cách sử dụng menu thả xuống.'
+  },
+  {
+    key: EQuestionType.CALCULATED_SIMPLE,
+    title: 'Calculated simple',
+    description: 'Các câu hỏi tính toán đơn giản'
+  },
+  {
+    key: EQuestionType.MATCHING,
+    title: 'Matching',
+    description: 'Câu trả lời cho mỗi câu hỏi phụ phải được chọn từ danh sách các khả năng.'
+  },
+  {
+    key: EQuestionType.ORDERING,
+    title: 'Ordering',
+    description: 'Sắp xếp các câu trả lời theo thứ tự đúng.'
   }
 ]
 
@@ -96,7 +82,7 @@ export type QuestionTypeChoose = {
 }
 
 const QuestionTypeChoose: React.FC<IProps> = (props): JSX.Element => {
-  const [state, setState] = useState<QuestionTypeChoose>({ type: EQuestionType.QUIZ })
+  const [state, setState] = useState<QuestionTypeChoose>({ type: EQuestionType.ONE_CHOICE })
   const jwt = useSelector((state: any) => state.auth?.user?.jwt)
   const axiosService = new AxiosService('multipart/form-data', jwt)
 
@@ -136,7 +122,7 @@ const QuestionTypeChoose: React.FC<IProps> = (props): JSX.Element => {
               </Space>
             </Radio.Group>
           </div>
-          <Divider type="vertical" style={{ minHeight: 400, borderWidth: 2, color: 'dark' }} />
+          <Divider type="vertical" style={{ minHeight: 320, borderWidth: 2, color: 'dark' }} />
           <div>
             <Text>{listQuestionType?.filter(item => item.key == state.type)[0]?.description}</Text>
           </div>

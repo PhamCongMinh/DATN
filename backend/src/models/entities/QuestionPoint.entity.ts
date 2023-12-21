@@ -44,6 +44,13 @@ export class QuestionPoint {
     required: true,
   })
   author_id?: string;
+
+  @Prop({
+    type: Boolean,
+    required: false,
+    default: true,
+  })
+  automatically_graded?: boolean;
 }
 
 export const QuestionPointSchema = SchemaFactory.createForClass(QuestionPoint);

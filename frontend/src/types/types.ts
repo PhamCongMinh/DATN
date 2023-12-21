@@ -46,7 +46,7 @@ export enum EventFiter {
 // }
 
 export interface IQuestion {
-  _id?: number
+  _id?: string
   title?: string
   status?: EQuestionStatus
   type?: EQuestionType
@@ -60,6 +60,7 @@ export interface IQuestion {
   description?: string
   points?: number
   question_choice?: IQuestionChoice[]
+  answer?: string
 
   memory_limit?: number
   time_limit?: number
@@ -80,23 +81,21 @@ export enum EQuestionDifficultyLevel {
 }
 
 export enum EQuestionType {
-  PROGRAMMING = 'PROGRAMMING',
+  ONE_CHOICE = 'ONE_CHOICE',
   MULTIPLE_CHOICE = 'MULTIPLE_CHOICE',
   TRUE_FALSE = 'TRUE_FALSE',
-  FILL_IN_THE_BLANK = 'FILL_IN_THE_BLANK',
   SHORT_ANSWER = 'SHORT_ANSWER',
-  MATCHING = 'MATCHING',
   ESSAY = 'ESSAY',
-  CODE_SNIPPET = 'CODE_SNIPPET',
-  MULTIPLE_ANSWER = 'MULTIPLE_ANSWER',
-  ORDERING = 'ORDERING',
-  EQUATION = 'EQUATION',
-  HOTSPOT = 'HOTSPOT',
-  QUIZ = 'QUIZ'
+
+  PROGRAMMING = 'PROGRAMMING',
+  SELECT_MISSING_WORD = 'SELECT_MISSING_WORD',
+  CALCULATED_SIMPLE = 'CALCULATED_SIMPLE',
+  MATCHING = 'MATCHING',
+  ORDERING = 'ORDERING'
 }
 
 export interface IQuestionChoice {
-  _id?: number
+  _id?: string
   content?: string
   point?: number
   order?: number

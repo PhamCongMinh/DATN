@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CloseOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { Button, Card, Form, Input, Select, Space, Typography } from 'antd'
 import { NextPage } from 'next'
@@ -10,13 +10,16 @@ interface IProps {
 }
 
 const QuestionAnswerForm: NextPage<IProps> = props => {
-  const [form] = Form.useForm<IQuestionChoice[]>()
+  const [form] = Form.useForm()
 
   useEffect(() => {
-    if (!props?.currentQuestion) {
-      form.setFieldsValue([])
+    // if (!props?.currentQuestion) {
+    //   form.setFieldsValue([])
+    // }
+    if (props?.currentQuestion?.question_choice) {
+      form.setFieldsValue({ items: props?.currentQuestion?.question_choice })
     }
-  }, [props?.currentQuestion])
+  }, [form, props?.currentQuestion])
 
   const onFinish = (value: IQuestionChoice[]) => {
     props.onFinish(value)
@@ -25,6 +28,7 @@ const QuestionAnswerForm: NextPage<IProps> = props => {
 
   return (
     <Form
+      form={form}
       name="dynamic_form_nest_item"
       onFinish={onFinish}
       style={{ maxWidth: 1000 }}

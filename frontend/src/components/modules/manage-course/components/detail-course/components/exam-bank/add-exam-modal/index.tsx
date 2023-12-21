@@ -46,7 +46,7 @@ const AddExamModal: NextPage<IProps> = ({ form, handleAddExam, currentExam, ...p
   const jwt = useSelector((state: any) => state.auth?.user?.jwt)
   const axiosService = new AxiosService('application/json', jwt)
 
-  const [state, setState] = useState<IQuestion>({
+  const [state, setState] = useState<IExam>({
     course_id: props.course._id
   })
 
@@ -105,6 +105,7 @@ const AddExamModal: NextPage<IProps> = ({ form, handleAddExam, currentExam, ...p
         draft['point_ladder'] = value.point_ladder
         draft['pass_point'] = value.pass_point
         draft['retry_times_number'] = value.retry_times_number
+        draft['password'] = value.password
         draft['exam_time'] = value.exam_time
         draft['start_time'] = value.start_time
         draft['end_time'] = value.end_time
@@ -128,7 +129,7 @@ const AddExamModal: NextPage<IProps> = ({ form, handleAddExam, currentExam, ...p
       label: 'Thông tin bài thi',
       children: (
         <>
-          <GeneralExamForm currentExam={currentExam} onFinish={handleGeneralExam} />
+          <GeneralExamForm currentExam={state} onFinish={handleGeneralExam} />
         </>
       )
     },
@@ -137,7 +138,7 @@ const AddExamModal: NextPage<IProps> = ({ form, handleAddExam, currentExam, ...p
       label: 'Danh sách câu hỏi',
       children: (
         <>
-          <QuestionPointForm currentExam={currentExam} onFinish={handleAddQuestionPoint} questions={props?.questions} />
+          <QuestionPointForm currentExam={state} onFinish={handleAddQuestionPoint} questions={props?.questions} />
         </>
       )
     },

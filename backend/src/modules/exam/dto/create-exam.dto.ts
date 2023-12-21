@@ -17,6 +17,11 @@ import { Type } from 'class-transformer';
 export class CreateQuestionPointDto {
   @ApiPropertyOptional()
   @IsOptional()
+  @IsString()
+  _id?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsNumber()
   point?: number;
 
@@ -29,6 +34,10 @@ export class CreateQuestionPointDto {
   @IsOptional()
   @IsNumber()
   order?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  automatically_graded?: boolean;
 }
 
 export class CreateExamDto {
@@ -41,6 +50,11 @@ export class CreateExamDto {
   @IsOptional()
   @IsString()
   exam_id?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  password?: string;
 
   @ApiPropertyOptional()
   @IsOptional()

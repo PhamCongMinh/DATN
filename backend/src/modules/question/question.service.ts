@@ -133,14 +133,40 @@ export class QuestionService {
     createQuizDto: CreateQuizDto,
   ) {
     const question = await this.questionRepository.findById(question_id);
+    if (!question) throw new Error('Question not found');
 
-    if (question.question_choice.length > 0)
-      for (const question_choice_id of question.question_choice) {
-        await this.questionChoiceRepository.delete(question_choice_id);
+    const listQuestionChoiceId = [];
+
+    for (const question_choice of createQuizDto.question_choice) {
+      if (question_choice._id) {
+        const { _id, ...rest } = question_choice;
+        await this.questionChoiceRepository.update(question_choice._id, {
+          ...rest,
+        });
+        listQuestionChoiceId.push(question_choice._id);
+      } else {
+        const newQuestionChoice = await this.questionChoiceRepository.create({
+          ...question_choice,
+          author_id: author_id,
+        });
+        listQuestionChoiceId.push(newQuestionChoice._id);
       }
+    }
 
-    await this.questionRepository.delete(question_id);
+    delete createQuizDto.question_choice;
 
-    return this.createQuestionQuiz(author_id, createQuizDto);
+    return await this.questionRepository.update(question_id, {
+      ...createQuizDto,
+      question_choice: listQuestionChoiceId,
+    });
+
+    // if (question.question_choice.length > 0)
+    //   for (const question_choice_id of question.question_choice) {
+    //     await this.questionChoiceRepository.delete(question_choice_id);
+    //   }
+
+    // await this.questionRepository.delete(question_id);
+    //
+    // return this.createQuestionQuiz(author_id, createQuizDto);
   }
 }

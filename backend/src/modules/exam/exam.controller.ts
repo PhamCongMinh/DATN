@@ -48,6 +48,12 @@ export class ExamController {
   }
 
   @UseAuth(Object.values(EUserRole))
+  @Get('/:id')
+  async getExamById(@Param('id') id: string, @Req() req) {
+    return this.examService.getExamById(req.user._id, id);
+  }
+
+  @UseAuth(Object.values(EUserRole))
   @Delete('/:id')
   async deleteExam(@Param('id') id: string, @Req() req) {
     return this.examService.deleteExam(req.user._id, id);

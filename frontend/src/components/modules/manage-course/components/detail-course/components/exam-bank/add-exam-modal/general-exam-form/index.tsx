@@ -60,6 +60,10 @@ const GeneralExamForm: NextPage<IProps> = props => {
           <Input />
         </Form.Item>
 
+        <Form.Item name="password" label="Mã pin bài thi:">
+          <Input />
+        </Form.Item>
+
         <Form.Item name="exam_time" label="Thời gian làm bài:">
           <Input />
         </Form.Item>

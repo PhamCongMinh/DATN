@@ -79,8 +79,10 @@ const ExamBank: NextPage<IProps> = props => {
   }, [reload])
 
   const handleSubmitQuestion = async () => {
+    setCurrentExam(undefined)
     setReload(true)
     setIsAddEvent(false)
+    setIsEditEvent(false)
   }
 
   const handleSearch = debounce(setSearchString, 500)
@@ -294,6 +296,7 @@ const ExamBank: NextPage<IProps> = props => {
               setIsAddEvent(false)
               setIsEditEvent(false)
               setCurrentExam(undefined)
+              setReload(!reload)
             }}
             handleAddExam={handleSubmitQuestion}
             course={props.course}

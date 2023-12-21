@@ -83,6 +83,7 @@ export class CreateQuizDto {
   comment?: string;
 
   @ApiPropertyOptional({ type: [CreateQuestionChoiceDto] })
+  @IsOptional()
   @IsArray()
   @Type(() => CreateQuestionChoiceDto)
   @ValidateNested({ each: true })
@@ -97,4 +98,9 @@ export class CreateQuizDto {
   @IsOptional()
   @IsString()
   custom_question_id?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  answer?: string;
 }

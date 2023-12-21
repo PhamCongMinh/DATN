@@ -40,9 +40,9 @@ export default function ManagementRentalNews() {
           <UserOutlined />
           <span>Quản lý</span>
         </Breadcrumb.Item>
-        <Breadcrumb.Item>Danh sách tin đăng</Breadcrumb.Item>
+        <Breadcrumb.Item>Danh sách blog</Breadcrumb.Item>
       </Breadcrumb>
-      <Text className={styles.title1}>Quản lí tin đăng</Text>
+      <Text className={styles.title1}>Quản lí blog</Text>
       <Divider style={{ width: 1350 }}></Divider>
       <RentalNewsTable table={tableData} reload={handleReload} />
       <Contact />

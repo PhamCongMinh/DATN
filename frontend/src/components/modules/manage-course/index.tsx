@@ -35,7 +35,7 @@ function getItem(
 const items: MenuProps['items'] = [
   getItem('Quản lý khóa học', 'managementCourse', <AppstoreOutlined />),
   getItem('Tạo khóa học mới', 'createCourse', <AppstoreOutlined />),
-  getItem('Quản lí tin đăng', 'managementNews', <AppstoreOutlined />),
+  getItem('Quản lí blog', 'managementNews', <AppstoreOutlined />),
   getItem('Liên hệ', 'contact', <MailOutlined />)
 ]
 

@@ -119,6 +119,12 @@ export class Question {
     required: true,
   })
   course_id?: string;
+
+  @Prop({
+    type: String,
+    required: false,
+  })
+  answer?: string;
 }
 
 export const QuestionSchema = SchemaFactory.createForClass(Question);

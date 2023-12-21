@@ -30,13 +30,21 @@ export class ExamService {
     ) {
       listQuestionPointId = await Promise.all(
         createExamDto.question_point.map(async (question_point) => {
+          const { _id, ...rest } = question_point;
           const newQuestionPoint = await this.questionPointRepository.create({
-            ...question_point,
+            ...rest,
             author_id: author_id,
           });
           return newQuestionPoint._id;
         }),
       );
+    }
+
+    let question_number = 0;
+    let total_point = 0;
+    for (const question_point of createExamDto.question_point) {
+      question_number = question_number + 1;
+      total_point = total_point + question_point.point;
     }
 
     delete createExamDto.question_point;
@@ -45,6 +53,8 @@ export class ExamService {
       ...createExamDto,
       author_id: author_id,
       question_point: listQuestionPointId,
+      total_point: total_point,
+      question_number: question_number,
     });
 
     return newExam;
@@ -77,18 +87,60 @@ export class ExamService {
     return this.examRepository.delete(exam_id);
   }
 
+  async getExamById(user_id: string, exam_id: string) {
+    return this.examRepository.examDocumentModel
+      .findOne({
+        _id: exam_id,
+      })
+      .populate({
+        path: 'question_point',
+        populate: {
+          path: 'question_id',
+          populate: {
+            path: 'question_choice',
+          },
+        },
+      })
+      .exec();
+  }
+
   async updateExam(
     author_id: string,
     exam_id: string,
     createExamDto: CreateExamDto,
   ) {
     const exam = await this.examRepository.findById(exam_id);
+    if (!exam) throw new Error('Exam not found');
 
-    if (exam.question_point.length > 0)
-      for (const question_point_id of exam.question_point) {
-        await this.questionPointRepository.delete(question_point_id);
+    const listQuestionPointId = [];
+    for (const question_point of createExamDto.question_point) {
+      const { _id, ...rest } = question_point;
+      if (_id) {
+        await this.questionPointRepository.update(_id, rest);
+        listQuestionPointId.push(_id);
+      } else {
+        const newQuestionPoint = await this.questionPointRepository.create({
+          ...rest,
+          author_id: author_id,
+        });
+        listQuestionPointId.push(newQuestionPoint._id);
       }
+    }
 
-    return this.createExam(author_id, createExamDto);
+    let question_number = 0;
+    let total_point = 0;
+    for (const question_point of createExamDto.question_point) {
+      question_number = question_number + 1;
+      total_point = total_point + question_point.point;
+    }
+
+    delete createExamDto.question_point;
+
+    return this.examRepository.update(exam_id, {
+      ...createExamDto,
+      question_point: listQuestionPointId,
+      question_number: question_number,
+      total_point: total_point,
+    });
   }
 }

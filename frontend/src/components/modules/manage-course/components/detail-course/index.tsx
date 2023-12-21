@@ -59,7 +59,7 @@ const items: MenuProps['items'] = [
   getItem('Người tham gia', 'participant', <AppstoreOutlined />),
   getItem('Ngân hàng câu hỏi', 'question_bank', <AppstoreOutlined />),
   getItem('Đề thi', 'exam_bank', <MailOutlined />),
-  getItem('Điểm', 'grade', <MailOutlined />),
+  // getItem('Điểm', 'grade', <MailOutlined />),
   getItem('Thảo luận', 'discuss', <MailOutlined />),
   getItem('Quay lại', 'back', <AppstoreOutlined />)
 ]
@@ -98,7 +98,7 @@ const DetailCourseContent: NextPage<IProps> = props => {
             {selectedMenuItem === 'participant' && <Participant course={props.course} />}
             {selectedMenuItem === 'question_bank' && <QuestionBank course={props.course} />}
             {selectedMenuItem === 'exam_bank' && <ExamBank course={props.course} />}
-            {selectedMenuItem === 'grade' && <Grade />}
+            {/*{selectedMenuItem === 'grade' && <Grade />}*/}
             {selectedMenuItem === 'discuss' && <Discuss course={props.course} />}
             {selectedMenuItem === 'back' && props.handleClickBack()}
           </Space>

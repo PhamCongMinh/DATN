@@ -1,0 +1,186 @@
+@import 'styles/colors.scss';
+@import 'styles/variables.scss';
+
+.meeting-page-container {
+  //margin: 28px 16px 16px;
+  border: 1px solid $color-border-settings;
+  background: $color-white-0;
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.06),
+    0px 1px 3px 0px rgba(16, 24, 40, 0.1);
+  width: 1140px;
+
+  &-head {
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid $color-border-settings;
+
+    .head-text {
+      &-title {
+        color: $color-title;
+        font-family: "Open Sans";
+        font-size: $font-size-4;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 28px;
+        margin: 0;
+
+        span {
+          padding: 2px 8px;
+          border-radius: 16px;
+          background: rgba(238, 81, 30, 0.04);
+          color: $color-primary;
+          text-align: center;
+          font-family: "Open Sans";
+          font-size: $font-size-1;
+          font-style: normal;
+          font-weight: 500;
+          line-height: 18px;
+          margin-left: 8px;
+        }
+      }
+
+      &-subtitle {
+        color: $color-subtitle;
+        font-family: "Open Sans";
+        font-size: $font-size-2;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 20px;
+        margin: 0;
+        margin-top: 4px;
+      }
+    }
+
+    .head-action {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+    }
+  }
+
+  .ant-table-thead {
+    color: #475467;
+    font-size: $font-size-1;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px;
+
+    .ant-table-cell::before {
+      display: none;
+    }
+
+    .ant-table-column-sorters {
+      justify-content: flex-start;
+      gap: 4px;
+
+      span {
+        flex: 0;
+      }
+    }
+  }
+
+  .meeting-table {
+    font-size: 14px;
+    font-style: normal;
+    line-height: 20px;
+    font-weight: 400;
+
+    .table-organiser {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 12px;
+
+      &-name {
+        color: $color-title;
+        font-weight: 600;
+      }
+    }
+
+    .table-event {
+      color: $color-title;
+      font-weight: 600;
+    }
+
+    .limit-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+
+    .table-sources {
+      color: #313131;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      width: 200px;
+    }
+
+    .event_date,
+    .created_date {
+      color: #475467;
+    }
+
+    .table-location {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      height: 22px;
+      border-radius: 16px;
+      background: #f5f5f5;
+      padding: 0 4px;
+
+      .location {
+        color: #3b3b3b;
+        font-family: "Open Sans";
+        font-size: $font-size-1;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 18px;
+      }
+    }
+
+    .table-action {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+
+      .view-btn {
+        width: 108px;
+        color: $color-black-0;
+        font-family: "Open Sans";
+        font-size: $font-size-1;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 20px;
+        letter-spacing: -0.24px;
+      }
+
+      .trash-btn {
+        margin: 0 4px 0 28px;
+      }
+    }
+  }
+}
+
+.content {
+  background: #ffffff;
+  padding: 20px;
+  //position: absolute;
+  top: 0;
+}
+
+.title1 {
+  font-family: "Open Sans";
+  font-weight: 500;
+  font-size: 1.8rem !important;
+}
+
