@@ -69,8 +69,8 @@ export default function SignUpForm() {
     <Space className={styles.space}>
       <Typography>
         <Text className={styles.title}>
-          Quality Rooms at <br />
-          Wallet-Friendly Prices
+          Skills for your future. <br />
+          Get started with us.
         </Text>
       </Typography>
       <Form name="basic" className={styles.form}>
