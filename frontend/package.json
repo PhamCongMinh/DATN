@@ -23,7 +23,7 @@
     "eslint-config-next": "13.0.4",
     "hooks": "^0.3.2",
     "immer": "^9.0.12",
-    "moment": "2.29.4",
+    "moment": "^2.29.4",
     "next": "13.0.4",
     "next-redux-wrapper": "^8.1.0",
     "object-to-formdata": "^4.4.2",

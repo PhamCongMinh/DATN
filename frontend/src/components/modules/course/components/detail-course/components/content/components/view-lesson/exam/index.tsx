@@ -8,11 +8,14 @@ import BackgroundImage3 from '../../../../../../../../../../assets/images/backgr
 import DateIcon from '../../../../../../../../../../assets/icons/date.png'
 import { IExam } from '../../../../../../../../../../types/exam'
 import AxiosService from '../../../../../../../../../../utils/axios'
-import { IDetailExam, IExamSubmit } from '../../../../../../../../../../types/exam-submit'
+import { IDetailExam, IDetailQuestionPoint, IExamSubmit } from '../../../../../../../../../../types/exam-submit'
 import QuestionOneChoice from './components/one-choice'
 import QuestionMultipleChoice from './components/multiple-choice'
 import QuestionShortAnswer from './components/short-answer'
 import QuestionEssay from './components/essay'
+import { EQuestionType } from '../../../../../../../../../../types/types'
+import CountdownTimer from './components/cowndown'
+import moment from 'moment/moment'
 
 const { Dragger } = Upload
 
@@ -54,39 +57,68 @@ const Exam: React.FC<IProps> = (props): JSX.Element => {
     props.onSubmit()
   }
 
+  const handleEndExamTime = () => {
+    message.error('Thời gian làm bài đã hết!')
+    handleSubmitExam()
+  }
+
   return (
     <div>
       <div className={styles.space}>
-        <Title className={styles.name}>Thời gian kết thúc bài thi: .Đếm ngược: </Title>
-        {exam?.question_point?.map((question_point, index) => {
-          return (
-            // <QuestionOneChoice
-            //   index={index + 1}
-            //   key={question_point._id}
-            //   exam_submit={props?.exam_submit}
-            //   question_point={question_point}
-            // />
-
-            // <QuestionMultipleChoice
-            //   index={index + 1}
-            //   key={question_point._id}
-            //   exam_submit={props?.exam_submit}
-            //   question_point={question_point}
-            // />
-
-            // <QuestionShortAnswer
-            //   index={index + 1}
-            //   key={question_point._id}
-            //   exam_submit={props?.exam_submit}
-            //   question_point={question_point}
-            // />
-            <QuestionEssay
-              index={index + 1}
-              key={question_point._id}
-              exam_submit={props?.exam_submit}
-              question_point={question_point}
-            />
-          )
+        <Space>
+          <Title className={styles.name}>{`Thời gian kết thúc bài thi: ${
+            exam?.end_time?.toString().split('.')[0]
+          }.Đếm ngược: `}</Title>
+          <CountdownTimer deadline={Date.now() + 1000 * 60 * Number(exam?.exam_time)} onFinish={handleEndExamTime} />
+        </Space>
+        {exam?.question_point?.map((question_point: IDetailQuestionPoint, index) => {
+          switch (question_point?.question_id?.type) {
+            case EQuestionType.ONE_CHOICE:
+              return (
+                <QuestionOneChoice
+                  index={index + 1}
+                  key={question_point._id}
+                  exam_submit={props?.exam_submit}
+                  question_point={question_point}
+                />
+              )
+            case EQuestionType.MULTIPLE_CHOICE:
+              return (
+                <QuestionMultipleChoice
+                  index={index + 1}
+                  key={question_point._id}
+                  exam_submit={props?.exam_submit}
+                  question_point={question_point}
+                />
+              )
+            case EQuestionType.SHORT_ANSWER:
+              return (
+                <QuestionShortAnswer
+                  index={index + 1}
+                  key={question_point._id}
+                  exam_submit={props?.exam_submit}
+                  question_point={question_point}
+                />
+              )
+            case EQuestionType.ESSAY:
+              return (
+                <QuestionEssay
+                  index={index + 1}
+                  key={question_point._id}
+                  exam_submit={props?.exam_submit}
+                  question_point={question_point}
+                />
+              )
+            default:
+              return (
+                <QuestionOneChoice
+                  index={index + 1}
+                  key={question_point._id}
+                  exam_submit={props?.exam_submit}
+                  question_point={question_point}
+                />
+              )
+          }
         })}
         <Button onClick={handleSubmitExam}>Kết thúc bài thi</Button>
       </div>
