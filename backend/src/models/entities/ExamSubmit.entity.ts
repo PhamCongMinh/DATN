@@ -53,12 +53,14 @@ export class ExamSubmit {
   @Prop({
     type: Number,
     required: false,
+    default: 0,
   })
   score?: number;
 
   @Prop({
     type: Number,
     required: false,
+    default: 0,
   })
   correct_answer?: number;
 

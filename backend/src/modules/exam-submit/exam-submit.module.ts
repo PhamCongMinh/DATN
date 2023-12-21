@@ -55,6 +55,10 @@ import { ExamSubmitService } from '@modules/exam-submit/exam-submit.service';
         name: ExamSubmit.name,
         schema: ExamSubmitSchema,
       },
+      {
+        name: Question.name,
+        schema: QuestionSchema,
+      },
     ]),
     LoggingModule,
   ],
@@ -62,6 +66,7 @@ import { ExamSubmitService } from '@modules/exam-submit/exam-submit.service';
   providers: [
     ExamSubmitService,
     ExamRepository,
+    QuestionRepository,
     QuestionPointRepository,
     AnswerRepository,
     ExamSubmitRepository,

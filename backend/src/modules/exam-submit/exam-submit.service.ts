@@ -18,6 +18,7 @@ import { AnswerQuestionDto } from '@modules/exam-submit/dto/answer-question.dto'
 import AnswerRepository from '@models/repositories/Answer.repository';
 import { BadRequestException } from '@shared/exception';
 import { AuthErrorMessage } from '@modules/auth/constants';
+import { EQuestionType } from '@constants/questions.constant';
 
 @Injectable()
 export class ExamSubmitService {
@@ -27,6 +28,7 @@ export class ExamSubmitService {
     private examRepository: ExamRepository,
     private examSubmitRepository: ExamSubmitRepository,
     private answerRepository: AnswerRepository,
+    private questionRepository: QuestionRepository,
   ) {
     this.loggerService.getLogger('ExamSubmitService');
   }
@@ -79,12 +81,6 @@ export class ExamSubmitService {
     if (exam_submit.status === EExamSubmitStatus.DONE)
       throw new Error('Exam is done');
 
-    const question_point = await this.questionPointRepository.findById(
-      answerQuestionDto.question_point,
-    );
-
-    if (!question_point) throw new Error('Question not found');
-
     const exam = await this.examRepository.examDocumentModel
       .findOne({
         _id: exam_submit.exam,
@@ -102,45 +98,46 @@ export class ExamSubmitService {
 
     if (!exam) throw new Error('Exam not found');
 
-    // TODO: check answer is correct
+    const question_point = await this.questionPointRepository.findById(
+      answerQuestionDto.question_point,
+    );
 
-    // if (
-    //   exam?.question_point?.filter(
-    //     (item) => item['_id'].toString() === question_point._id.toString(),
-    //   ).length === 0
-    // )
-    //   throw new Error('Question not in exam');
-    //
-    // if (question_point.question_id.question_type === 'MULTIPLE_CHOICE') {
-    //   if (
-    //     question_point.question_id.question_choice.length !==
-    //     answerQuestionDto.question_choice.length
-    //   )
-    //     throw new Error('Wrong answer');
-    //
-    //   for (const question_choice_id of answerQuestionDto.question_choice) {
-    //     const question_choice = await this.questionChoiceRepository.findById(
-    //       question_choice_id,
-    //     );
-    //
-    //     if (!question_choice) throw new Error('Question choice not found');
-    //
-    //     if (
-    //       question_choice.question_id.toString() !==
-    //       question_point.question_id._id.toString()
-    //     )
-    //       throw new Error('Question choice not in question');
-    //
-    //     if (!question_choice.is_correct) throw new Error('Wrong answer');
-    //   }
-    // } else {
-    //   if (!answerQuestionDto.answer) throw new Error('Wrong answer');
-    //
-    //   if (
-    //     question_point.question_id.question_answer !== answerQuestionDto.answer
-    //   )
-    //     throw new Error('Wrong answer');
-    // }
+    if (!question_point) throw new Error('Question not found');
+
+    const question = await this.questionRepository.questionDocument
+      .findOne({
+        _id: question_point.question_id,
+      })
+      .populate('question_choice')
+      .exec();
+
+    // TODO: check answer is correct
+    const questionType = question?.type;
+    const is_auto_check = question_point?.automatically_graded;
+    console.log('is_auto_check', is_auto_check);
+    console.log('questionType', questionType);
+    let is_correct_answer = false;
+
+    if (is_auto_check) {
+      switch (questionType) {
+        case EQuestionType.ONE_CHOICE:
+          const correctAnswer = question?.question_choice?.filter(
+            (choice) => choice['is_correct'] === true,
+          );
+
+          if (
+            correctAnswer[0]['_id'] == answerQuestionDto?.question_choice[0]
+          ) {
+            is_correct_answer = true;
+            await this.examSubmitRepository.update(exam_submit._id, {
+              score: exam_submit.score + question_point?.point,
+              correct_answer: exam_submit.correct_answer + 1,
+            });
+          }
+          break;
+      }
+    }
+    console.log('is_correct_answer', is_correct_answer);
 
     const isExistAnswer = await this.answerRepository.answerDocumentModel
       .findOne({
@@ -153,6 +150,7 @@ export class ExamSubmitService {
       const updatedAnswer = await this.answerRepository.update(
         isExistAnswer._id,
         {
+          is_correct_answer: is_correct_answer,
           question_choice: answerQuestionDto?.question_choice,
           answer: answerQuestionDto?.answer,
         },
@@ -165,6 +163,7 @@ export class ExamSubmitService {
         question_point: question_point._id,
         question_choice: answerQuestionDto?.question_choice,
         answer: answerQuestionDto?.answer,
+        is_correct_answer: is_correct_answer,
       });
 
       const newListSubmitAnswer = [];
