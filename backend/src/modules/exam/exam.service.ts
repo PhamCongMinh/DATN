@@ -101,14 +101,37 @@ export class ExamService {
     createExamDto: CreateExamDto,
   ) {
     const exam = await this.examRepository.findById(exam_id);
+    if (!exam) throw new Error('Exam not found');
 
-    if (exam.question_point.length > 0)
-      for (const question_point_id of exam.question_point) {
-        await this.questionPointRepository.delete(question_point_id);
+    const listQuestionPointId = [];
+    for (const question_point of createExamDto.question_point) {
+      const { _id, ...rest } = question_point;
+      if (_id) {
+        await this.questionPointRepository.update(_id, rest);
+        listQuestionPointId.push(_id);
+      } else {
+        const newQuestionPoint = await this.questionPointRepository.create({
+          ...rest,
+          author_id: author_id,
+        });
+        listQuestionPointId.push(newQuestionPoint._id);
       }
+    }
 
-    await this.examRepository.delete(exam_id);
+    delete createExamDto.question_point;
 
-    return this.createExam(author_id, createExamDto);
+    return this.examRepository.update(exam_id, {
+      ...createExamDto,
+      question_point: listQuestionPointId,
+    });
+
+    // if (exam.question_point.length > 0)
+    //   for (const question_point_id of exam.question_point) {
+    //     await this.questionPointRepository.delete(question_point_id);
+    //   }
+    //
+    // await this.examRepository.delete(exam_id);
+    //
+    // return this.createExam(author_id, createExamDto);
   }
 }
