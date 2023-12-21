@@ -1,24 +1,8 @@
 import { MongooseModule } from '@nestjs/mongoose';
 import { LoggingModule } from '@shared/modules/loggers/logger.module';
 import { Module } from '@nestjs/common';
-import { QuestionController } from '@modules/question/question.controller';
-import { QuestionService } from '@modules/question/question.service';
 import QuestionRepository from '@models/repositories/Question.repository';
-import {
-  Question,
-  QuestionSchema,
-  Testcase,
-  TestcaseSchema,
-} from '@models/entities';
-import TestcaseModule from '@modules/testcase/testcase.module';
-import TestcaseRepository from '@models/repositories/Testcase.repository';
-import QuestionChoiceRepository from '@models/repositories/QuestionChoice.repository';
-import {
-  QuestionChoice,
-  QuestionChoiceSchema,
-} from '@models/entities/QuestionChoice.entity';
-import { ExamController } from '@modules/exam/exam.controller';
-import { ExamService } from '@modules/exam/exam.service';
+import { Question, QuestionSchema } from '@models/entities';
 import { Exam, ExamSchema } from '@models/entities/Exam.entity';
 import {
   QuestionPoint,
@@ -33,8 +17,8 @@ import {
   ExamSubmitSchema,
 } from '@models/entities/ExamSubmit.entity';
 import { Answer, AnswerSchema } from '@models/entities/Answer.entity';
-import { ExamSubmitController } from '@modules/exam-submit/exam-submit.controller';
-import { ExamSubmitService } from '@modules/exam-submit/exam-submit.service';
+import { ExamScoreService } from '@modules/exam-score/exam-score.service';
+import { ExamScoreController } from '@modules/exam-score/exam-score.controller';
 import { ExamScore, ExamScoreSchema } from '@models/entities/ExamScore.entity';
 import ExamScoreRepository from '@models/repositories/ExamScore.repository';
 
@@ -68,16 +52,16 @@ import ExamScoreRepository from '@models/repositories/ExamScore.repository';
     ]),
     LoggingModule,
   ],
-  controllers: [ExamSubmitController],
+  controllers: [ExamScoreController],
   providers: [
+    ExamScoreService,
     ExamScoreRepository,
-    ExamSubmitService,
     ExamRepository,
     QuestionRepository,
     QuestionPointRepository,
     AnswerRepository,
     ExamSubmitRepository,
   ],
-  exports: [ExamSubmitService],
+  exports: [ExamScoreService],
 })
-export default class ExamSubmitModule {}
+export default class ExamScoreModule {}

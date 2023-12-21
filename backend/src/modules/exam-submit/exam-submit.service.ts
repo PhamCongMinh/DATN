@@ -19,6 +19,7 @@ import AnswerRepository from '@models/repositories/Answer.repository';
 import { BadRequestException } from '@shared/exception';
 import { AuthErrorMessage } from '@modules/auth/constants';
 import { EQuestionType } from '@constants/questions.constant';
+import ExamScoreRepository from '@models/repositories/ExamScore.repository';
 
 @Injectable()
 export class ExamSubmitService {
@@ -29,6 +30,7 @@ export class ExamSubmitService {
     private examSubmitRepository: ExamSubmitRepository,
     private answerRepository: AnswerRepository,
     private questionRepository: QuestionRepository,
+    private examScoreRepository: ExamScoreRepository,
   ) {
     this.loggerService.getLogger('ExamSubmitService');
   }
@@ -133,6 +135,7 @@ export class ExamSubmitService {
           if (
             correctAnswer[0]['_id'] == answerQuestionDto?.question_choice[0]
           ) {
+            console.log('run here 1');
             is_correct_answer = true;
             await this.examSubmitRepository.update(exam_submit._id, {
               score: exam_submit.score + question_point?.point,
@@ -154,6 +157,7 @@ export class ExamSubmitService {
             answerQuestionDto?.answer.toLowerCase() ==
             question?.answer.toLowerCase()
           ) {
+            console.log('run here 2');
             is_correct_answer = true;
             await this.examSubmitRepository.update(exam_submit._id, {
               score: exam_submit.score + question_point?.point,
@@ -182,6 +186,7 @@ export class ExamSubmitService {
               correctAnswer.some((answer) => answer['_id'] == choice),
             )
           ) {
+            console.log('run here 3');
             is_correct_answer = true;
             await this.examSubmitRepository.update(exam_submit._id, {
               score: exam_submit.score + question_point?.point,
@@ -267,6 +272,15 @@ export class ExamSubmitService {
 
     if (!exam) throw new Error('Exam not found');
     if (exam.end_time < new Date()) throw new Error('Submit time is over');
+
+    await this.examScoreRepository.create({
+      author_id: user_id,
+      exam: exam._id,
+      exam_submit: exam_submit._id,
+      total_point: exam_submit.score,
+      correct_answer: exam_submit.correct_answer,
+      score: (exam_submit.score / exam.total_point) * exam.point_ladder,
+    });
 
     return await this.examSubmitRepository.update(exam_submit._id, {
       status: EExamSubmitStatus.DONE,
