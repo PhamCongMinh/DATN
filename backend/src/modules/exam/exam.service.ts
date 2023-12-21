@@ -40,12 +40,21 @@ export class ExamService {
       );
     }
 
+    let question_number = 0;
+    let total_point = 0;
+    for (const question_point of createExamDto.question_point) {
+      question_number = question_number + 1;
+      total_point = total_point + question_point.point;
+    }
+
     delete createExamDto.question_point;
 
     const newExam = await this.examRepository.create({
       ...createExamDto,
       author_id: author_id,
       question_point: listQuestionPointId,
+      total_point: total_point,
+      question_number: question_number,
     });
 
     return newExam;
@@ -118,20 +127,20 @@ export class ExamService {
       }
     }
 
+    let question_number = 0;
+    let total_point = 0;
+    for (const question_point of createExamDto.question_point) {
+      question_number = question_number + 1;
+      total_point = total_point + question_point.point;
+    }
+
     delete createExamDto.question_point;
 
     return this.examRepository.update(exam_id, {
       ...createExamDto,
       question_point: listQuestionPointId,
+      question_number: question_number,
+      total_point: total_point,
     });
-
-    // if (exam.question_point.length > 0)
-    //   for (const question_point_id of exam.question_point) {
-    //     await this.questionPointRepository.delete(question_point_id);
-    //   }
-    //
-    // await this.examRepository.delete(exam_id);
-    //
-    // return this.createExam(author_id, createExamDto);
   }
 }
