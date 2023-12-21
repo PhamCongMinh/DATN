@@ -159,7 +159,9 @@ const AddQuestionModal: NextPage<IProps> = ({ form, handleAddQuestion, currentQu
           {
             // @ts-ignore
             props?.questionType === EQuestionType.SHORT_ANSWER ||
-            currentQuestion?.type === EQuestionType.SHORT_ANSWER ? (
+            currentQuestion?.type === EQuestionType.SHORT_ANSWER ||
+            props?.questionType === EQuestionType.ESSAY ||
+            currentQuestion?.type === EQuestionType.ESSAY ? (
               <p>
                 <Text className={styles.title3}>
                   <br />
