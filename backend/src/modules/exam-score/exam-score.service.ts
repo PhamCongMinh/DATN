@@ -5,6 +5,7 @@ import QuestionPointRepository from '@models/repositories/QuestionPoint.reposito
 import ExamRepository from '@models/repositories/Exam.repository';
 import ExamSubmitRepository from '@models/repositories/ExamSubmit.repository';
 import AnswerRepository from '@models/repositories/Answer.repository';
+import ExamScoreRepository from '@models/repositories/ExamScore.repository';
 
 @Injectable()
 export class ExamScoreService {
@@ -15,7 +16,19 @@ export class ExamScoreService {
     private examSubmitRepository: ExamSubmitRepository,
     private answerRepository: AnswerRepository,
     private questionRepository: QuestionRepository,
+    private examScoreRepository: ExamScoreRepository,
   ) {
     this.loggerService.getLogger('ExamScoreService');
+  }
+
+  async getListExamScoreInAExam(userId: string, examId: string) {
+    return this.examScoreRepository.examScoreModel
+      .find({
+        exam: examId,
+      })
+      .populate('exam_submit')
+      .populate('author_id')
+      .populate('exam')
+      .exec();
   }
 }
