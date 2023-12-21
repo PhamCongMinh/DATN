@@ -62,20 +62,20 @@ const RentalNewsTable: React.FC<IProps> = (props): JSX.Element => {
       render: text => <a>{text}</a>
     },
     {
-      title: 'Giá cho thuê',
+      title: 'Nội dung',
       dataIndex: 'pricePerMonth',
       key: 'pricePerMonth'
     },
-    {
-      title: 'Diện tích',
-      dataIndex: 'area',
-      key: 'area'
-    },
-    {
-      title: 'Địa chỉ',
-      dataIndex: 'address',
-      key: 'address'
-    },
+    // {
+    //   title: 'Diện tích',
+    //   dataIndex: 'area',
+    //   key: 'area'
+    // },
+    // {
+    //   title: 'Địa chỉ',
+    //   dataIndex: 'address',
+    //   key: 'address'
+    // },
     {
       title: 'Trạng thái',
       key: 'status',
