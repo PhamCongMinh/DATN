@@ -118,13 +118,9 @@ export class ExamSubmitService {
       })
       .exec();
 
-    // TODO: check answer is correct
     const questionType = question?.type;
     const is_auto_check = question_point?.automatically_graded;
-    console.log('is_auto_check', is_auto_check);
-    console.log('questionType', questionType);
     let is_correct_answer = false;
-    console.log('test', questionType === EQuestionType.SHORT_ANSWER);
 
     if (is_auto_check) {
       switch (questionType) {
@@ -204,7 +200,6 @@ export class ExamSubmitService {
         }
       }
     }
-    console.log('is_correct_answer', is_correct_answer);
 
     if (isExistAnswer) {
       const updatedAnswer = await this.answerRepository.update(
