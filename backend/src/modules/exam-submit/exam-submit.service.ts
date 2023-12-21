@@ -16,6 +16,8 @@ import ExamSubmitRepository from '@models/repositories/ExamSubmit.repository';
 import { EExamSubmitStatus } from '@models/entities/ExamSubmit.entity';
 import { AnswerQuestionDto } from '@modules/exam-submit/dto/answer-question.dto';
 import AnswerRepository from '@models/repositories/Answer.repository';
+import { BadRequestException } from '@shared/exception';
+import { AuthErrorMessage } from '@modules/auth/constants';
 
 @Injectable()
 export class ExamSubmitService {
@@ -32,12 +34,14 @@ export class ExamSubmitService {
   async startExam(user_id: string, startExamDto: StartExamDto) {
     const exam = await this.examRepository.findById(startExamDto.exam_id);
 
-    if (!exam) throw new Error('Exam not found');
+    if (!exam) throw new BadRequestException({ message: 'Exam not found' });
     if (exam?.password !== startExamDto.password)
-      throw new Error('Wrong password');
+      throw new BadRequestException({ message: 'Wrong password' });
 
-    if (exam.start_time > new Date()) throw new Error('Exam not started');
-    if (exam.end_time < new Date()) throw new Error('Exam ended');
+    if (exam.start_time > new Date())
+      throw new BadRequestException({ message: 'Exam not started' });
+    if (exam.end_time < new Date())
+      throw new BadRequestException({ message: 'Exam ended' });
 
     const exam_submit = await this.examSubmitRepository.examSubmitDocumentModel
       .findOne({
@@ -48,7 +52,7 @@ export class ExamSubmitService {
 
     if (exam_submit) {
       if (exam_submit.status === EExamSubmitStatus.DONE)
-        throw new Error('Exam is done');
+        throw new BadRequestException({ message: 'Exam is done' });
       else return exam_submit;
     }
 
@@ -98,6 +102,8 @@ export class ExamSubmitService {
 
     if (!exam) throw new Error('Exam not found');
 
+    // TODO: check answer is correct
+
     // if (
     //   exam?.question_point?.filter(
     //     (item) => item['_id'].toString() === question_point._id.toString(),
@@ -136,76 +142,81 @@ export class ExamSubmitService {
     //     throw new Error('Wrong answer');
     // }
 
-    const answer = await this.answerRepository.create({
-      author_id: user_id,
-      question_point: question_point._id,
-      question_choice: answerQuestionDto.question_choice,
-      answer: answerQuestionDto.answer,
-    });
+    const isExistAnswer = await this.answerRepository.answerDocumentModel
+      .findOne({
+        author_id: user_id,
+        question_point: question_point._id,
+      })
+      .exec();
 
-    exam_submit.answers.push(answer._id);
+    if (isExistAnswer) {
+      const updatedAnswer = await this.answerRepository.update(
+        isExistAnswer._id,
+        {
+          question_choice: answerQuestionDto?.question_choice,
+          answer: answerQuestionDto?.answer,
+        },
+      );
 
-    await this.examSubmitRepository.update(exam_submit._id, exam_submit);
+      return updatedAnswer;
+    } else {
+      const answer = await this.answerRepository.create({
+        author_id: user_id,
+        question_point: question_point._id,
+        question_choice: answerQuestionDto?.question_choice,
+        answer: answerQuestionDto?.answer,
+      });
 
-    return answer;
+      const newListSubmitAnswer = [];
+      if (exam_submit?.answers) {
+        for (const answer_id of exam_submit?.answers) {
+          newListSubmitAnswer.push(answer_id);
+        }
+      }
+      newListSubmitAnswer.push(answer._id);
+
+      await this.examSubmitRepository.update(exam_submit._id, {
+        answers: newListSubmitAnswer,
+      });
+
+      return answer;
+    }
   }
 
-  // async getExamInACourse(author_id: string, getExamDto: GetExamDto) {
-  //   const query = {
-  //     author_id: author_id,
-  //     course_id: getExamDto.course_id,
-  //   };
-  //
-  //   if (getExamDto?.search) {
-  //     query['$text'] = { $search: getExamDto.search };
-  //   }
-  //
-  //   return this.examRepository.examDocumentModel
-  //     .find(query)
-  //     .populate('question_point')
-  //     .exec();
-  // }
-  //
-  // async deleteExam(author_id: string, exam_id: string) {
-  //   const exam = await this.examRepository.findById(exam_id);
-  //
-  //   if (exam.question_point.length > 0)
-  //     for (const question_point_id of exam.question_point) {
-  //       await this.questionPointRepository.delete(question_point_id);
-  //     }
-  //
-  //   return this.examRepository.delete(exam_id);
-  // }
-  //
-  // async getExamById(user_id: string, exam_id: string) {
-  //   return this.examRepository.examDocumentModel
-  //     .findOne({
-  //       _id: exam_id,
-  //     })
-  //     .populate({
-  //       path: 'question_point',
-  //       populate: {
-  //         path: 'question_id',
-  //         populate: {
-  //           path: 'question_choice',
-  //         },
-  //       },
-  //     })
-  //     .exec();
-  // }
-  //
-  // async updateExam(
-  //   author_id: string,
-  //   exam_id: string,
-  //   createExamDto: CreateExamDto,
-  // ) {
-  //   const exam = await this.examRepository.findById(exam_id);
-  //
-  //   if (exam.question_point.length > 0)
-  //     for (const question_point_id of exam.question_point) {
-  //       await this.questionPointRepository.delete(question_point_id);
-  //     }
-  //
-  //   return this.createExam(author_id, createExamDto);
-  // }
+  async confirmEndOfSubmitExam(user_id: string, exam_submit_id: string) {
+    const exam_submit = await this.examSubmitRepository.examSubmitDocumentModel
+      .findOne({
+        _id: exam_submit_id,
+        author_id: user_id,
+      })
+      .exec();
+
+    if (!exam_submit) throw new Error('ExamSubmit not found');
+
+    if (exam_submit.status === EExamSubmitStatus.DONE)
+      throw new Error('Exam is done');
+
+    const exam = await this.examRepository.examDocumentModel
+      .findOne({
+        _id: exam_submit.exam,
+      })
+      .populate({
+        path: 'question_point',
+        populate: {
+          path: 'question_id',
+          populate: {
+            path: 'question_choice',
+          },
+        },
+      })
+      .exec();
+
+    if (!exam) throw new Error('Exam not found');
+    if (exam.end_time < new Date()) throw new Error('Submit time is over');
+
+    return await this.examSubmitRepository.update(exam_submit._id, {
+      status: EExamSubmitStatus.DONE,
+      end_time: new Date(),
+    });
+  }
 }

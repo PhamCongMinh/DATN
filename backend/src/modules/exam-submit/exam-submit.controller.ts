@@ -56,31 +56,15 @@ export class ExamSubmitController {
     );
   }
 
-  // @UseAuth(Object.values(EUserRole))
-  // @Get('/')
-  // async getExamInACourse(@Query() getExamDto: GetExamDto, @Req() req) {
-  //   return this.examSubmitService.getExamInACourse(req.user._id, getExamDto);
-  // }
-  //
-  // @UseAuth(Object.values(EUserRole))
-  // @Get('/:id')
-  // async getExamById(@Param('id') id: string, @Req() req) {
-  //   return this.examSubmitService.getExamById(req.user._id, id);
-  // }
-  //
-  // @UseAuth(Object.values(EUserRole))
-  // @Delete('/:id')
-  // async deleteExam(@Param('id') id: string, @Req() req) {
-  //   return this.examSubmitService.deleteExam(req.user._id, id);
-  // }
-  //
-  // @UseAuth(Object.values(EUserRole))
-  // @Put('/:id')
-  // async updateExam(
-  //   @Param('id') id: string,
-  //   @Body() createExamDto: CreateExamDto,
-  //   @Req() req,
-  // ) {
-  //   return this.examSubmitService.updateExam(req.user._id, id, createExamDto);
-  // }
+  @UseAuth(Object.values(EUserRole))
+  @Put('/end/:exam_submit_id')
+  async confirmEndOfSubmitExam(
+    @Req() req,
+    @Param('exam_submit_id') exam_submit_id: string,
+  ) {
+    return this.examSubmitService.confirmEndOfSubmitExam(
+      req.user._id,
+      exam_submit_id,
+    );
+  }
 }

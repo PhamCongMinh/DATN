@@ -24,7 +24,6 @@ export class AnswerQuestionDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsString()
   question_choice?: string[];
 
   @ApiPropertyOptional()

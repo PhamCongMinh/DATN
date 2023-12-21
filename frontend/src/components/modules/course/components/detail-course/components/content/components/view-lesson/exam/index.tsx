@@ -53,7 +53,13 @@ const Exam: React.FC<IProps> = (props): JSX.Element => {
     setCurrentExamSubmit(props?.exam_submit)
   }, [props?.exam_submit])
 
-  const handleSubmitExam = () => {
+  const handleSubmitExam = async () => {
+    try {
+      const res = await axiosService.put(`exam-submit/end/${currentExamSubmit?._id}`, {})
+      message.success('Đã nộp bài thi')
+    } catch (e) {
+      message.error('Nộp bài thi thất bại, vui lòng thử lại sau')
+    }
     props.onSubmit()
   }
 
