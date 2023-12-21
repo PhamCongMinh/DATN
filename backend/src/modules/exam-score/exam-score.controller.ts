@@ -16,6 +16,12 @@ export class ExamScoreController {
   }
 
   @UseAuth(Object.values(EUserRole))
+  @Get('/exam/chart/:examId')
+  async getChartData(@Param('examId') examId: string, @Req() req) {
+    return this.examScoreService.getChartData(req.user._id, examId);
+  }
+
+  @UseAuth(Object.values(EUserRole))
   @Get('/exam/:examId')
   async getListExamScoreInAExam(@Param('examId') examId: string, @Req() req) {
     return this.examScoreService.getListExamScoreInAExam(req.user._id, examId);
