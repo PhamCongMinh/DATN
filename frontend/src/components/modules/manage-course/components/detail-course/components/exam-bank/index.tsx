@@ -257,6 +257,9 @@ const ExamBank: NextPage<IProps> = props => {
             <ButtonOutlined btnType="base" height={40}>
               Import
             </ButtonOutlined>
+            <ButtonOutlined btnType="base" height={40}>
+              Tự động tạo đề
+            </ButtonOutlined>
             <ButtonContained
               onClick={() => {
                 setIsAddEvent(true)
