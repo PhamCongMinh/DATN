@@ -60,7 +60,7 @@ export class CourseService {
   }
 
   async createLesson(data: CreateLessonDto) {
-    const { documents, exam, ...rest } = data;
+    const { _id, documents, exam, ...rest } = data;
     const lesson = await this.lessonRepository.create({
       ...rest,
       exam: exam ? exam : null,
