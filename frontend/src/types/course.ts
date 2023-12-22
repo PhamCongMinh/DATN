@@ -1,7 +1,7 @@
 import { IFile } from './file'
 
 export interface ICourse {
-  _id?: number
+  _id?: string
   name?: string
   tags?: string
   course_image?: IFile

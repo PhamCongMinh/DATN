@@ -49,8 +49,8 @@ export interface ICourse {
   end_time?: Date
   status?: string
   author?: string
-  created_at: Date
-  updated_at: Date
+  created_at?: Date
+  updated_at?: Date
 }
 
 const CourseContent: NextPage = () => {

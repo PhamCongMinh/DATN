@@ -60,4 +60,8 @@ export class CreateCourseDto {
   @ApiPropertyOptional()
   @IsOptional()
   teacher_introduction?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  is_contest?: boolean;
 }
