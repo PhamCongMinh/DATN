@@ -86,6 +86,7 @@ entity Question{
     status: string
     type: string
     comment: string
+    question_choice: string[]
     course_id: string <<FK>> (Course)
     answer: string
     ---
@@ -95,13 +96,12 @@ entity Question{
 
 entity QuestionChoice{
     *id: string<<PK>>
-    question_id: string <<FK>> (Question)
     content: string
     point: number
     order: number
     description: string
     is_correct: boolean
-    author_id: string <<FK>> (User)
+    author_id: string
     ---
     created_at: datetime
     updated_at: datetime
@@ -113,7 +113,6 @@ entity QuestionPoint{
     order: number
     question_id: string <<FK>> (Question)
     author_id: string <<FK>> (User)
-    exam_id: string <<FK>> (Exam)
     automatically_graded: boolean
     ---
     created_at: datetime
@@ -133,6 +132,7 @@ entity Exam{
     retry_times_number: number
     start_time: Date
     end_time: Date
+    question_point: string[]
     author_id: string <<FK>> (User)
     comment: string
     course_id: string
@@ -147,6 +147,7 @@ entity ExamSubmit {
     *id: string<<PK>>
     author_id: string <<FK>> (User)
     exam: string <<FK>> (Exam)
+    answers: string[] <<FK>> (Answer)
     status: string
     score: number
     correct_answer: number
@@ -174,7 +175,6 @@ entity Answer {
     *id: string<<PK>>
     author_id: string <<FK>> (User)
     question_point: string <<FK>> (QuestionPoint)
-    exam_submit: string <<FK>> (ExamSubmit)
     is_correct_answer: boolean
     submitted_time: Date
     question_choice: string[] <<FK>> (QuestionChoice)
@@ -202,6 +202,7 @@ entity Section {
     course_id: string <<FK>> (Course)
     order?: number
     visible?: boolean
+    lessons?: string[] <<FK>> (Lesson)
     ---
     created_at: datetime
     updated_at: datetime
@@ -228,8 +229,7 @@ entity Discuss {
     title?: string
     content?: string
     author_id?: string <<FK>> (User)
-    course_id?: string <<FK>> (Course)
-    contest_id?: string <<FK>> (Contest)
+    comments?: string[] <<FK>> (Comment)
     ---
     created_at: datetime
     updated_at: datetime
@@ -238,7 +238,6 @@ entity Discuss {
 entity Comment {
     *id: string<<PK>>
     content: string;
-    discuss_id: string <<FK>> (Discuss)
     author_id: string <<FK>> (User)
     rate?: number
     ---
@@ -257,50 +256,15 @@ entity Blog {
 }
 
 
-'User |o..|| UserRole
-'User ||..o{ UserConference
-'User ||..o{ UploadedAsset
-'User ||..o{ Preference
-'User ||..o{ Notification
+'User |o-down..|| UserRole
+'User ||-down..o{ UserConference
+'User ||-down..o{ UploadedAsset
+'User ||-down..o{ Preference
+'User ||-down..o{ Notification
 'Conference ||-left..o{ Notification
 'UserConference }o..|| Conference
-'User |o..|| EmailVerification
-Course }o-down..|| User
-Contest }o-down..|| User
-'User ||-right..o{ Course
-'User ||..o{ Contest
-User ||..o{ Question
-User ||..o{ QuestionChoice
-User ||..o{ QuestionPoint
-User ||..o{ Exam
-User ||..o{ ExamSubmit
-User ||..o{ ExamScore
-User ||..o{ Answer
-User ||..o{ UploadedAsset
-User ||..o{ Discuss
-User ||..o{ Comment
-Blog ||-left..|| User
+'User |o-down..|| EmailVerification
 
-QuestionChoice }o-down..|| Question
-Question ||-down..o{ QuestionPoint
-
-Exam ||-down..|{ QuestionPoint
-Exam ||..o{ ExamSubmit
-Answer }|..|| ExamSubmit
-ExamSubmit ||..|| ExamScore
-Answer ||-down..o{ QuestionChoice
-
-Course ||..o{ Section
-Section ||..o{ Lesson
-Lesson ||..o{ UploadedAsset
-Lesson ||..o| Exam
-
-Contest ||..o{ Section
-Course ||..o| UploadedAsset
-Contest ||..o| UploadedAsset
-
-Course ||..o| Discuss
-Contest ||..o| Discuss
-Discuss ||..o{ Comment
-
+User ||-down..o{ Course
+User ||-down..o{ Contest
 @enduml
