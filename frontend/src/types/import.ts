@@ -5,3 +5,8 @@ export interface IImportFile {
   course_id?: string
   documents?: IFile
 }
+
+export interface IQuestionDataFromAI {
+  question: string
+  answers: string[]
+}

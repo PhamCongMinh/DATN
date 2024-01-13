@@ -48,6 +48,8 @@ import { HomeOutlined, UserOutlined } from '@ant-design/icons'
 import AxiosService from '../../../../../../../utils/axios'
 import { ICourse } from '../../../../index'
 import ImportQuestionFile from './import-question'
+import { IQuestionDataFromAI } from '../../../../../../../types/import'
+import ViewImportQuestion from './view-import-question'
 const { Text } = Typography
 
 export const DATE_FORMAT_FULL = 'YYYY-MM-DDTHH:mm:ss.SSS[Z]'
@@ -75,6 +77,8 @@ const QuestionBank: NextPage<IProps> = props => {
   const [searchString, setSearchString] = useState<string>()
   const [currentPage, setCurrentPage] = useState(1)
   const [isImport, setImport] = useState(false)
+  const [isViewImportQuestion, setViewImportQuestion] = useState(false)
+  const [questionDataFromAI, setQuestionDataFromAI] = useState<IQuestionDataFromAI[]>()
 
   const [form] = useForm()
   const [notiModal, setNotiModal] = useState({
@@ -129,6 +133,14 @@ const QuestionBank: NextPage<IProps> = props => {
     setQuestionType(type)
     setIsChooseQuestionType(false)
     setIsAddEvent(true)
+  }
+
+  const handleQuestionDataFromAI = async (data: IQuestionDataFromAI[]) => {
+    console.log('handleQuestionDataFromAI', data)
+    setQuestionDataFromAI(data)
+    setImport(false)
+    setViewImportQuestion(true)
+    setReload(true)
   }
 
   interface DataType {
@@ -359,12 +371,25 @@ const QuestionBank: NextPage<IProps> = props => {
           <ImportQuestionFile
             course={props.course}
             open={isImport}
-            onOk={() => {
-              setImport(false)
-              setReload(true)
-            }}
+            onOk={handleQuestionDataFromAI}
             onCancel={() => {
               setReload(false)
+              setImport(false)
+            }}
+          />
+          <ViewImportQuestion
+            course={props.course}
+            open={isViewImportQuestion}
+            data={questionDataFromAI}
+            onSubmit={() => {
+              setQuestionDataFromAI(undefined)
+              setReload(true)
+              setViewImportQuestion(false)
+            }}
+            onBack={() => {
+              setQuestionDataFromAI(undefined)
+              setReload(false)
+              setViewImportQuestion(false)
             }}
           />
         </>

@@ -11,7 +11,7 @@ import { ICourse } from '../../../../../index'
 import AxiosService from '../../../../../../../../utils/axios'
 import { IExam } from '../../../../../../../../types/exam'
 import PdfView from '../../../../../../../elements/pdf-view'
-import { IImportFile } from '../../../../../../../../types/import'
+import { IImportFile, IQuestionDataFromAI } from '../../../../../../../../types/import'
 
 const { Dragger } = Upload
 
@@ -21,7 +21,7 @@ const { Text } = Typography
 interface IProps {
   course: ICourse
   open: boolean
-  onOk: () => void
+  onOk: (data: IQuestionDataFromAI[]) => void
   onCancel: () => void
   // setReload: () => void
   // openDetailCourse: (course: any) => void
@@ -59,7 +59,7 @@ const ImportQuestionFile: React.FC<IProps> = (props): JSX.Element => {
       setLoadingImport(false)
       console.log(response)
       message.success(`Nhập liệu danh sách câu hỏi thành công`)
-      props.onOk()
+      props.onOk(response.data)
       setState(initialState)
     } catch (error) {
       alert('Nhập liệu danh sách câu hỏi thất bại, vui lòng kiểm tra lại thông tin trước khi thử lại')
@@ -93,17 +93,6 @@ const ImportQuestionFile: React.FC<IProps> = (props): JSX.Element => {
         options.onError(new Error('Tải file thất bại, vui lòng kiểm tra lại file trước khi thử lại'))
       }
     }
-  }
-
-  const onOk = () => {
-    props.onOk()
-    setIsPreview(false)
-    setState((prev: ILesson) =>
-      produce(prev, draft => {
-        // @ts-ignore
-        draft['documents'] = undefined
-      })
-    )
   }
 
   const onCancel = () => {
