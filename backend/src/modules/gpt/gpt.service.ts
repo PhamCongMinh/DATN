@@ -23,6 +23,7 @@ import { fromPath } from 'pdf2pic';
 import { v4 as uuidv4 } from 'uuid';
 import { AzureService } from '@modules/asset-upload/azure.service';
 import { readFile } from 'fs/promises';
+import { IQuestionDataFromAI } from '@modules/gpt/interface';
 
 @Injectable()
 export class GptService {
@@ -194,13 +195,16 @@ export class GptService {
     }
   }
 
-  async getQuestionInImageWithAI(imageUrls: string[]) {
+  async getQuestionInImageWithAI(
+    imageUrls: string[],
+  ): Promise<IQuestionDataFromAI[]> {
     const systemContent =
       `You will support retrieving question information from image or pdf files and returning a list of questions and their answers.` +
       `The answer is in this format: [item, item,...,item]. and type of object item is {question: string, answers: string[]}.` +
       `No further explanation in the answer.` +
       `If there is no data or found , answer : "{"message" : "No question found !"}".` +
-      `You are a machine that only returns and replies with valid, iterable RFC8259 compliant JSON in your responses with codeblock json.`;
+      `You are a machine that only returns and replies with valid, iterable RFC8259 compliant JSON in your responses with codeblock json.` +
+      `Example answer: [{"question": "What is the capital of Vietnam?", "answers": ["Hanoi","Ho Chi Minh City"]}, {"question": "What is the capital of France?", "answers": ["Paris", "New York"]}]`;
 
     const imageData = [];
     for (const imageUrl of imageUrls) {
@@ -227,7 +231,10 @@ export class GptService {
       },
     ];
 
-    const result = await this.searchWithRetry(messages, modelArray[0]);
+    const result: IQuestionDataFromAI[] = await this.searchWithRetry(
+      messages,
+      modelArray[0],
+    );
     return result;
   }
 
