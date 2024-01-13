@@ -12,6 +12,7 @@ import DiscussModule from '@modules/discuss/discuss.module';
 import ExamModule from '@modules/exam/exam.module';
 import ExamSubmitModule from '@modules/exam-submit/exam-submit.module';
 import ExamScoreModule from '@modules/exam-score/exam-score.module';
+import GptModule from '@modules/gpt/gpt.module';
 
 export const MODULES = [
   AuthModule,
@@ -27,4 +28,5 @@ export const MODULES = [
   ExamModule,
   ExamSubmitModule,
   ExamScoreModule,
+  GptModule,
 ];
