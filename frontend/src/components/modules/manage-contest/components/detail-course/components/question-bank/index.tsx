@@ -47,6 +47,7 @@ import QuestionTypeChoose from './question-type-choose'
 import { HomeOutlined, UserOutlined } from '@ant-design/icons'
 import AxiosService from '../../../../../../../utils/axios'
 import { ICourse } from '../../../../index'
+import ImportQuestionFile from './import-question'
 const { Text } = Typography
 
 export const DATE_FORMAT_FULL = 'YYYY-MM-DDTHH:mm:ss.SSS[Z]'
@@ -73,6 +74,7 @@ const QuestionBank: NextPage<IProps> = props => {
   const [eventFilter, setEventFilter] = useState<EventFiter>()
   const [searchString, setSearchString] = useState<string>()
   const [currentPage, setCurrentPage] = useState(1)
+  const [isImport, setImport] = useState(false)
 
   const [form] = useForm()
   const [notiModal, setNotiModal] = useState({
@@ -279,7 +281,13 @@ const QuestionBank: NextPage<IProps> = props => {
             <ButtonOutlined btnType="base" height={40}>
               Export
             </ButtonOutlined>
-            <ButtonOutlined btnType="base" height={40}>
+            <ButtonOutlined
+              onClick={() => {
+                setImport(true)
+              }}
+              btnType="base"
+              height={40}
+            >
               Import
             </ButtonOutlined>
             <ButtonContained
@@ -347,6 +355,17 @@ const QuestionBank: NextPage<IProps> = props => {
               setIsChooseQuestionType(false)
             }}
             onOk={handleChoiceQuestionType}
+          />
+          <ImportQuestionFile
+            course={props.course}
+            open={isImport}
+            onOk={() => {
+              setImport(false)
+              setReload(true)
+            }}
+            onCancel={() => {
+              setReload(false)
+            }}
           />
         </>
       </div>
