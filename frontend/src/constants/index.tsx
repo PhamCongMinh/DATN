@@ -11,7 +11,7 @@ export const menuItemsBeforeLogin: MenuProps['items'] = [
   },
   {
     label: <a>Cuộc thi</a>,
-    key: 'rentout'
+    key: 'contest'
   },
   {
     label: <a>Blog</a>,
@@ -38,7 +38,7 @@ export const menuItemsForTeacher: MenuProps['items'] = [
   },
   {
     label: <a>Cuộc thi</a>,
-    key: 'rentout'
+    key: 'manage-contest'
   },
   {
     label: <a>Blog</a>,
@@ -61,7 +61,7 @@ export const menuItemsForStudent: MenuProps['items'] = [
   },
   {
     label: <a>Cuộc thi</a>,
-    key: 'rentout'
+    key: 'contest'
   },
   {
     label: <a>Blog</a>,

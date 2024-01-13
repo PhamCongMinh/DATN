@@ -18,6 +18,7 @@ import { CreateLessonDto } from '@modules/course/dto/create-lesson.dto';
 import { UseAuth } from '@shared/decorators/auth.decorator';
 import { EUserRole } from '@models/entities';
 import { GetSectionInACourseDto } from '@modules/course/dto/get-section-in-a course.dto';
+import { GetMyCourseDto } from '@modules/course/dto/get-my-course.dto';
 
 @ApiTags('Course')
 @Controller('course')
@@ -36,14 +37,14 @@ export class CourseController {
   }
 
   @Get('/')
-  async getCourse() {
-    return this.courseService.getCourse();
+  async getCourse(@Query() getMyCourseDto: GetMyCourseDto) {
+    return this.courseService.getCourse(getMyCourseDto);
   }
 
   @UseAuth(Object.values(EUserRole))
   @Get('/my-course')
-  async getCourseByAuthor(@Req() req) {
-    return this.courseService.getCourseByAuthor(req.user._id);
+  async getCourseByAuthor(@Req() req, @Query() getMyCourseDto: GetMyCourseDto) {
+    return this.courseService.getCourseByAuthor(req.user._id, getMyCourseDto);
   }
 
   @Post('/section')
@@ -111,8 +112,8 @@ export class CourseController {
 
   @UseAuth(Object.values(EUserRole))
   @Get('/joined')
-  async getJoinedCourse(@Req() req) {
-    return this.courseService.getJoinedCourse(req.user._id);
+  async getJoinedCourse(@Req() req, @Query() getMyCourseDto: GetMyCourseDto) {
+    return this.courseService.getJoinedCourse(req.user._id, getMyCourseDto);
   }
 
   @UseAuth(Object.values(EUserRole))

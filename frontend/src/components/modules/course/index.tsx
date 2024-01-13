@@ -11,7 +11,7 @@ import { NextPage } from 'next'
 import DetailCourseContent from './components/detail-course'
 import Contact from '../manage-account/components/contact'
 import AllCourse from './components/all-course'
-import { ICourse } from '../../../types/course'
+import { ICourse } from '../manage-course'
 
 type MenuItem = Required<MenuProps>['items'][number]
 const { Text } = Typography

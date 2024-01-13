@@ -1,0 +1,107 @@
+//@use 'styles/colors.scss' as color;
+//@use 'styles/variables.scss' as var;
+//
+//.update-meeting-modal {
+//  &-title {
+//    color: #6b6b6b;
+//    font-family: "Open Sans";
+//    font-size: var.$font-size-3;
+//    font-style: normal;
+//    font-weight: 600;
+//    line-height: 24px;
+//    display: flex;
+//    justify-content: flex-start;
+//    align-items: center;
+//    gap: 9px;
+//  }
+//
+//  &-form {
+//    padding: 30px 4px 0;
+//
+//    .form-date {
+//      &-label {
+//        color: color.$color-profile-label;
+//        font-family: "Open Sans";
+//        font-size: var.$font-size-2;
+//        font-style: normal;
+//        font-weight: 500;
+//        line-height: 32px;
+//      }
+//
+//      &-input-wrap {
+//        display: flex;
+//        align-items: flex-start;
+//        gap: 8px;
+//
+//        .ant-picker {
+//          border-radius: 8px;
+//
+//          input {
+//            color: #6d6d6d;
+//            font-family: "Open Sans";
+//            font-size: var.$font-size-2;
+//            font-style: normal;
+//            font-weight: 400;
+//            line-height: 24px;
+//          }
+//        }
+//      }
+//
+//      &-text {
+//        margin-top: 11px;
+//      }
+//    }
+//
+//    .ant-upload.ant-upload-btn {
+//      padding: 11px 0;
+//    }
+//
+//    &-action {
+//      display: flex;
+//      justify-content: flex-end;
+//      gap: 10px;
+//      border-top: 1px solid color.$color-white-2;
+//      margin: 0 -24px;
+//      padding: 16px 24px 14px;
+//
+//      .cancel-btn {
+//        height: 44px;
+//        padding: 8px 16px;
+//        justify-content: center;
+//        align-items: center;
+//        color: #9c9c9c;
+//        font-family: "Open Sans";
+//        font-size: var.$font-size-3;
+//        font-style: normal;
+//        font-weight: 500;
+//        line-height: 140%;
+//        border: none;
+//        background-color: transparent;
+//
+//        &:hover {
+//          border: none !important;
+//        }
+//      }
+//
+//      .continue-btn {
+//        width: 152px;
+//        border-radius: 4px;
+//      }
+//    }
+//  }
+//}
+//
+//.pac-container.pac-logo {
+//  border-radius: 8px;
+//  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+//  &::after {
+//    display: none !important;
+//  }
+//
+//  .pac-item {
+//    padding: 8px 16px;
+//    font-family: "Open Sans";
+//    font-size: 14px;
+//    font-weight: 500;
+//  }
+//}

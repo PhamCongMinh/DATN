@@ -7,6 +7,11 @@ export class CreateLessonDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
+  _id?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   course_id?: string;
 
   @ApiPropertyOptional()

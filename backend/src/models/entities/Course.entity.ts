@@ -146,6 +146,13 @@ export class Course {
     required: false,
   })
   teacher_introduction?: string;
+
+  @Prop({
+    type: Boolean,
+    required: false,
+    default: false,
+  })
+  is_contest?: boolean;
 }
 
 export const CourseSchema = SchemaFactory.createForClass(Course);

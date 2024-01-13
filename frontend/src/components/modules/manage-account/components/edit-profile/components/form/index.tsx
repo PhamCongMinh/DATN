@@ -172,7 +172,7 @@ export default function EditProfileForm() {
       </Upload>
       <Text className={styles.text}>
         <br />
-        Ảnh giấy tờ chứng minh bạn là chủ trọ: <br />
+        Ảnh giấy tờ chứng minh bạn có chuyên môn trong khóa học: <br />
       </Text>
       <Text>
         (Nếu bạn là người đi thuê thì vui lòng bỏ qua mục này) <br />

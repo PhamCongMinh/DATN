@@ -7,6 +7,7 @@ import { CreateSectionDto } from '@modules/course/dto/create-section.dto';
 import { CreateLessonDto } from '@modules/course/dto/create-lesson.dto';
 import LessonRepository from '@models/repositories/Lesson.repository';
 import { string } from 'joi';
+import { GetMyCourseDto } from '@modules/course/dto/get-my-course.dto';
 
 @Injectable()
 export class CourseService {
@@ -28,14 +29,30 @@ export class CourseService {
     });
   }
 
-  async getCourse() {
-    return this.courseRepository.getAll();
+  async getCourse(getMyCourseDto: GetMyCourseDto) {
+    if (getMyCourseDto?.is_contest) {
+      return this.courseRepository.courseDocument.find({
+        is_contest: getMyCourseDto.is_contest,
+      });
+    } else {
+      return this.courseRepository.courseDocument.find({
+        is_contest: false,
+      });
+    }
   }
 
-  async getCourseByAuthor(author_id: string) {
-    return this.courseRepository.courseDocument.find({
-      author_id: author_id,
-    });
+  async getCourseByAuthor(author_id: string, getMyCourseDto: GetMyCourseDto) {
+    if (getMyCourseDto?.is_contest) {
+      return this.courseRepository.courseDocument.find({
+        author_id: author_id,
+        is_contest: getMyCourseDto.is_contest,
+      });
+    } else {
+      return this.courseRepository.courseDocument.find({
+        author_id: author_id,
+        is_contest: false,
+      });
+    }
   }
 
   async createSection(data: CreateSectionDto) {
@@ -43,7 +60,7 @@ export class CourseService {
   }
 
   async createLesson(data: CreateLessonDto) {
-    const { documents, exam, ...rest } = data;
+    const { _id, documents, exam, ...rest } = data;
     const lesson = await this.lessonRepository.create({
       ...rest,
       exam: exam ? exam : null,
@@ -133,15 +150,20 @@ export class CourseService {
     return this.sectionRepository.update(section_id, data);
   }
 
-  async getJoinedCourse(student_id: string) {
-    const course = await this.courseRepository.courseDocument
-      .find({
+  async getJoinedCourse(student_id: string, getMyCourseDto: GetMyCourseDto) {
+    if (getMyCourseDto?.is_contest) {
+      return this.courseRepository.courseDocument.find({
         students: { $in: [student_id] },
-      })
-      .exec();
-    console.log(course);
-
-    return course;
+        is_contest: getMyCourseDto.is_contest,
+      });
+    } else {
+      return this.courseRepository.courseDocument
+        .find({
+          students: { $in: [student_id] },
+          is_contest: false,
+        })
+        .exec();
+    }
   }
 
   async checkJoinedCourse(student_id: string, course_id: string) {

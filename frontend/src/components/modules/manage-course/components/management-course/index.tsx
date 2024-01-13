@@ -54,7 +54,10 @@ const ManagementCourse: React.FC<IProps> = (props): JSX.Element => {
           </Breadcrumb.Item>
           <Breadcrumb.Item>Khóa học</Breadcrumb.Item>
         </Breadcrumb>
-        <Text className={styles.title1}>Danh sách khóa học</Text>
+        <Space>
+          <Text className={styles.title1}>Danh sách khóa học</Text>
+          <Input placeholder={'Tìm kiếm khóa học'} className={styles.search}></Input>
+        </Space>
         <Divider style={{ width: 1215, margin: 0 }}></Divider>
         <Space className={styles.sub_content}>
           {props.data.length !== 0 ? (
