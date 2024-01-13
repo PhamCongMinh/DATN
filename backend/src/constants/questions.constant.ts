@@ -1,0 +1,24 @@
+export enum EQuestionDifficultyLevel {
+  EASY = 'EASY',
+  MEDIUM = 'MEDIUM',
+  HARD = 'HARD',
+}
+
+export enum EQuestionStatus {
+  DRAFT = 'DRAFT',
+  READY = 'READY',
+}
+
+export enum EQuestionType {
+  ONE_CHOICE = 'ONE_CHOICE',
+  MULTIPLE_CHOICE = 'MULTIPLE_CHOICE',
+  TRUE_FALSE = 'TRUE_FALSE',
+  SHORT_ANSWER = 'SHORT_ANSWER',
+  ESSAY = 'ESSAY',
+
+  PROGRAMMING = 'PROGRAMMING',
+  SELECT_MISSING_WORD = 'SELECT_MISSING_WORD',
+  CALCULATED_SIMPLE = 'CALCULATED_SIMPLE',
+  MATCHING = 'MATCHING',
+  ORDERING = 'ORDERING',
+}

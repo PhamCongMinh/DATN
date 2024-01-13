@@ -10,7 +10,6 @@ import SubContent from './components/subcontent'
 import { RentNews, RentNewsType } from '../../../types'
 
 import styles from './style.module.scss'
-import DetailHouseContent from '../detail-house'
 
 const { Text } = Typography
 
@@ -192,9 +191,6 @@ const RentContent: React.FC<IProps> = (props): JSX.Element => {
             </div>
           </Space>
         </div>
-      )}
-      {isOpenDetailHouse === true && (
-        <DetailHouseContent rentNews={detailHouse} handleClickBack={handleClickBack} setReload={props.setReload} />
       )}
     </div>
   )

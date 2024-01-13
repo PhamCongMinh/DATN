@@ -10,10 +10,10 @@ function CustomFooter() {
   return (
     <Footer style={{ padding: 0, textAlign: 'center' }}>
       <Space className={styles.container}>
-        <Title className={styles.main_title}>RentHouse</Title>
+        <Title className={styles.main_title}>Learning</Title>
         <div style={{ marginLeft: 300, marginRight: 50, textAlign: 'left' }}>
-          <Title className={styles.title}>About RentHouse</Title>
-          <Text className={styles.text}>Support rent and rent out</Text>
+          <Title className={styles.title}>About Learning</Title>
+          <Text className={styles.text}>Support online learning</Text>
         </div>
         <div style={{ marginRight: 50, textAlign: 'left' }}>
           <Title className={styles.title}>Contact</Title>

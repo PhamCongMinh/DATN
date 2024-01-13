@@ -1,0 +1,122 @@
+@startuml
+left to right direction
+    package "Hệ thống" {
+'        (Đăng nhập) as (UC1)
+'        (Đăng ký) as (UC2)
+
+        (Quản lý khóa học) as (UC25)
+        (Xem danh sách khóa học) as (UC3)
+        (Tạo nội dung khóa học) as (UC4)
+        (Cài đặt khóa học) as (UC5)
+        (Xem danh sách học sinh) as (UC6)
+        (Tạo khóa học) as (UC80)
+         (Sửa nội dung khóa học) as (UC81)
+
+'        (Quản lý đề thi) as (UC26)
+'        (Tạo đề thi từ ngân hàng câu hỏi ) as (UC30)
+'        (Chỉnh sửa đề thi) as (UC31)
+'        (Xóa đề thi) as (UC32)
+'        (Xem danh sách đề thi) as (UC33)
+'        (Tạo ngân hàng câu hỏi) as (UC8)
+'        (Import danh sách câu hỏi) as (UC9)
+'        (Tạo đề thi từ ngân hàng đề thi) as (UC10)
+
+'        (Quản lý ngân hàng câu hỏi) as (UC11)
+'        (Tạo câu hỏi) as (UC40)
+'        (Chỉnh sửa câu hỏi) as (UC41)
+'        (Xóa câu hỏi) as (UC42)
+'        (Xem danh sách câu hỏi) as (UC43)
+'        (Import danh sách câu hỏi bằng AI) as (UC44)
+'        (Export đề thi để làm đề thi giấy) as (UC12)
+'        (Tạo các unit test để kiểm tra code tự động) as (UC13)
+
+'        (Quản lý kết quả thi) as (UC27)
+'        (Thống kê biểu đồ điểm) as (UC14)
+'        (Danh sách điểm của học sinh ) as (UC15)
+
+'        (Đăng kí khóa học) as (UC16)
+'        (Xem và học nội dung khóa học ) as (UC17)
+'        (Xem tài liệu) as (UC18)
+'        (Làm bài thi) as (UC19)
+'        (Diễn đàn thảo luận) as (UC20)
+'        (Xem kết quả thi) as (UC21)
+'        (Đăng kí cuộc thi) as (UC70)
+'
+'        (Thống kê người dùng) as (UC22)
+'        (Thống kê bài thi) as (UC23)
+'        (Thống kê các dữ liệu hệ thống) as (UC24)
+'
+'         (Quản lý cuộc thi) as (UC60)
+'         (Tạo cuộc thi) as (UC61)
+'         (Xem danh sách cuộc thi) as (UC62)
+'         (Xem danh sách đăng ký cuộc thi) as (UC63)
+'         (Thêm đề thi vào cuộc thi) as (UC64)
+    }
+
+'    actor "Nguoi dung" as ND
+    actor "Giao vien" as GV
+'    actor "Hoc sinh" as HS
+'    actor "Admin" as AD
+
+'    ND <|-- HS
+'    ND <|-- GV
+'    ND <|-- AD
+'
+'    HS --> (UC16)
+'    HS --> (UC17)
+''    HS --> (UC18)
+'    HS --> (UC19)
+'    HS --> (UC20)
+'    HS --> (UC21)
+'    HS --> (UC70)
+'
+'    HS --> (UC1)
+'    HS --> (UC2)
+'
+'    GV --> (UC1)
+'    GV --> (UC2)
+'
+    GV --> (UC25)
+    (UC25) <.. (UC3): extend
+    (UC25) <.. (UC4): extend
+    (UC25) <.. (UC5): extend
+    (UC25) <.. (UC6): extend
+    (UC25) <.. (UC80): extend
+    (UC25) <.. (UC81): extend
+
+'    GV --> (UC26)
+''    (UC26) <... (UC8): extend
+''    (UC26) <... (UC30): extend
+''    (UC26) <... (UC31): extend
+''    (UC26) <... (UC32): extend
+''    (UC26) <... (UC33): extend
+'
+'
+'    GV -->  (UC11)
+''    (UC26) <... (UC9): extend
+''    (UC26) <... (UC10): extend
+''    (UC11) <... (UC40): extend
+''    (UC11) <... (UC41): extend
+''    (UC11) <... (UC42): extend
+''    (UC11) <... (UC43): extend
+''    (UC11) <... (UC44): extend
+''
+'
+'    GV --> (UC27)
+'    (UC27) <.. (UC7): extend
+'    (UC27) <.. (UC14): extend
+'    (UC27) <.. (UC15): extend
+'
+'    GV --> (UC60)
+''    (UC60) <.. (UC61): extend
+''    (UC60) <.. (UC62): extend
+''    (UC60) <.. (UC63): extend
+''    (UC60) <.. (UC64): extend
+'
+'
+'    AD --> (UC1)
+'    AD --> (UC22)
+'    AD --> (UC23)
+'    AD --> (UC24)
+
+@enduml

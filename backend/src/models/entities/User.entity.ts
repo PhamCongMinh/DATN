@@ -1,11 +1,13 @@
 import { Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { Prop } from '@shared/swagger';
 
-export enum Role {
-  HOST = 'host',
-  RENTER = 'renter',
+export enum EUserRole {
   ADMIN = 'admin',
+  SUB_ADMIN = 'sub-admin',
+  STUDENT = 'student',
+  TEACHER = 'teacher',
+  USER = 'user',
 }
 
 export type UserDocument = User & Document;
@@ -28,9 +30,9 @@ export class User {
 
   @Prop({
     type: String,
-    required: true,
+    required: false,
   })
-  username: string;
+  username?: string;
 
   @Prop({
     type: String,
@@ -41,33 +43,34 @@ export class User {
   @Prop({
     type: String,
     required: true,
-    default: Role.RENTER,
+    enum: EUserRole,
+    default: EUserRole.USER,
   })
-  role: string;
-
-  @Prop({
-    type: 'string',
-    required: true,
-  })
-  numberPhone: string;
+  role: EUserRole;
 
   @Prop({
     type: 'string',
     required: false,
   })
-  zaloPhone: string;
+  numberPhone?: string;
 
   @Prop({
     type: 'string',
     required: false,
   })
-  facebookUrl: string;
+  zaloPhone?: string;
 
   @Prop({
     type: 'string',
     required: false,
   })
-  avatarUrl: string;
+  facebookUrl?: string;
+
+  @Prop({
+    type: 'string',
+    required: false,
+  })
+  avatarUrl?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

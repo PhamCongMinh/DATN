@@ -1,0 +1,21 @@
+.custom-empty {
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+  &-icon {
+    width: 98px;
+  }
+
+  &-text {
+    color: #0b0b0b;
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    letter-spacing: -0.14px;
+  }
+}

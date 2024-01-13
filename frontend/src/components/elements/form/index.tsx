@@ -1,4 +1,4 @@
-import { Button, Form, Image, Input, Typography } from 'antd'
+import { Button, Form, Image, Input, Space, Typography } from 'antd'
 import styles from './style.module.scss'
 import { SearchOutlined } from '@ant-design/icons'
 
@@ -7,26 +7,16 @@ const { Text } = Typography
 export default function CustomForm() {
   return (
     <Form name="basic" className={styles.form}>
-      <Form.Item style={{ textAlign: 'center' }}>
-        <Text className={styles.title}>Tìm kiếm phòng trọ</Text>
-      </Form.Item>
-      <Form.Item>
-        <Input placeholder="Địa điểm" />
-      </Form.Item>
+      <Space direction={'vertical'}>
+        <Text className={styles.title}>Tìm kiếm khóa học</Text>
 
-      <Form.Item>
-        <Input placeholder="Chọn giá" />
-      </Form.Item>
-
-      <Form.Item>
-        <Input placeholder="Diện tích" />
-      </Form.Item>
-
-      <Form.Item>
-        <Button type="primary" htmlType="submit" className={styles.button} icon={<SearchOutlined />}>
-          Tìm kiếm
-        </Button>
-      </Form.Item>
+        <Space>
+          <Input placeholder="Từ khóa" style={{ height: 40, width: 470, marginLeft: 100 }} />
+          <Button type="primary" htmlType="submit" className={styles.button} icon={<SearchOutlined />}>
+            Tìm kiếm
+          </Button>
+        </Space>
+      </Space>
     </Form>
   )
 }

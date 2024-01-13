@@ -6,15 +6,15 @@ export const menuItemsBeforeLogin: MenuProps['items'] = [
     key: 'home'
   },
   {
-    label: <a>Tìm trọ</a>,
-    key: 'rent'
+    label: <a>Khóa học</a>,
+    key: 'course'
   },
   {
-    label: <a>Cho thuê</a>,
-    key: 'rentout'
+    label: <a>Cuộc thi</a>,
+    key: 'contest'
   },
   {
-    label: 'Blog',
+    label: <a>Blog</a>,
     key: 'blog'
   },
   {
@@ -27,21 +27,44 @@ export const menuItemsBeforeLogin: MenuProps['items'] = [
   }
 ]
 
-export const menuItemsAfterLogin: MenuProps['items'] = [
+export const menuItemsForTeacher: MenuProps['items'] = [
   {
     label: <a>Trang chủ</a>,
     key: 'home'
   },
   {
-    label: <a>Tìm trọ</a>,
-    key: 'rent'
+    label: <a>Quản lý khóa học</a>,
+    key: 'manage-course'
   },
   {
-    label: <a>Cho thuê</a>,
-    key: 'rentout'
+    label: <a>Cuộc thi</a>,
+    key: 'manage-contest'
   },
   {
-    label: 'Blog',
+    label: <a>Blog</a>,
+    key: 'blog'
+  },
+  {
+    label: <a>Quản lí tài khoản</a>,
+    key: 'manage-account'
+  }
+]
+
+export const menuItemsForStudent: MenuProps['items'] = [
+  {
+    label: <a>Trang chủ</a>,
+    key: 'home'
+  },
+  {
+    label: <a>Khóa học</a>,
+    key: 'course'
+  },
+  {
+    label: <a>Cuộc thi</a>,
+    key: 'contest'
+  },
+  {
+    label: <a>Blog</a>,
     key: 'blog'
   },
   {
@@ -57,7 +80,7 @@ export const menuItemsForAdmin: MenuProps['items'] = [
   },
   {
     label: <a>Tìm trọ</a>,
-    key: 'rent'
+    key: 'course'
   },
   {
     label: 'Blog',

@@ -1,0 +1,51 @@
+@import 'styles/colors.scss';
+@import 'styles/variables.scss';
+
+.date-picker {
+  &-container {
+    position: relative;
+
+    .ant-picker {
+      border-radius: 4px;
+    }
+
+    .date-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  &-medium.ant-picker {
+    padding: 10px 12px 10px 42px;
+  }
+
+  &-icon-medium {
+    position: absolute;
+    left: 12px;
+    top: 12px;
+  }
+
+  &-large.ant-picker {
+    padding: $padding-md 12px $padding-md 42px;
+    height: 60px !important;
+
+    .ant-picker-input > input {
+      font-size: $font-size-3;
+      font-family: "Open Sans";
+      line-height: 24px;
+    }
+  }
+
+  &-icon-large {
+    position: absolute;
+    left: 12px;
+    top: 18px;
+  }
+}
+
+// .default-popup-dp {
+//   .ant-picker-cell-selected .ant-picker-cell-inner {
+//     border-radius: 77.492px;
+//   }
+// }

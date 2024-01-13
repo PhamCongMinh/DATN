@@ -1,0 +1,55 @@
+@use 'styles/colors.scss' as color;
+@use 'styles/variables.scss' as var;
+
+.btn {
+  &-large {
+    padding: 8px 16px;
+    height: 44px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: "Open Sans";
+    font-weight: 600;
+    color: color.$color-white-1;
+    // gap: 8px;
+  }
+}
+
+.contained-default {
+  border: 1px solid color.$color-primary;
+  background: color.$color-primary;
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+
+  &:hover {
+    color: color.$color-white-1 !important;
+    border-color: color.$color-primary !important;
+    opacity: 0.8;
+  }
+
+  &.type-dark {
+    border-radius: 2px;
+    border: 1px solid #1a1a1a;
+    background: #1a1a1a;
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+    color: #fff;
+
+    font-family: "Open Sans";
+    font-size: var.$font-size-2;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+
+    &:hover {
+      border-color: #1a1a1a !important;
+    }
+  }
+
+  &.type-green {
+    border-radius: 2px;
+    border: 1px solid color.$color-primary;
+    background: color.$color-primary;
+    box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+  }
+}

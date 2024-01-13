@@ -131,7 +131,7 @@ export const ApiOkResponsePayload = <DataDto extends Type<unknown>>(
 
 export class ResponsePayload<T> implements IResponse<T> {
   @ApiEnumProperty({ enum: HttpStatus, example: HttpStatus.OK })
-  statusCode?: HttpStatus;
+  status_code?: HttpStatus;
   @ApiProperty()
   data?: T;
   @ApiProperty()

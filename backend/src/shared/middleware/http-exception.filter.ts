@@ -35,12 +35,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
           : { message: excResponse };
       newDataResponse = newDataResponse?.message;
       excResponse = new exc.BadRequestException({
-        statusCode: excResponse.statusCode
-          ? excResponse.statusCode
+        status_code: excResponse.status_code
+          ? excResponse.status_code
           : HttpStatus.BAD_REQUEST,
         data: excResponse.data ? excResponse.data : null,
-        validatorErrors: excResponse?.validatorErrors
-          ? excResponse.validatorErrors
+        validator_errors: excResponse?.validator_errors
+          ? excResponse.validator_errors
           : [],
         message:
           typeof newDataResponse === 'string'
@@ -48,6 +48,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
             : 'unknown message',
       }).getResponse();
     }
-    response.status(excResponse.statusCode).json(excResponse);
+    response.status(excResponse.status_code).json(excResponse);
   }
 }

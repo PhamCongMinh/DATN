@@ -1,0 +1,10 @@
+{
+    "apps": [
+        {
+            "name": "crowded-genix-provider",
+            "script": "npm run console:dev judging-engine",
+            "node_args": "",
+            "instances": 1
+        }
+    ]
+}

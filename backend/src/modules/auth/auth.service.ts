@@ -14,8 +14,6 @@ import UserRepository from '@models/repositories/User.repository';
 import { EEnvKey } from '@constants/env.constant';
 import { UpdateAccountDto } from '@modules/auth/dto/updateAccount.dto';
 import { UpdateProfileDto } from '@modules/auth/dto/updateProfile.dto';
-import PrivateInformationRepository from '@models/repositories/PrivateInformation.repository';
-import { PrivateInformationDocument } from '@models/entities/PrivateInformation.entity';
 
 @Injectable()
 export class AuthService {
@@ -24,19 +22,19 @@ export class AuthService {
     private jwtService: JwtService,
     private configService: ConfigService,
     private loggerService: LoggerService,
-    private privateInformationRepository: PrivateInformationRepository,
   ) {
     this.loggerService.getLogger('AuthService');
   }
 
+  sign(data: any) {
+    return this.jwtService.sign(data);
+  }
+
   async createAccessToken(user: UserDocument) {
-    const payload = { id: user._id, email: user.email, role: user.role };
+    console.log(user.toObject());
     const result = user.toObject();
 
-    result['access_token'] = this.jwtService.sign(payload, {
-      secret: this.configService.get(EEnvKey.TOKEN_AUTH_KEY),
-      expiresIn: 60 * 60 * 24,
-    });
+    result['access_token'] = this.jwtService.sign(user.toObject());
 
     delete result.password;
     return result;
@@ -44,6 +42,7 @@ export class AuthService {
 
   async login(loginDto: LoginDto) {
     const user = await this.userRepository.findUserByEmail(loginDto.email);
+    console.log(user);
     // Check user exist
     if (!user)
       throw new BadRequestException({ message: AuthErrorMessage.NoExist });
@@ -74,23 +73,10 @@ export class AuthService {
   }
 
   async updateProfile(id: string, data: UpdateProfileDto) {
-    const privateData = {
-      ...data,
-      ownerId: id,
-    };
-    console.log(privateData);
-    await this.privateInformationRepository.privateInformationDocumentModel.updateOne(
-      { ownerId: id },
-      privateData,
-      { upsert: true },
-    );
+    return;
   }
 
   async checkUpdatedInfo(id: string) {
-    const userInfo =
-      await this.privateInformationRepository.privateInformationDocumentModel
-        .findOne({ ownerId: id })
-        .exec();
-    return userInfo ? { isUpdatedInfo: true } : { isUpdatedInfo: false };
+    return true;
   }
 }

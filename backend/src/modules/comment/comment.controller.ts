@@ -5,6 +5,8 @@ import { LoggerService } from '@shared/modules/loggers/logger.service';
 import { Comment } from '@models/entities/Comment.entity';
 import { CreateCommentDto } from '@modules/comment/dto/request/createCommentDto';
 import { CommentService } from '@modules/comment/comment.service';
+import { UseAuth } from '@shared/decorators/auth.decorator';
+import { EUserRole } from '@models/entities/User.entity';
 
 @ApiTags('Comment')
 @Controller('comment')
@@ -16,8 +18,7 @@ export class CommentController {
     this.loggerService.getLogger('CommentController');
   }
 
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth('jwt')
+  @UseAuth(Object.values(EUserRole))
   @Post('/')
   async createComment(@Body() createCommentDto: CreateCommentDto, @Req() req) {
     console.log(createCommentDto);

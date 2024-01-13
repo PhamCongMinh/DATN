@@ -57,11 +57,13 @@ export default function SignInForm() {
       }
 
       // @ts-ignore
-      if (response.statusCode === 200) {
+      if (response.status_code === 200) {
         dispatch(authSliceActions.logIn(userData))
+        console.log(userData)
       }
 
-      router.push('/rent')
+      if (userData.role === 'student') router.push('/course')
+      else if (userData.role === 'teacher') router.push('/manage-course')
     } catch (error) {
       alert('Đăng nhập thất bại, vui lòng kiểm tra lại thông tin trước khi thử lại')
       console.log(error)
@@ -72,8 +74,8 @@ export default function SignInForm() {
     <Space className={styles.space}>
       <Typography>
         <Text className={styles.title}>
-          Quality Rooms at <br />
-          Wallet-Friendly Prices
+          Skills for your future. <br />
+          Get started with us.
         </Text>
       </Typography>
       <Form name="basic" className={styles.form}>

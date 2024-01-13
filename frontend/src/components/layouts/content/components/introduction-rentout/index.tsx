@@ -12,10 +12,10 @@ function IntroductionRentout() {
     <div style={{ display: 'flex', justifyContent: 'center', marginTop: 100, marginBottom: 100 }}>
       <Space className={styles.space}>
         <div className={styles.container}>
-          <Title className={styles.title}>Cho thuê nhà trọ</Title>
+          <Title className={styles.title}>Become an instructor</Title>
           <Text className={styles.text}>
-            Kiếm thêm thu nhập khi cho các sinh viên, người lao động, khách du lịch đang tìm kiếm chỗ ở thuê phòng trống
-            của bạn.
+            Hãy tham gia cùng chúng tôi trong sứ mệnh chia sẻ tri thức. Chúng tôi cung cấp các công cụ và kỹ năng để dạy
+            những gì bạn yêu thích. Các giảng viên từ khắp nơi trên thế giới đang tham gia nền tảng.
           </Text>
           <Button className={styles.button}>Tìm hiểu thêm</Button>
         </div>

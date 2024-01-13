@@ -1,0 +1,29 @@
+@import 'styles/colors.scss';
+@import 'styles/variables.scss';
+
+.select-container {
+  height: 44px;
+  .ant-select {
+    height: 100%;
+    .ant-select-selection-item {
+      display: flex;
+      align-items: center;
+    }
+  }
+  .ant-select-selector {
+    border-radius: 10px;
+
+    .ant-select-selection-search-input {
+      height: 100%;
+    }
+  }
+}
+
+.custom-select-popup {
+  padding: 0;
+  border-radius: 8px;
+
+  .ant-select-item {
+    padding: 12px 16px;
+  }
+}

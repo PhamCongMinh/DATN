@@ -10,11 +10,10 @@ import { JwtStrategy } from '@shared/strategy/jwt.strategy';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from '@models/entities/User.entity';
 import { MulterModule } from '@nestjs/platform-express';
-import {
-  PrivateInformation,
-  PrivateInformationSchema,
-} from '@models/entities/PrivateInformation.entity';
-import PrivateInformationRepository from '@models/repositories/PrivateInformation.repository';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtAuthGuard } from '@shared/guards/auth.guard';
+import { EEnvKey } from '@constants/env.constant';
+import { JWT_EXPIRE_IN } from '@constants/auth.constant';
 
 @Module({
   imports: [
@@ -23,12 +22,17 @@ import PrivateInformationRepository from '@models/repositories/PrivateInformatio
         name: User.name,
         schema: UserSchema,
       },
-      {
-        name: PrivateInformation.name,
-        schema: PrivateInformationSchema,
-      },
     ]),
-    JwtModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        signOptions: {
+          expiresIn: JWT_EXPIRE_IN,
+        },
+        secret: configService.get<string>(EEnvKey.TOKEN_AUTH_KEY),
+      }),
+      inject: [ConfigService],
+    }),
     PassportModule,
     MulterModule.registerAsync({
       useFactory: () => ({
@@ -36,12 +40,7 @@ import PrivateInformationRepository from '@models/repositories/PrivateInformatio
       }),
     }),
   ],
-  providers: [
-    AuthService,
-    JwtStrategy,
-    UserRepository,
-    PrivateInformationRepository,
-  ],
+  providers: [AuthService, JwtAuthGuard, JwtStrategy, UserRepository],
   controllers: [AuthController],
 })
 export class AuthModule {}
