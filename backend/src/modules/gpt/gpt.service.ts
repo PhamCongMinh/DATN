@@ -15,6 +15,14 @@ import {
 import { ImportQuestionDto } from '@modules/gpt/dto/import-question.dto';
 import { BadRequestException } from '@shared/exception';
 // import { pdf2pic } from 'pdf2pic';
+import axios from 'axios';
+import * as fs from 'fs';
+import * as pdf2pic from 'pdf2pic';
+import { BlobServiceClient } from '@azure/storage-blob';
+import { fromPath } from 'pdf2pic';
+import { v4 as uuidv4 } from 'uuid';
+import { AzureService } from '@modules/asset-upload/azure.service';
+import { readFile } from 'fs/promises';
 
 @Injectable()
 export class GptService {
@@ -24,6 +32,7 @@ export class GptService {
     private loggerService: LoggerService,
     private testcaseRepository: TestcaseRepository,
     private questionChoiceRepository: QuestionChoiceRepository,
+    private azureService: AzureService,
   ) {
     this.openai = new OpenAI({ apiKey: process.env.OPENAI_KEY });
   }
@@ -153,12 +162,11 @@ export class GptService {
     const isImage = await this.isImage(dto.asset_url);
 
     if (isImage) {
-      return this.getQuestionInImageWithAI(dto);
+      return this.getQuestionInImageWithAI([dto.asset_url]);
     }
 
     if (isPDF) {
-      return 'Not support pdf yet';
-      // return this.getQuestionInPDFWithAI(dto);
+      return this.getQuestionInPdfWithAI(dto.asset_url);
     }
 
     throw new BadRequestException({
@@ -186,13 +194,24 @@ export class GptService {
     }
   }
 
-  async getQuestionInImageWithAI(dto: ImportQuestionDto) {
+  async getQuestionInImageWithAI(imageUrls: string[]) {
     const systemContent =
       `You will support retrieving question information from image or pdf files and returning a list of questions and their answers.` +
       `The answer is in this format: [item, item,...,item]. and type of object item is {question: string, answers: string[]}.` +
       `No further explanation in the answer.` +
       `If there is no data or found , answer : "{"message" : "No question found !"}".` +
       `You are a machine that only returns and replies with valid, iterable RFC8259 compliant JSON in your responses with codeblock json.`;
+
+    const imageData = [];
+    for (const imageUrl of imageUrls) {
+      imageData.push({
+        type: 'image_url',
+        image_url: {
+          url: imageUrl,
+          detail: 'high',
+        },
+      });
+    }
 
     const messages: ChatCompletionMessageParam[] = [
       {
@@ -202,14 +221,8 @@ export class GptService {
       {
         role: 'user',
         content: [
-          { type: 'text', text: 'Get list questions in this image' },
-          {
-            type: 'image_url',
-            image_url: {
-              url: dto.asset_url,
-              detail: 'high',
-            },
-          },
+          { type: 'text', text: 'Get list questions in images' },
+          ...imageData,
         ],
       },
     ];
@@ -269,16 +282,53 @@ export class GptService {
     }
   }
 
-  // private async convertPdfToImages(pdfPath: string) {
-  //   const converter = new pdf2pic({
-  //     quality: 300, // Output quality of images
-  //     saveInSameFolder: true, // Save the images in the same folder as the PDF
-  //     outDir: 'uploads', // Output directory for images
-  //     dpi: 600, // DPI (dots per inch) for images
-  //   });
-  //
-  //   const images = await converter.convertBulk(pdfPath, -1); // -1 to convert all pages
-  //
-  //   return images;
-  // }
+  async getQuestionInPdfWithAI(fileUrl: string) {
+    try {
+      const pdfFilePath = await this.downloadPdf(fileUrl);
+      const images = await this.convertPdfToImages(pdfFilePath);
+      const listImageUrls: string[] = await this.uploadImagesToAzure(images);
+      console.log('listImageUrls', listImageUrls);
+      return this.getQuestionInImageWithAI(listImageUrls);
+    } catch (error) {
+      console.error('Error:', error.message || error);
+    }
+  }
+
+  async downloadPdf(url: string): Promise<string> {
+    const response = await axios.get(url, { responseType: 'arraybuffer' });
+    const pdfFilePath = 'temp.pdf';
+    fs.writeFileSync(pdfFilePath, response.data);
+    return pdfFilePath;
+  }
+
+  async convertPdfToImages(pdfFilePath: string): Promise<string[]> {
+    const pdf2picOptions = {
+      density: 300,
+      saveFilename: uuidv4(),
+      savePath: 'upload',
+      format: 'png',
+      width: 600,
+      height: 600,
+    };
+
+    const converter = fromPath(pdfFilePath, pdf2picOptions);
+    const result = await converter.bulk(-1);
+
+    return result.map((page) => page.path);
+  }
+
+  async uploadImagesToAzure(images: string[]) {
+    console.log(images);
+    const listFileUrl = [];
+    for (const imagePath of images) {
+      const imageName = imagePath.split('/').pop();
+      console.log(imageName);
+      const fileUrl = await this.azureService.uploadFile(
+        await readFile(imagePath),
+        imageName,
+      );
+      listFileUrl.push(fileUrl);
+    }
+    return listFileUrl;
+  }
 }

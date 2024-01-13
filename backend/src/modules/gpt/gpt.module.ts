@@ -16,6 +16,7 @@ import { GptService } from '@modules/gpt/gpt.service';
 import QuestionRepository from '@models/repositories/Question.repository';
 import TestcaseRepository from '@models/repositories/Testcase.repository';
 import QuestionChoiceRepository from '@models/repositories/QuestionChoice.repository';
+import { AssetUploadModule } from '@modules/asset-upload/asset-upload.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import QuestionChoiceRepository from '@models/repositories/QuestionChoice.reposi
       },
     ]),
     LoggingModule,
+    AssetUploadModule,
   ],
   controllers: [GptController],
   providers: [
