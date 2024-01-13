@@ -52,17 +52,17 @@ const ManagementCourse: React.FC<IProps> = (props): JSX.Element => {
             <UserOutlined />
             <span>Quản lý</span>
           </Breadcrumb.Item>
-          <Breadcrumb.Item>Khóa học</Breadcrumb.Item>
+          <Breadcrumb.Item>Cuộc thi </Breadcrumb.Item>
         </Breadcrumb>
         <Space>
-          <Text className={styles.title1}>Danh sách khóa học</Text>
+          <Text className={styles.title1}>Danh sách cuộc thi</Text>
           <Input placeholder={'Tìm kiếm khóa học'} className={styles.search}></Input>
         </Space>
         <Divider style={{ width: 1215, margin: 0 }}></Divider>
         <Space className={styles.sub_content}>
           {props.data.length !== 0 ? (
             <List
-              grid={{ gutter: 27 }}
+              grid={{ gutter: 20 }}
               dataSource={props.data}
               renderItem={(course: ICourse) => (
                 <List.Item key={course._id}>
