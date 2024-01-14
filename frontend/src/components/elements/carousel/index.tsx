@@ -2,11 +2,7 @@ import { Carousel } from 'antd'
 import Image from 'next/image'
 
 import Search from '../search/index'
-import ImageInCarousel1 from '../../../assets/images/list_image_header_1.png'
-import ImageInCarousel2 from '../../../assets/images/list_image_header_2.png'
 import Home1 from '../../../assets/images/home1.png'
-import Home2 from '../../../assets/images/home2.jpg'
-import Home3 from '../../../assets/images/home3.png'
 
 import styles from './style.module.scss'
 import React from 'react'
