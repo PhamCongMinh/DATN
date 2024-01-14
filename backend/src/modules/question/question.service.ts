@@ -7,6 +7,12 @@ import TestcaseRepository from '@models/repositories/Testcase.repository';
 import { CreateQuizDto } from '@modules/question/dto/create-quiz.dto';
 import QuestionChoiceRepository from '@models/repositories/QuestionChoice.repository';
 import { GetQuizDto } from '@modules/question/dto/get-quiz.dto';
+import { ImportQuestionsDto } from '@modules/question/dto/import-questions.dto';
+import {
+  EQuestionDifficultyLevel,
+  EQuestionStatus,
+  EQuestionType,
+} from '@constants/questions.constant';
 
 @Injectable()
 export class QuestionService {
@@ -168,5 +174,40 @@ export class QuestionService {
     // await this.questionRepository.delete(question_id);
     //
     // return this.createQuestionQuiz(author_id, createQuizDto);
+  }
+
+  async importQuestions(author_id: string, dto: ImportQuestionsDto) {
+    const questions = [];
+    for (const question of dto.questions) {
+      let listQuestionChoiceId = [];
+      if (question?.question_choice && question?.question_choice.length > 0) {
+        listQuestionChoiceId = await Promise.all(
+          question.question_choice.map(async (question_choice, index) => {
+            const newQuestionChoice =
+              await this.questionChoiceRepository.create({
+                ...question_choice,
+                order: index + 1,
+                author_id: author_id,
+              });
+            return newQuestionChoice._id;
+          }),
+        );
+      }
+
+      delete question.question_choice;
+
+      const newQuestion = await this.questionRepository.create({
+        ...question,
+        author_id: author_id,
+        question_choice: listQuestionChoiceId,
+        title: question.description,
+        difficulty_level: EQuestionDifficultyLevel.EASY,
+        status: EQuestionStatus.DRAFT,
+        type: EQuestionType.MULTIPLE_CHOICE,
+      });
+
+      questions.push(newQuestion);
+    }
+    return questions;
   }
 }

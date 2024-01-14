@@ -33,5 +33,6 @@ import { AzureService } from '@modules/asset-upload/azure.service';
     UserRepository,
     AzureService,
   ],
+  exports: [AssetUploadService, AzureService],
 })
 export class AssetUploadModule {}
