@@ -21,6 +21,7 @@ import { CreateQuestionAboutProgramingDto } from '@modules/question/dto/create-q
 import { UpdateQuestionAboutProgramingDto } from '@modules/question/dto/update-question-about-programing.dto';
 import { CreateQuizDto } from '@modules/question/dto/create-quiz.dto';
 import { GetQuizDto } from '@modules/question/dto/get-quiz.dto';
+import { ImportQuestionsDto } from '@modules/question/dto/import-questions.dto';
 
 @ApiTags('Question')
 @Controller('question')
@@ -99,6 +100,17 @@ export class QuestionController {
       req.user._id,
       id,
       createQuizDto,
+    );
+  }
+  @UseAuth(Object.values(EUserRole))
+  @Post('/import')
+  async importQuestions(
+    @Body() importQuestionsDto: ImportQuestionsDto,
+    @Req() req,
+  ) {
+    return this.questionService.importQuestions(
+      req.user._id,
+      importQuestionsDto,
     );
   }
 }
