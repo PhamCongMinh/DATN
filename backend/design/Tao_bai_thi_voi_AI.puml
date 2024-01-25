@@ -1,0 +1,77 @@
+@startuml
+title Nhập liệu danh sách câu hỏi với AI
+actor "Giáo viên" as GV
+boundary Frontend
+control Backend
+database "Cơ sở dữ liệu" as Database
+participant GPT
+participant "Azure Storage Blob" as ASB
+
+autonumber
+activate GV
+
+GV->Frontend: taiAnhHoacFilePDFChuaAnhDeThiLenHeThong()
+
+activate Frontend
+
+Frontend->Backend: goiApiTaiFile()
+
+activate Backend
+
+Backend->ASB: uploadFile()
+
+activate ASB
+
+ASB-->Backend: return { ketQua }
+
+deactivate ASB
+
+Backend->Database: luuThongTinFile()
+
+activate Database
+
+Database-->Backend: return { ketQua }
+
+Backend-->Frontend: return { ketQua }
+
+Frontend-->GV: hienThiFileHoacAnhVuaTaiLenHeThong()
+
+GV->Frontend: anNutXuLyAnhHoacFileChuaCauHoiVoiAI()
+
+Frontend->Backend: goiApiXuLyAnhHoacFileVoiAI()
+
+Backend->Backend: taoPrompt()
+
+Backend->GPT: goiApiVaGuiDuLieuCanThietDeXuLi()
+
+activate GPT
+
+GPT->Backend: return { ketQua }
+
+deactivate GPT
+
+Backend-->Frontend: return { ketQua }
+
+Frontend-->GV: hienThiDanhSachCauHoiMaAIVuaTrichXuatDuoc()
+
+GV->Frontend: luuDanhSachCauHoi()
+
+Frontend->Backend: goiApiLuuDanhSachCauHoi()
+
+Backend->Database: luuDanhSachCauHoi()
+
+Database-->Backend: return { ketQua }
+
+Backend-->Frontend: return { ketQua }
+
+Frontend-->GV: hienThiKetQua()
+
+
+deactivate Database
+
+deactivate Backend
+
+deactivate Frontend
+
+deactivate GV
+@enduml

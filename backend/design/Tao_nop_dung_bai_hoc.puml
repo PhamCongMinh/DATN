@@ -1,0 +1,61 @@
+@startuml
+title Tạo bài học trong khóa học
+actor "Giáo viên" as GV
+boundary Frontend
+control Backend
+database "Cơ sở dữ liệu" as Database
+participant "Azure Storage Blob" as ASB
+
+autonumber
+activate GV
+
+GV->Frontend: taoKhoaHoc()
+
+activate Frontend
+
+Frontend->Backend: goiApiTaoKhoaHoc()
+
+activate Backend
+
+Backend->Database: luuThongTinKhoaHoc()
+
+activate Database
+
+Database-->Backend: return { ketQua }
+
+Backend-->Frontend: return { ketQua }
+
+Frontend-->GV: hienThiKetQua()
+
+GV->Frontend: taoBaiHoc()
+
+Frontend-->GV: hienThiFormTaoNoiDungBaiHoc()
+
+GV->Frontend: nhapNoiDungBaiHocHoacTaiFile()
+
+Frontend->Backend: goiApiTaoBaiHoc()
+
+Backend->ASB: taiFileLenAzureNeuCo()
+
+activate ASB
+
+ASB-->Backend: return { ketQua }
+
+Backend->Database: luuThongTinBaiHoc()
+
+deactivate ASB
+
+Database-->Backend: return { ketQua }
+
+Backend-->Frontend: return { ketQua }
+
+Frontend-->GV: hienThiBaiHoc()
+
+deactivate Database
+
+deactivate Backend
+
+deactivate Frontend
+
+deactivate GV
+@enduml

@@ -1,0 +1,48 @@
+@startuml
+title Xem bài học
+actor "Học sinh" as HS
+boundary Frontend
+control Backend
+database "Cơ sở dữ liệu" as Database
+
+autonumber
+activate HS
+
+HS->Frontend: dangKyKhoaHoc()
+
+activate Frontend
+
+Frontend->Backend: goiApiDangKiKhoaHoc()
+
+activate Backend
+
+Backend->Database: dangKyKhoaHoc()
+
+activate Database
+
+Database-->Backend: return { ketQua }
+
+Backend-->Frontend: return { ketQua }
+
+Frontend-->HS: hienThiKetQua()
+
+HS->Frontend: xemBaiHoc()
+
+Frontend->Backend: goiApiLayThongTinBaiHoc()
+
+Backend->Database: layThongTinBaiHoc()
+
+Database-->Backend: return { ketQua }
+
+Backend-->Frontend: return { ketQua }
+
+Frontend-->HS: hienThiBaiHoc()
+
+deactivate Database
+
+deactivate Backend
+
+deactivate Frontend
+
+deactivate HS
+@enduml

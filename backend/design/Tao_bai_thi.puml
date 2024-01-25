@@ -1,0 +1,72 @@
+@startuml
+title Tạo bài thi
+actor "Giáo viên" as GV
+boundary Frontend
+control Backend
+database "Cơ sở dữ liệu" as Database
+
+autonumber
+activate GV
+
+GV->Frontend: taoCuocThi()
+
+activate Frontend
+
+Frontend->Backend: goiApiTaoCuocThi()
+
+activate Backend
+
+Backend->Database: taoCuocThi()
+
+activate Database
+
+Database-->Backend: return { ketQua}
+
+Backend-->Frontend: return { ketQua }
+
+Frontend-->GV: hienThiCuocThiVuaTao()
+
+GV->Frontend: taoCauHoi()
+
+Frontend->Backend: goiApiTaoCauHoi()
+
+Backend->Database: taoCauHoi()
+
+Database-->Backend: return { ketQua }
+
+Backend-->Frontend: return { ketQua }
+
+Frontend-->GV: hienThiCauHoiVuaTao()
+
+GV->Frontend: taoDeThi()
+
+Frontend->Backend: goiApiTaoDeThi()
+
+Backend->Database: taoDeThi()
+
+Database-->Backend: return { ketQua }
+
+Backend-->Frontend: return { ketQua }
+
+Frontend-->GV: hienThiDeThiVuaTao()
+
+GV->Frontend: dinhKemDeThiVuaTaoVaoCuocThi()
+
+Frontend->Backend: goiApiDinhKemDeThiVaoCuocThi()
+
+Backend->Database: dinhKemDeThiVaoCuocThi()
+
+Database-->Backend: return { ketQua }
+
+Backend-->Frontend: return { ketQua }
+
+Frontend-->GV: hienThiDeThiVuaDinhKem()
+
+deactivate Database
+
+deactivate Backend
+
+deactivate Frontend
+
+deactivate GV
+@enduml

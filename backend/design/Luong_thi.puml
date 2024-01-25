@@ -1,0 +1,80 @@
+@startuml
+title Tham gia thi
+actor "Học sinh" as HS
+boundary Frontend
+control Backend
+database "Cơ sở dữ liệu" as Database
+
+autonumber
+activate HS
+
+HS->Frontend: dangKyCuocThi()
+
+activate Frontend
+
+Frontend->Backend: goiApiDangKyCuocThi()
+
+activate Backend
+
+Backend->Database: dangKyCuocThi()
+
+activate Database
+
+Database-->Backend: return { ketQua}
+
+Backend-->Frontend: return { ketQua }
+
+Frontend-->HS: hienThiKetQua()
+
+HS->Frontend: nhapMatKhauThamGiaBaiThi()
+
+Frontend->Backend: goiApiNhapMatKhauThamGiaBaiThi()
+
+Backend->Database: layMatKhau()
+
+Database-->Backend: return { ketQua }
+
+Backend->Backend: xacThucMatKhau()
+
+Backend->Database: layThongTinBaiThi()
+
+Database-->Backend: return { thongTinBaiThi }
+
+Backend-->Frontend: return { thongTinBaiThi }
+
+Frontend-->HS: hienThiBaiThi()
+
+HS->Frontend: lamBaiThi()
+
+HS->Frontend: guiDapAnTungCauHoi()
+
+Frontend->Backend: goiApiLuuDapAnTraLoi()
+
+Backend->Database: luuDapAnTraLoi()
+
+Database-->Backend: return { ketQuaLuuDapAn }
+
+Backend-->Frontend: return { ketQuaLuuDapAn }
+
+Frontend-->HS: hienThiKetQuaLuuDapAn()
+
+HS->Frontend: nopBaiThi()
+
+Frontend->Backend: goiApiNopBaiThi()
+
+Backend->Backend: tinhToanKetQuaThi()
+
+Backend->Database: luuThongTinBaiThi()
+
+Database-->Backend: return { ketQua }
+
+Backend-->Frontend: return { ketQua }
+
+deactivate Database
+
+deactivate Backend
+
+deactivate Frontend
+
+deactivate HS
+@enduml
